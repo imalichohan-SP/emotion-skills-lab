@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Self-Talk Makeover</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f0ff;
+  --card:#ffffff;
+  --violet:#7828d0;--violet-dark:#4808a0;--violet-light:#c8a8f8;
+  --teal:#189898;--teal-dark:#0a5858;--teal-light:#98e0e0;
+  --coral:#e85048;--coral-dark:#a01828;--coral-light:#f8b0a8;
+  --gold:#d89020;--gold-dark:#886000;--gold-light:#f8dea0;
+  --green:#18c870;--green-dark:#0a7840;--green-light:#a0f0c0;
+  --red:#e02828;--red-dark:#980808;--red-light:#f8b0b0;
+  --sky:#2868d8;--sky-dark:#0840a8;--sky-light:#a8c8f8;
+  --text:#0c0820;--text-soft:#302048;
+  --shadow-sm:0 4px 16px rgba(72,8,160,0.12);
+  --shadow-md:0 8px 32px rgba(72,8,160,0.16);
+  --shadow-lg:0 16px 48px rgba(72,8,160,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 7% 10%,rgba(120,40,208,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 93% 82%,rgba(24,152,152,0.14) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(216,144,32,0.09) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--violet-dark),var(--teal-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--violet-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(72,8,160,0.09);color:var(--violet-dark);border:1.5px solid rgba(72,8,160,0.24)}
+.act-banner.act2{background:rgba(10,88,88,0.09);color:var(--teal-dark);border:1.5px solid rgba(10,88,88,0.24)}
+.act-banner.act3{background:rgba(136,96,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(136,96,0,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(120,40,208,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet-dark),var(--teal-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(72,8,160,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(120,40,208,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--violet-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(120,40,208,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(120,40,208,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--violet-dark);background:rgba(120,40,208,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.teal{color:var(--teal-dark);background:rgba(10,88,88,0.09)}
+.stage-label.gold{color:var(--gold-dark);background:rgba(136,96,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(120,40,208,0.09),rgba(24,152,152,0.07));border:1.5px solid rgba(120,40,208,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--violet-dark);font-style:normal}
+.story-box p span.gold{color:var(--gold-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(224,40,40,0.10),rgba(120,40,208,0.09));border:2px solid rgba(224,40,40,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--red-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* NEGATIVE SELF-TALK SELECTION */
+.thought-chips{display:flex;flex-direction:column;gap:10px;margin:18px 0 26px}
+.thought-chip{background:var(--bg);border:2px solid rgba(120,40,208,0.20);border-radius:var(--radius-sm);padding:13px 18px;cursor:pointer;transition:var(--t);font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:12px;position:relative}
+.thought-chip:hover{transform:translateX(3px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.thought-chip .tc-icon{font-size:20px;flex-shrink:0}
+.thought-chip.tc-negative{border-color:var(--coral-dark);background:linear-gradient(135deg,rgba(224,80,72,0.10),rgba(224,40,40,0.07));box-shadow:0 0 0 3px rgba(160,24,40,0.12),var(--shadow-sm);animation:correctPop 0.35s ease}
+.thought-chip.tc-balanced{border-color:var(--teal-dark);background:linear-gradient(135deg,rgba(24,152,152,0.10),rgba(24,200,112,0.07));animation:correctPop 0.35s ease}
+.thought-chip.tc-wrong{border-color:var(--gold-dark);background:rgba(216,144,32,0.07);animation:wrongShake 0.4s ease}
+.tc-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:900;padding:3px 9px;border-radius:999px}
+.tc-negative .tc-badge{background:var(--coral-dark);color:#fff}
+.tc-balanced .tc-badge{background:var(--teal-dark);color:#fff}
+
+/* THOUGHT TRAP MATCHING */
+.trap-match-wrap{margin:18px 0 24px;display:flex;flex-direction:column;gap:14px}
+.trap-scenario{background:linear-gradient(135deg,rgba(224,40,40,0.08),rgba(120,40,208,0.07));border:1.5px solid rgba(224,40,40,0.22);border-radius:var(--radius-sm);padding:16px 18px}
+.trap-thought{font-size:14.5px;font-weight:900;color:var(--red-dark);margin-bottom:12px;font-style:italic}
+.trap-opts{display:flex;flex-direction:column;gap:8px}
+.trap-opt{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid rgba(120,40,208,0.18);border-radius:10px;padding:10px 14px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);text-align:left;width:100%}
+.trap-opt:hover{border-color:var(--violet);color:var(--text);transform:translateX(3px)}
+.trap-opt .to-icon{font-size:18px;flex-shrink:0}
+.trap-opt.to-correct{border-color:var(--teal-dark);background:rgba(24,152,152,0.10);color:var(--teal-dark);cursor:default;animation:correctPop 0.35s ease}
+.trap-opt.to-wrong{border-color:var(--coral-dark);background:rgba(224,80,72,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.trap-opt.to-reveal{border-color:var(--teal-dark);background:rgba(24,152,152,0.07);cursor:default;opacity:0.8}
+
+/* DUAL METER */
+.dual-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(120,40,208,0.07),rgba(24,200,112,0.06));border:1.5px solid rgba(120,40,208,0.20);border-radius:var(--radius-sm);padding:24px}
+.dual-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.dual-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.dual-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--violet-dark);box-shadow:0 3px 14px rgba(72,8,160,0.36);cursor:pointer;transition:transform 0.2s ease}
+.dual-slider::-webkit-slider-thumb:hover,.dual-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.dual-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--violet-dark);cursor:pointer}
+.dual-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dual-bar-side{padding:16px;border-radius:var(--radius-sm);border:2px solid}
+.dual-bar-side.neg-side{border-color:rgba(160,24,40,0.28);background:rgba(232,80,72,0.07)}
+.dual-bar-side.sup-side{border-color:rgba(10,88,88,0.28);background:rgba(24,152,152,0.07)}
+.dbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dbs-emoji{font-size:24px}
+.dbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.dbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.dbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.neg-side .dbs-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 6px rgba(160,24,40,0.28)}
+.sup-side .dbs-fill{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark));box-shadow:0 2px 6px rgba(10,88,88,0.28)}
+.dbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.neg-side .dbs-pct{color:var(--coral-dark)}
+.sup-side .dbs-pct{color:var(--teal-dark)}
+.dbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:36px}
+
+/* EMOTION SHIFT */
+.emotion-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 24px}
+.emo-side{border-radius:var(--radius-sm);padding:20px 18px;border:2px solid}
+.emo-side.harsh-side{border-color:rgba(160,24,40,0.26);background:rgba(232,80,72,0.07)}
+.emo-side.balanced-side{border-color:rgba(10,88,88,0.26);background:rgba(24,152,152,0.07)}
+.emo-side-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
+.harsh-side .emo-side-title{color:var(--coral-dark)}
+.balanced-side .emo-side-title{color:var(--teal-dark)}
+.emo-thought{font-size:13px;font-weight:800;font-style:italic;margin-bottom:12px;line-height:1.45;color:var(--text)}
+.emo-result{font-size:13.5px;font-weight:900;margin-bottom:10px}
+.harsh-side .emo-result{color:var(--coral-dark)}
+.balanced-side .emo-result{color:var(--teal-dark)}
+.emo-bar-wrap{margin-top:10px}
+.emo-bar-label{font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:4px}
+.emo-bar-track{height:10px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06)}
+.emo-bar-fill{height:100%;border-radius:999px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.harsh-side .emo-bar-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark))}
+.balanced-side .emo-bar-fill{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark))}
+
+/* SCENARIO BUTTONS */
+.scenario-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.scenario-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(120,40,208,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.scenario-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.scenario-btn .sb-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease}
+.scenario-btn:hover .sb-icon{transform:scale(1.10)}
+.scenario-btn .sb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.scenario-btn .sb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.scenario-btn.sel-harmful{border-color:var(--coral-dark);background:rgba(232,80,72,0.08);animation:wrongShake 0.4s ease}
+.scenario-btn.sel-ok{border-color:var(--gold-dark);background:rgba(216,144,32,0.09);animation:correctPop 0.4s ease}
+.scenario-btn.sel-best{border-color:var(--teal-dark);background:rgba(24,152,152,0.09);animation:correctPop 0.4s ease}
+
+/* METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(120,40,208,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.neg-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 8px rgba(160,24,40,0.28)}
+.meter-fill.sup-fill{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark));box-shadow:0 2px 8px rgba(10,88,88,0.28)}
+.meter-fill.conf-fill{background:linear-gradient(90deg,var(--sky-light),var(--sky-dark));box-shadow:0 2px 8px rgba(8,64,168,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(232,80,72,0.09);border:1.5px solid rgba(160,24,40,0.22)}
+.outcome-box.ok{background:rgba(216,144,32,0.10);border:1.5px solid rgba(136,96,0,0.22)}
+.outcome-box.best{background:rgba(24,152,152,0.09);border:1.5px solid rgba(10,88,88,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(120,40,208,0.08),rgba(24,152,152,0.07),rgba(24,200,112,0.06));border:2px solid rgba(120,40,208,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(120,40,208,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,200,112,0.10),rgba(24,152,152,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--violet-dark);padding:2px 0}
+
+/* COACH vs CRITIC SORT */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;padding:14px 16px;background:rgba(120,40,208,0.06);border:2px dashed rgba(120,40,208,0.26);border-radius:var(--radius-sm);min-height:52px}
+.sort-chip{background:#fff;border:2px solid rgba(120,40,208,0.22);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-chip:hover{border-color:var(--violet-dark);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.sort-chip.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.sort-zone.zone-critic{border-color:rgba(160,24,40,0.32);background:rgba(232,80,72,0.07)}
+.sort-zone.zone-coach{border-color:rgba(10,88,88,0.30);background:rgba(24,152,152,0.07)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-critic .sz-title{color:var(--coral-dark)}
+.sort-zone.zone-coach .sz-title{color:var(--teal-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:4px}
+.sz-remove{cursor:pointer;font-size:13px;color:var(--text-soft);transition:color 0.2s}
+.sz-remove:hover{color:var(--coral-dark)}
+
+/* LAYLA SCENARIO */
+.layla-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.layla-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(120,40,208,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.layla-btn:hover{border-color:var(--violet);transform:translateX(3px)}
+.layla-btn .lb-icon{font-size:24px;flex-shrink:0}
+.layla-btn .lb-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.layla-btn .lb-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.layla-btn.lb-correct{border-color:var(--teal-dark);background:rgba(24,152,152,0.10);animation:correctPop 0.4s ease}
+.layla-btn.lb-incorrect{border-color:var(--coral-dark);background:rgba(232,80,72,0.08);animation:wrongShake 0.4s ease}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(120,40,208,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--violet);background:rgba(120,40,208,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--teal-dark);background:rgba(24,152,152,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(232,80,72,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--teal-dark);background:rgba(24,152,152,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(24,152,152,0.16);color:#0a4848}
+.quiz-feedback.q-fb-incorrect{background:rgba(232,80,72,0.12);color:#800010}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(24,152,152,0.13);color:#0a4848;border:1.5px solid rgba(10,88,88,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(232,80,72,0.10);color:#800010;border:1.5px solid rgba(160,24,40,0.22)}
+.feedback-msg.info-msg{background:rgba(72,8,160,0.08);color:var(--violet-dark);border:1.5px solid rgba(72,8,160,0.20)}
+.feedback-msg.violet-msg{background:rgba(72,8,160,0.08);color:var(--violet-dark);border:1.5px solid rgba(72,8,160,0.22)}
+.feedback-msg.gold-msg{background:rgba(136,96,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(136,96,0,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(120,40,208,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(48,32,72,0.38)}
+.reflection-input:focus{border-color:var(--violet-dark);box-shadow:0 0 0 3px rgba(72,8,160,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--teal-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--violet-dark),var(--teal-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(72,8,160,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(72,8,160,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(120,40,208,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(120,40,208,0.08);border-color:var(--violet-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(120,40,208,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--violet-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(120,40,208,0.18);border-radius:999px}
+
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(216,144,32,0.14),rgba(120,40,208,0.11));border:1.5px solid rgba(216,144,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(120,40,208,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(245,240,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(120,40,208,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(120,40,208,0.06),rgba(24,152,152,0.05),rgba(24,200,112,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .dual-bars{grid-template-columns:1fr}
+  .emotion-compare{grid-template-columns:1fr}
+  .sort-zones{grid-template-columns:1fr}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🟣 Inner Voice Lab</div>
+    <h1>The <span>Self-Talk Makeover</span></h1>
+    <p>Catch harsh thoughts - Rewrite your story - Build powerful self-belief</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🧠</div>
+    <h2>Inner Voice Upgraded!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. Your inner voice is now your coach - not your critic. That changes everything.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Thought Catcher</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🎙️</span><div class="b-title">Inner Coach Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">⭐</span><div class="b-title">Self-Belief Booster</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let negSel       = new Set();
+let negOk        = false;
+let trapAnswers  = {};
+let dualLevel    = 85;
+let emoShown     = false;
+let selfTk1Id    = null;
+let selfTk1Lock  = false;
+let rewriteText  = '';
+let rewriteValid = false;
+let upgradeText  = '';
+let upgradeValid = false;
+let reflectText  = '';
+let reflectValid = false;
+let laylaDone1   = false;
+let laylaDone2   = false;
+let laylaDone3   = false;
+let laylaCount1  = 0;
+let sortPlac     = {};
+let sortSel      = null;
+let quizAnswers  = {};
+
+const thoughtItems = [
+  {id:'missed',    text:'"I missed one shot."',                icon:'⚽', mode:'balanced'},
+  {id:'terrible',  text:'"I\'m terrible at everything."',      icon:'😰', mode:'negative'},
+  {id:'tryagain',  text:'"I can try again."',                  icon:'💪', mode:'balanced'},
+  {id:'alwfail',   text:'"I always fail."',                    icon:'😔', mode:'negative'},
+  {id:'didntgo',   text:'"That didn\'t go well."',             icon:'🤔', mode:'balanced'}
+];
+
+const dualStates = [
+  {range:[0,18],   nLabel:'Minimal', sLabel:'Very Strong', nMood:'Harsh self-talk essentially silent. Mind supportive and curious. Self-esteem fully available.', sMood:'Peak inner coach. Thoughts are accurate, kind, and forward-focused. Emotional resilience very high.'},
+  {range:[19,38],  nLabel:'Low', sLabel:'Strong', nMood:'Mild self-criticism present but not dominant. Balanced perspective largely intact.', sMood:'Good inner coach access. Able to see setbacks realistically without catastrophising. Confidence accessible.'},
+  {range:[39,58],  nLabel:'Moderate', sLabel:'Reduced', nMood:'Noticeable harsh self-talk. Some distortions active. Self-esteem under pressure.', sMood:'Supportive voice still accessible with effort. This is where self-talk tools have the most immediate impact.'},
+  {range:[59,78],  nLabel:'High', sLabel:'Low', nMood:'Strong negative self-talk dominant. Thought distortions active: exaggeration, absolute language, mind reading. Shame rising.', sMood:'Inner coach largely drowned out. Supportive perspective requires deliberate effort to access. CBT tools urgently useful.'},
+  {range:[79,100], nLabel:'Maximum', sLabel:'Minimal', nMood:'Extreme negative self-talk. Global identity attacks ("I am terrible", "I always fail") running without challenge. Severe emotional impact.', sMood:'Supportive inner voice almost inaccessible without active intervention. This is the highest-impact zone for self-talk training.'}
+];
+
+const selfTalkOptions = [
+  {
+    id:'awful', icon:'🔴', text:'"I\'m awful at football. I should just quit."', sub:'Global identity attack - extends the mistake to permanent inadequacy',
+    quality:'harmful', negL:92, supL:8,
+    outcome:{title:'The Identity Attack', body:'Saying "I\'m awful at football" transforms a single missed shot into a verdict on Ayaan\'s entire ability. This is the cognitive distortion of All-or-Nothing thinking: one failure becomes evidence of total failure. "Should just quit" adds a behavioural consequence to the identity attack, removing any possibility of growth. The brain hears this statement and processes it as factual self-assessment - not as a frustrated emotional response. Repeated often enough, it becomes the default story about ability.', tip:'CBT principle: Cognitive distortions are biased patterns of thinking that the brain accepts as accurate. Identifying them by name (All-or-Nothing, Overgeneralizing) reduces their psychological power by inserting a layer of critical evaluation between the thought and the emotional response it would otherwise trigger automatically.'}
+  },
+  {
+    id:'great', icon:'🟡', text:'"That wasn\'t my best - it happened."', sub:'Accurate observation - specific to the event, not generalised to identity',
+    quality:'ok', negL:42, supL:56,
+    outcome:{title:'Accurate But Incomplete', body:'"That wasn\'t my best - it happened" is a significant improvement over an identity attack. It stays specific (this shot), acknowledges the reality without exaggeration, and does not collapse into global conclusions. The weakness is that it stops at neutral acknowledgement without offering any forward motion - no learning, no encouragement, no direction. It prevents shame but does not actively build confidence or suggest what comes next.', tip:'Principle: Balanced self-talk has two components - accurate acknowledgement of what happened, and forward orientation toward what is possible next. Neutral acknowledgement alone is an important step, but the full inner coach sequence also includes a growth-directed next step.'}
+  },
+  {
+    id:'scored', icon:'🟢', text:'"I missed this one shot. I\'ve scored before and I can practise to get better."', sub:'Specific, balanced, evidence-based, and forward-focused - the full inner coach response',
+    quality:'best', negL:18, supL:88,
+    outcome:{title:'The Full Inner Coach Response', body:'"I missed this one shot" is specific - not global. "I\'ve scored before" provides counter-evidence against the distorted identity attack, recruited directly from actual experience. "I can practise to get better" adds a growth-oriented direction that treats the missed shot as information (practice is needed) rather than verdict (I am hopeless). Together, these three components demonstrate exactly what the inner coach sounds like: honest, fair, and forward-looking.', tip:'Research: Cognitive reappraisal - the deliberate reframing of an emotional event using more accurate, balanced language - is one of the most empirically supported emotion regulation strategies. Research consistently shows it produces significant reductions in negative affect while maintaining honest engagement with reality.'}
+  }
+];
+
+const coachCriticItems = [
+  {id:'always',    text:'"You always ruin things."',                zone:'critic'},
+  {id:'tryhard',   text:'"This is hard, but you can handle it."',  zone:'coach'},
+  {id:'useless',   text:'"You\'re so useless at this."',           zone:'critic'},
+  {id:'specific',  text:'"That specific part went wrong - you can fix it."', zone:'coach'},
+  {id:'stupid',    text:'"How could you be so stupid?"',           zone:'critic'},
+  {id:'proud',     text:'"You gave it a real go, that takes courage."', zone:'coach'},
+  {id:'worthless', text:'"Nobody wants you around."',              zone:'critic'},
+  {id:'progress',  text:'"Every mistake is part of learning."',    zone:'coach'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is self-talk, and why does it matter so much for emotions?',
+    options:[
+      {icon:'💬', text:'Self-talk is the continuous stream of thoughts and inner commentary we direct at ourselves - and because the brain processes it as factual self-assessment, it has direct and measurable effects on emotions, confidence, and behaviour', correct:true},
+      {icon:'🎭', text:'Self-talk is only important if spoken aloud - internal thoughts have no significant impact on how we feel or how we perform', correct:false},
+      {icon:'🧬', text:'Self-talk is largely determined by personality and genetics - the words we use about ourselves cannot be significantly changed through practice', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. Self-talk is the internal commentary the brain generates about the self, events, and the future. Crucially, the brain processes self-directed statements with similar neural mechanisms to externally received information - which is why being repeatedly told "you\'re terrible" by someone else and repeatedly thinking "I\'m terrible" about yourself produce surprisingly similar psychological effects. Self-talk is not a neutral narrator; it is an active architect of emotional experience and self-concept.',
+      incorrect:'Not quite. Internal self-talk - even when never spoken aloud - has substantial and well-documented effects on emotions, confidence, and performance. The brain processes self-directed thoughts as information about the self, and repeated patterns of self-talk shape the neural connections underlying self-concept. Cognitive-behavioral therapy is one of the most empirically supported psychological treatments precisely because changing the patterns of internal self-talk produces measurable changes in emotional experience and behaviour.'
+    }
+  },
+  {
+    q:'Question 2: What specific features make a thought unhelpful or psychologically harmful?',
+    options:[
+      {icon:'😔', text:'Any thought that mentions something negative or difficult is unhelpful - only positive thoughts support wellbeing', correct:false},
+      {icon:'🔍', text:'Thoughts become unhelpful when they use absolute language ("always", "never"), attack identity rather than behaviour, exaggerate evidence, or assume others\' thoughts without evidence', correct:true},
+      {icon:'😐', text:'Thoughts are unhelpful only if they make us feel sad - thoughts that produce anger or anxiety are not psychologically significant', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. Unhelpful thoughts share specific structural features that distinguish them from accurate, balanced thinking. Absolute language ("always", "never", "everyone") treats rare or complex patterns as universal facts. Identity attacks ("I am terrible") are more harmful than behavioural observations ("that specific thing went wrong"). Exaggeration inflates the significance or permanence of events. Mind reading assumes others\' negative thoughts without evidence. Identifying these specific features - rather than simply labelling thoughts as "negative" - is the skill that makes cognitive restructuring actually effective.',
+      incorrect:'Not quite. What makes thoughts unhelpful is not that they acknowledge negative realities - accurate recognition of difficulties is important. What makes them harmful is specific distortion: absolute language, identity attacks, exaggeration, and mind reading. A thought can be genuinely negative ("this is difficult") and still be accurate and helpful. A thought can seem positive but be distorted ("I never make mistakes"). The quality that matters is accuracy and fairness, not simply positive or negative valence.'
+    }
+  },
+  {
+    q:'Question 3: Why is balanced thinking more powerful than simply thinking positively?',
+    options:[
+      {icon:'✨', text:'Positive thinking is always better than balanced thinking - the more positive the thought, the better the psychological outcome', correct:false},
+      {icon:'🎯', text:'Balanced thinking is more powerful because the brain can verify it against real experience - it builds genuine confidence through accurate evidence rather than pleasant fiction', correct:true},
+      {icon:'😐', text:'Balanced thinking and positive thinking produce identical outcomes - the distinction between them is just philosophical, not practical', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. This is one of the most important insights in cognitive-behavioral psychology. Forced positive thinking ("I am amazing at everything") often backfires because the brain can identify its inaccuracy, leading to credibility collapse: if the brain does not believe the positive thought, the thought loses its power and may trigger a rebound toward cynicism. Balanced thinking ("I missed that shot AND I have scored before AND I can practise") works because every component can be verified against actual experience. The brain builds genuine confidence from real evidence - not from pleasant fiction that does not match what it actually knows.',
+      incorrect:'Not quite. Research consistently shows that unconditionally positive self-talk is often less effective than balanced self-talk - particularly for people who have high self-awareness and can detect inaccuracy. The brain evaluates self-directed statements for credibility. When a positive statement is not believable ("I\'m perfect at this"), the brain may reject it entirely, leaving the person with no effective self-talk at all. Balanced thinking works precisely because it is verifiable: "I missed this shot" (true) "but I have scored before" (also true) "and I can practise" (also true). Real confidence is built on real evidence.'
+    }
+  }
+];
+
+const laylaSteps = {
+  harsh: [
+    {id:'dumb',    text:'"I am so stupid. I will never be good at this subject."', correct:true},
+    {id:'disapp',  text:'"I am disappointed with this grade."', correct:false},
+    {id:'try2',    text:'"I can ask for help and do better next time."', correct:false}
+  ],
+  distort: [
+    {id:'aon',     text:'All-or-Nothing: one grade becomes evidence of total failure forever', correct:true},
+    {id:'mind',    text:'Mind Reading: assuming the teacher thinks she is unintelligent', correct:false},
+    {id:'over',    text:'Overgeneralizing: one bad result means all future results will be bad', correct:false}
+  ],
+  rewrite: [
+    {id:'smart',   text:'"Successful people always get top grades. I must not be smart."', correct:false},
+    {id:'honest',  text:'"I got a lower grade this time. That tells me something needs more work. I can ask questions and practise the parts I found hard."', correct:true},
+    {id:'forget',  text:'"It was just one test. It doesn\'t matter at all."', correct:false}
+  ]
+};
+
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🟣', 2:'🔵', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getDualState(v) {
+  return dualStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(n) {
+  var pct = Math.round(((n - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + n + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ===== STAGES ===== */
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Catch the Inner Voice') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #013</div>' +
+    '<h2>The Voice in Your Head Is Training You Every Day</h2>' +
+    '<p>Welcome to the Self-Talk Makeover Lab. Every single day, the mind runs a continuous commentary - about what just happened, about what others think, about what mistakes mean, about who you are. This commentary is self-talk. And unlike a real voice you can turn off, self-talk is always running. The brain processes what it says to itself with remarkable literalness: the difference between "I made a mistake" and "I am a mistake" is the difference between information and identity - but both are processed with equal seriousness.</p>' +
+    '<div class="story-box" data-icon="⚽">' +
+      '<p><span>Ayaan</span> is ten years old and loves football. During practice, he has a clear shot at goal from close range - and he misses it cleanly. The goalkeeper did not even have to move. Before the ball has stopped rolling, the self-talk has already started:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"I\'m terrible. I always mess up the easy ones. Everyone is watching and they all think I\'m bad at this. Why do I even bother?"</p></div>' +
+    '<p>None of these statements are accurate. But accuracy is not what gives them their power. Their power comes from repetition - and from the brain\'s tendency to accept self-directed statements as factual self-assessment without scrutiny. Ayaan\'s inner voice is currently working against him. The good news: that voice can be retrained.</p>' +
+    '<div class="feedback-msg info-msg">🧠 <strong>Core concept:</strong> Self-talk is not a reflection of reality - it is a habit of mind. Harsh, exaggerated, identity-based self-talk is a learned pattern, not a verdict. It can be caught, examined, and rewritten with specific skills. Cognitive-behavioral therapy is built on precisely this insight: changing the pattern of self-talk produces measurable, lasting changes in emotions and behaviour.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin the Makeover</button>' +
+  '</div>';
+}
+
+function s2() {
+  negSel = new Set(); negOk = false;
+  var chips = thoughtItems.map(function(t) {
+    return '<div class="thought-chip" id="thc-' + t.id + '" onclick="toggleNeg(\'' + t.id + '\',\'' + t.mode + '\')">' +
+      '<span class="tc-icon">' + t.icon + '</span>' +
+      '<span>' + t.text + '</span>' +
+      '<span class="tc-badge"></span>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Catch the Inner Voice') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Spot Negative Self-Talk</div>' +
+    '<h2>Which Thoughts Are Harsh or Exaggerated?</h2>' +
+    '<p>Not all difficult thoughts are harmful. A thought that is accurate and specific ("that didn\'t go well") is very different from a thought that is exaggerated and global ("I always fail"). The specific, accurate thought carries useful information. The exaggerated, global thought carries distortion - and distortion is what makes self-talk harmful.</p>' +
+    '<p>Click each thought to classify it. Identify which ones are harsh or exaggerated (negative self-talk) and which are balanced observations.</p>' +
+    '<div class="thought-chips">' + chips + '</div>' +
+    '<div id="negFeedback"></div>' +
+    '<button class="btn-primary" id="negNextBtn" onclick="renderStage(3)" disabled>Next: Thought Trap Detector -></button>' +
+  '</div>';
+}
+
+function s3() {
+  trapAnswers = {};
+  var traps = [
+    {id:'trap1', thought:'"I\'m terrible at everything."', opts:[
+      {id:'aon', label:'All-or-Nothing', desc:'One failure = total failure, no middle ground', correct:true},
+      {id:'mr',  label:'Mind Reading', desc:'Assuming others\' negative thoughts without evidence', correct:false},
+      {id:'og',  label:'Overgeneralizing', desc:'One event = universal pattern forever', correct:false}
+    ]},
+    {id:'trap2', thought:'"I always mess up."', opts:[
+      {id:'aon2', label:'All-or-Nothing', desc:'Seeing one failure as complete failure', correct:false},
+      {id:'og2',  label:'Overgeneralizing', desc:'"Always" turns one event into a permanent global pattern', correct:true},
+      {id:'mr2',  label:'Mind Reading', desc:'Assuming others\' thoughts without evidence', correct:false}
+    ]},
+    {id:'trap3', thought:'"Everyone thinks I\'m bad."', opts:[
+      {id:'og3',  label:'Overgeneralizing', desc:'Extending one mistake to all situations', correct:false},
+      {id:'aon3', label:'All-or-Nothing', desc:'Thinking in black and white extremes', correct:false},
+      {id:'mr3',  label:'Mind Reading', desc:'Claiming certain knowledge of what "everyone" thinks - without evidence', correct:true}
+    ]}
+  ];
+  var rows = traps.map(function(trap) {
+    var optBtns = trap.opts.map(function(opt) {
+      return '<button class="trap-opt" id="to-' + trap.id + '-' + opt.id + '" onclick="answerTrap(\'' + trap.id + '\',\'' + opt.id + '\',' + opt.correct + ')">' +
+        '<span class="to-icon">🎯</span>' + '<strong>' + opt.label + '</strong> - ' + opt.desc +
+      '</button>';
+    }).join('');
+    return '<div class="trap-scenario">' +
+      '<div class="trap-thought">Thought: ' + trap.thought + '</div>' +
+      '<div class="trap-opts">' + optBtns + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Catch the Inner Voice') +
+    backBtn(2,'Back to Negative Self-Talk') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Thought Trap Detector</div>' +
+    '<h2>Name the Distortion, Break Its Power</h2>' +
+    '<p>Cognitive-behavioral psychology identifies specific patterns of distorted thinking - "thought traps" - that make self-talk harmful. Naming a thought trap does not make the thought disappear. But it inserts a critical layer between the thought and the emotional response: "That\'s All-or-Nothing thinking" is significantly harder for the brain to treat as factual self-assessment than "I\'m terrible at everything."</p>' +
+    '<div class="feedback-msg info-msg">📚 <strong>The three traps:</strong><br/>' +
+    '<strong>All-or-Nothing:</strong> Seeing in extremes - perfect or failure, no middle ground<br/>' +
+    '<strong>Overgeneralizing:</strong> One event becomes a permanent universal pattern ("always", "never")<br/>' +
+    '<strong>Mind Reading:</strong> Assuming you know what others think - always negatively' +
+    '</div>' +
+    '<div class="trap-match-wrap">' + rows + '</div>' +
+    '<div id="trapFeedback"></div>' +
+    '<button class="btn-primary" id="trapNextBtn" onclick="renderStage(4)" disabled>Next: Negative vs Supportive Meter -></button>' +
+  '</div>';
+}
+
+function s4() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Catch the Inner Voice') +
+    backBtn(3,'Back to Thought Traps') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Negative vs Supportive Meter</div>' +
+    '<h2>The Inner Voice Meter</h2>' +
+    '<p>Negative self-talk and supportive self-talk exist on an inverse spectrum. As the harsh inner critic gets louder, the supportive inner coach gets quieter - and the emotional experience shifts accordingly. Understanding where Ayaan is on this meter right now - and what moves the needle in each direction - is the foundation of the self-talk makeover.</p>' +
+    '<div class="dual-meter-wrap">' +
+      '<div class="dual-slider-labels"><span>💪 Full Support</span><span>⚖️ Balanced</span><span>🌧️ Full Negative</span></div>' +
+      '<input type="range" class="dual-slider" id="dualSl" min="0" max="100" value="85" oninput="updateDual(this.value)"/>' +
+      '<div class="dual-bars">' +
+        '<div class="dual-bar-side neg-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🌧️</span><span class="dbs-title">Negative Self-Talk</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="negFill" style="width:85%"></div></div>' +
+          '<div class="dbs-pct" id="negPct">85%</div>' +
+          '<div class="dbs-mood" id="negMood">Loading...</div>' +
+        '</div>' +
+        '<div class="dual-bar-side sup-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">☀️</span><span class="dbs-title">Supportive Self-Talk</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="supFill" style="width:15%"></div></div>' +
+          '<div class="dbs-pct" id="supPct">15%</div>' +
+          '<div class="dbs-mood" id="supMood">Loading...</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg violet-msg">🎯 <strong>Ayaan\'s state:</strong> "I\'m terrible" + "I always mess up" + "everyone thinks I\'m bad" - three simultaneous active distortions after a single missed shot - places most people at Maximum Negative Self-Talk. This is the highest-impact zone for the self-talk makeover because the distance between current thinking and accurate thinking is greatest, and the emotional consequences of the distortion are most severe.</div>' +
+    '<button class="btn-primary" onclick="renderStage(5)">Next: Emotion Shift Visualization -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Catch the Inner Voice') +
+    backBtn(4,'Back to Negative Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Emotion Shift</div>' +
+    '<h2>The Same Event, Two Completely Different Experiences</h2>' +
+    '<p>The missed shot is the same in both cases below. The event does not change. What changes is the self-talk that the brain generates about the event. And that change in self-talk produces entirely different emotional experiences - affecting confidence, shame, motivation, and how Ayaan will approach the next opportunity. The thought is the lever. Changing the thought changes everything downstream.</p>' +
+    '<div class="emotion-compare">' +
+      '<div class="emo-side harsh-side">' +
+        '<div class="emo-side-title">Harsh Inner Critic</div>' +
+        '<div class="emo-thought">"I\'m terrible. I always mess up. Everyone thinks I\'m bad."</div>' +
+        '<div class="emo-result">Shame rises sharply</div>' +
+        '<div class="emo-bar-wrap"><div class="emo-bar-label">Shame Level</div><div class="emo-bar-track"><div class="emo-bar-fill" id="shameBar" style="width:0%"></div></div></div>' +
+        '<div class="emo-bar-wrap" style="margin-top:8px"><div class="emo-bar-label">Confidence Level</div><div class="emo-bar-track"><div class="emo-bar-fill" id="confBarH" style="width:0%;background:linear-gradient(90deg,var(--sky-light),var(--sky-dark))"></div></div></div>' +
+        '<div style="margin-top:10px;font-size:12.5px;font-weight:700;color:var(--coral-dark)">Likely outcome: avoidance of next attempt, withdrawal, practice declines</div>' +
+      '</div>' +
+      '<div class="emo-side balanced-side">' +
+        '<div class="emo-side-title">Supportive Inner Coach</div>' +
+        '<div class="emo-thought">"I missed that shot. I\'ve scored before. I can practise and improve."</div>' +
+        '<div class="emo-result">Confidence maintained</div>' +
+        '<div class="emo-bar-wrap"><div class="emo-bar-label">Shame Level</div><div class="emo-bar-track"><div class="emo-bar-fill" id="shameBarB" style="width:0%;background:linear-gradient(90deg,var(--coral-light),var(--coral-dark))"></div></div></div>' +
+        '<div class="emo-bar-wrap" style="margin-top:8px"><div class="emo-bar-label">Confidence Level</div><div class="emo-bar-track"><div class="emo-bar-fill" id="confBarB" style="width:0%"></div></div></div>' +
+        '<div style="margin-top:10px;font-size:12.5px;font-weight:700;color:var(--teal-dark)">Likely outcome: continued effort, specific practice targeted, improvement accelerates</div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="emoNextWrap">' +
+      '<div class="feedback-msg violet-msg" id="emoInfo">Click below to see the emotion shift play out in real time.</div>' +
+      '<button class="btn-primary" id="emoBtn" onclick="animateEmo()">Show the Emotion Shift</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {icon:'🔍', title:'Catch the Thought', desc:'"I\'m terrible." "I always mess up." "Everyone thinks I\'m bad." Notice that the thought has arrived. Name it. Give it just enough distance to examine it rather than automatically believing it.'},
+    {icon:'🔬', title:'Check the Facts', desc:'Is "terrible" an accurate description, or a distorted one? Have there been times I played well? Does "everyone" literally mean every single person? Is "always" actually always? The facts are almost always less extreme than the distortion.'},
+    {icon:'✏️', title:'Rewrite Fairly', desc:'"I missed that shot." Specific, not global. Temporary, not permanent. Behavioural, not identity. This version can be verified, which is why it builds genuine confidence - unlike forced positivity the brain cannot believe.'},
+    {icon:'🎙️', title:'Speak Like a Coach, Not a Critic', desc:'A good coach says: "You missed that one - here is what we can work on." A good coach does not say: "You are terrible and you always mess up." Your inner voice should meet the standard of the best coach you can imagine.'}
+  ];
+  var rows = steps.map(function(s, i) {
+    return '<div class="formula-row" style="animation-delay:' + (i*0.09) + 's"><span class="fr-icon">' + s.icon + '</span><div><div class="fr-title">' + s.title + '</div><div class="fr-desc">' + s.desc + '</div></div></div>';
+  }).join('<div class="formula-arrow">↓</div>');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Catch the Inner Voice') +
+    backBtn(5,'Back to Emotion Shift') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - Makeover Formula</div>' +
+    '<h2>The Four-Step Self-Talk Makeover Formula</h2>' +
+    '<p>The Self-Talk Makeover is not about positive thinking. It is about accurate thinking. The goal is not to replace "I\'m terrible" with "I\'m amazing" - because the brain knows the second statement is not more true than the first. The goal is to replace distorted thinking with fair, specific, verifiable thinking that the brain can actually use to build genuine self-belief.</p>' +
+    '<div class="formula-box">' + rows + '<div class="formula-row formula-result" style="margin-top:12px"><span class="fr-icon">⭐</span><div><div class="fr-title">Genuine Self-Belief</div><div class="fr-desc">Built from real evidence. Verified against actual experience. Not dependent on outcomes being perfect. Not crushed by a single setback. This is the difference between a confident person and a fragile one: not that the confident person never fails, but that their inner voice does not transform every failure into an identity verdict.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg gold-msg">🏅 <strong>Badge Progress:</strong> Thought Catcher Level 1 - almost earned! Continue to Act 2 to rewrite the story...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Rewrite the Story -></button>' +
+  '</div>';
+}
+
+function s7() {
+  selfTk1Id = null; selfTk1Lock = false;
+  var btns = selfTalkOptions.map(function(o) {
+    return '<button class="scenario-btn" id="st1-' + o.id + '" onclick="chooseSelfTk1(\'' + o.id + '\')">' +
+      '<span class="sb-icon">' + o.icon + '</span>' +
+      '<div><div class="sb-text">' + o.text + '</div><div class="sb-sub">' + o.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewrite the Story') +
+    backBtn(6,'Back to Formula') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 7 - Choose Better Self-Talk</div>' +
+    '<h2>What Should Ayaan Say to Himself?</h2>' +
+    '<p>Ayaan has just missed the shot. The harsh inner critic has fired its first volley. Now, three inner voice options are available. Each represents a different relationship between the self and the mistake - and each will produce dramatically different emotional and behavioural consequences. Choose the one that reflects the best inner coach response and watch the meters respond.</p>' +
+    '<div class="scenario-options">' + btns + '</div>' +
+    '<div id="st1Outcome"></div>' +
+    '<div id="st1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Practise the Rewrite -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  rewriteValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewrite the Story') +
+    backBtn(7,'Back to Self-Talk Choice') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 8 - Rewrite Builder</div>' +
+    '<h2>Rewrite "I Always Mess Up"</h2>' +
+    '<p>The phrase "I always mess up" is a textbook Overgeneralizing thought trap. "Always" is absolute language that turns one missed shot into a permanent universal verdict. The rewrite does not pretend the mistake did not happen - it states what actually happened, accurately and specifically, and then points toward what is possible next.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your rewrite should include three components:<br/>' +
+      '<strong>Specific event:</strong> What actually happened, accurately and precisely - no exaggeration<br/>' +
+      '<strong>Balanced perspective:</strong> Counter-evidence or a realistic view that corrects the distortion<br/>' +
+      '<strong>Forward action:</strong> What Ayaan can do next - the growth direction' +
+    '</div>' +
+    '<label class="input-label">Instead of saying "I always mess up," Ayaan could say...</label>' +
+    '<textarea class="reflection-input" id="rewriteInput" oninput="checkRewrite(this.value)" placeholder="For example: I missed that particular shot in today\'s practice. Missing one shot is not the same as always messing up - I have had good shots before and will again. I am going to ask the coach which part of my technique to work on so I can practise specifically..." rows="5"></textarea>' +
+    '<div class="char-counter" id="rewriteCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg violet-msg" style="margin-bottom:16px">🧠 <strong>Why specificity is the key:</strong> "I always mess up" has three levels of distortion: frequency ("always"), scope ("mess up" instead of "missed that shot"), and permanence (implied future pattern). Each level can be corrected individually with specific language. The more precisely you target each distortion, the more effective the rewrite - because the brain has to accept specific, verifiable statements that it cannot dismiss as naive optimism.</div>' +
+    '<button class="btn-primary" id="rewriteNextBtn" onclick="renderStage(9)" disabled>Next: Your Personal Self-Talk Upgrade -></button>' +
+  '</div>';
+}
+
+function s9() {
+  upgradeValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewrite the Story') +
+    backBtn(8,'Back to Rewrite Builder') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 9 - Personal Self-Talk Upgrade</div>' +
+    '<h2>Your Strong Inner Voice Statement</h2>' +
+    '<p>The strongest inner voice is not the one that claims you never make mistakes. It is the one that knows mistakes happen, treats them as information rather than verdicts, and speaks to you the way the best coach you have ever had would speak to you - with honesty, accuracy, and genuine belief in your capacity to grow.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your strong inner voice statement should demonstrate:<br/>' +
+      '<strong>Self-respect:</strong> Language that treats you as someone worth coaching, not attacking<br/>' +
+      '<strong>Accuracy:</strong> Honest, specific, verifiable - not forced positivity or denial<br/>' +
+      '<strong>Encouragement:</strong> A growth direction, a next step, a piece of genuine forward momentum' +
+    '</div>' +
+    '<label class="input-label">When I make a mistake, my strong inner voice says...</label>' +
+    '<textarea class="reflection-input" id="upgradeInput" oninput="checkUpgrade(this.value)" placeholder="For example: When I make a mistake, my strong inner voice says: this happened and I can learn from it. I am not defined by this one moment. Every person I admire has made mistakes. What matters is what I do next - and the answer is: I figure out what to practise, I ask for help if I need it, and I try again with what I now know..." rows="5"></textarea>' +
+    '<div class="char-counter" id="upgradeCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg violet-msg" style="margin-bottom:16px">💬 <strong>The inner coach standard:</strong> Before writing your statement, ask yourself: would I say this to a friend who made a mistake? If yes, it is probably a good inner coach statement. If no - if it is something you would never say to someone you cared about - then it fails the inner coach standard and needs to be rewritten. We are almost always harsher with ourselves than we would ever be with others. The inner coach closes that gap.</div>' +
+    '<button class="btn-primary" id="upgradeNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on the Science -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewrite the Story') +
+    backBtn(9,'Back to Voice Statement') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Changing Self-Talk Change Feelings?</h2>' +
+    '<p>The connection between thought and emotion is not metaphorical - it is neurological. Understanding the mechanism makes the skill more compelling to practise, because it answers the question "why would just changing the words I say to myself make any real difference?"</p>' +
+    '<p>Answer all three questions with depth and specificity:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Explain in your own words the neurological reason why self-talk affects emotions - what is it about the way the brain processes self-directed thoughts that gives them such power over how we feel?<br/>' +
+      '2. Why is balanced self-talk more effective than simply replacing negative thoughts with positive ones? What would happen if Ayaan replaced "I\'m terrible" with "I\'m amazing at football"?<br/>' +
+      '3. Think of a specific situation in your own life where your inner critic speaks most harshly. What would your inner coach say about the same situation?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about how the brain processes self-talk as factual self-assessment, why credibility matters in self-talk, and a real situation from your own experience where a different inner voice would change the emotional experience..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🏅 <strong>Badge Progress:</strong> Inner Coach Builder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Real-Life Practice -></button>' +
+  '</div>';
+}
+
+function s11() {
+  laylaDone1 = false; laylaDone2 = false; laylaDone3 = false; laylaCount1 = 0;
+  function mkBtns(stepKey, fnName) {
+    return laylaSteps[stepKey].map(function(opt) {
+      return '<button class="layla-btn" id="l' + stepKey.charAt(0) + '-' + opt.id + '" onclick="' + fnName + '(\'' + opt.id + '\',' + opt.correct + ')">' +
+        '<span class="lb-icon">💭</span>' +
+        '<div><div class="lb-text">' + opt.text + '</div></div>' +
+      '</button>';
+    }).join('');
+  }
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Real-Life Practice') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Layla Gets a Lower Grade</h2>' +
+    '<div class="story-box" data-icon="📝">' +
+      '<p><span class="gold">Layla</span> is eleven years old. She studied hard for her maths test - harder than usual. When the results come back, the grade is lower than she expected. Before she has even put the test paper down, the inner critic is speaking:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"I am so stupid. I studied really hard and I still failed. I will never be good at maths. What is the point of even trying?"</p></div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify the harsh self-talk</div>' +
+    '<div class="layla-options">' + mkBtns('harsh','selectLaylaHarsh') + '</div>' +
+    '<div id="laylaHFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Identify the distortion type</div>' +
+    '<div id="laylaDWrap" style="opacity:0.4;pointer-events:none"><div class="layla-options">' + mkBtns('distort','selectLaylaDistort') + '</div></div>' +
+    '<div id="laylaDFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose the balanced rewrite</div>' +
+    '<div id="laylaRWrap" style="opacity:0.4;pointer-events:none"><div class="layla-options">' + mkBtns('rewrite','selectLaylaRewrite') + '</div></div>' +
+    '<div id="laylaRFeedback"></div>' +
+    '<button class="btn-primary" id="laylaNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Coach vs Critic Sorting -></button>' +
+  '</div>';
+}
+
+function s12() {
+  sortPlac = {}; sortSel = null;
+  var chips = coachCriticItems.map(function(c) {
+    return '<div class="sort-chip" id="sc-' + c.id + '" onclick="handleSortClick(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Real-Life Practice') +
+    backBtn(11,'Back to Layla\'s Scenario') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 12 - Coach vs Critic Sorting</div>' +
+    '<h2>Inner Critic or Inner Coach?</h2>' +
+    '<p>Every piece of self-talk can be evaluated against a simple standard: is this the voice of a critic, or the voice of a coach? The critic attacks. The coach trains. The critic uses absolute language. The coach stays specific. The critic talks about who you are. The coach talks about what you did and what you can do next. Both voices are available to everyone. Which one gets louder depends on which one gets practised.</p>' +
+    '<p>Sort each statement into the correct zone. Be precise - some coaching statements acknowledge difficulty honestly while still being genuinely supportive.</p>' +
+    '<div class="sort-bank" id="sortBank">' + chips + '</div>' +
+    '<div id="sortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a statement, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-critic" onclick="placeSort(\'critic\')">' +
+        '<div class="sz-title">Inner Critic</div>' +
+        '<div class="sz-items" id="zone-critic"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-coach" onclick="placeSort(\'coach\')">' +
+        '<div class="sz-title">Inner Coach</div>' +
+        '<div class="sz-items" id="zone-coach"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sortFeedback"></div>' +
+    '<button class="btn-primary" id="sortNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Real-Life Practice') +
+    backBtn(12,'Back to Coach vs Critic Sort') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Self-Talk Makeover Lab with genuine depth. Let\'s confirm how clearly the core concepts have settled. Answer all three questions carefully - draw on everything explored today about self-talk, thought distortions, and the inner coach.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Inner Voice Builder!</h2>' +
+    '<p>You completed the full Self-Talk Makeover Lab - all 3 Acts, 14 stages, and a genuine exploration of one of the most powerful skills available: deliberately shaping the voice in your head from critic to coach. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Thought Catcher</div><div class="b-sub">Spotted the distortions</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🎙️</span><div class="b-title">Inner Coach Builder</div><div class="b-sub">Rewrote the story</div></div>' +
+      '<div class="badge-item"><span class="b-icon">⭐</span><div class="b-title">Self-Belief Booster</div><div class="b-sub">Built genuine confidence</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🔍</span><div><div class="sk-title">Catching the Thought Traps</div><div class="sk-desc">Self-talk is not a reflection of reality - it is a habit of mind. All-or-Nothing thinking turns partial failures into total ones. Overgeneralizing turns single events into permanent patterns. Mind Reading invents others\' negative thoughts without evidence. Naming these traps - identifying them precisely rather than just feeling bad - inserts a critical layer between the thought and the emotional response, and begins to reduce their psychological power.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🎙️</span><div><div class="sk-title">The Inner Coach Standard</div><div class="sk-desc">The inner coach speaks like the best coach imaginable: honest about what happened, fair about what it means, and forward-focused about what comes next. "I missed that shot. I\'ve scored before. I can practise specific techniques to improve." All three parts are true. All three can be verified. The brain builds genuine confidence from verified, accurate, specific thinking - not from positive claims it cannot believe.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">⭐</span><div><div class="sk-title">Genuine Self-Belief</div><div class="sk-desc">Genuine self-belief is not the feeling that nothing will ever go wrong. It is the knowledge that when things go wrong, you will not turn the event into an identity verdict. It is built from evidence - real evidence, honestly assessed. Every time you catch a thought trap and rewrite it accurately, you are not just feeling better in the moment. You are training the neural patterns that determine how you will respond to the next setback - and the one after that.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="⭐" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'The next time your inner critic fires - "I\'m terrible", "I always mess up", "everyone thinks I\'m bad" - you will remember this: that is a thought trap, not a truth. It is All-or-Nothing. It is Overgeneralizing. It is Mind Reading. And you now have the tools to catch it, check it, and rewrite it. Not into something falsely positive. Into something accurate. Into something fair. Into something your inner coach would actually say. And that voice - the honest, specific, forward-looking one - is the voice that builds the kind of confidence that survives setbacks. 🧠' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--violet-dark),var(--teal-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ===== POST RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    negSel.forEach(function(id) {
+      var item = thoughtItems.find(function(t){ return t.id === id; });
+      var el = document.getElementById('thc-' + id);
+      if (el && item) { el.classList.add('tc-' + item.mode); var b = el.querySelector('.tc-badge'); if (b) b.textContent = item.mode === 'negative' ? 'Harsh' : 'Balanced'; }
+    });
+    checkNeg();
+  }
+  if (n === 3) {
+    Object.keys(trapAnswers).forEach(function(tid) {
+      var ans = trapAnswers[tid];
+      var trap = [{id:'trap1',opts:[{id:'aon',correct:true},{id:'mr',correct:false},{id:'og',correct:false}]},{id:'trap2',opts:[{id:'aon2',correct:false},{id:'og2',correct:true},{id:'mr2',correct:false}]},{id:'trap3',opts:[{id:'og3',correct:false},{id:'aon3',correct:false},{id:'mr3',correct:true}]}].find(function(t){ return t.id === tid; });
+      if (!trap) return;
+      trap.opts.forEach(function(opt) {
+        var el = document.getElementById('to-' + tid + '-' + opt.id);
+        if (!el) return;
+        el.style.cursor = 'default';
+        if (opt.id === ans.optId) el.classList.add(ans.correct ? 'to-correct' : 'to-wrong');
+        else if (opt.correct && !ans.correct) el.classList.add('to-reveal');
+      });
+    });
+    checkTraps();
+  }
+  if (n === 4) updateDual(dualLevel);
+  if (n === 5) {
+    setTimeout(function() {
+      if (emoShown) {
+        document.getElementById('shameBar').style.width = '88%';
+        document.getElementById('confBarH').style.width = '14%';
+        document.getElementById('shameBarB').style.width = '22%';
+        document.getElementById('confBarB').style.width = '82%';
+        var btn = document.getElementById('emoBtn');
+        if (btn) { btn.textContent = 'Next: The Makeover Formula ->'; btn.onclick = function(){ renderStage(6); }; }
+        var info = document.getElementById('emoInfo');
+        if (info) info.innerHTML = '<div class="feedback-msg correct-msg">The same event. The same missed shot. Two completely different self-talk patterns producing two completely different emotional outcomes - and two completely different trajectories for what Ayaan will do next. The thought is the lever. This is what cognitive-behavioral therapy is built on: changing the pattern of self-talk changes the emotional and behavioural response.</div>';
+      }
+    }, 60);
+  }
+  if (n === 8 && rewriteText) { var ta = document.getElementById('rewriteInput'); if (ta) ta.value = rewriteText; checkRewrite(rewriteText); }
+  if (n === 9 && upgradeText) { var ta2 = document.getElementById('upgradeInput'); if (ta2) ta2.value = upgradeText; checkUpgrade(upgradeText); }
+  if (n === 10 && reflectText) { var ta3 = document.getElementById('reflectInput'); if (ta3) ta3.value = reflectText; checkReflect(reflectText); }
+  if (n === 11) {
+    setTimeout(function() {
+      if (laylaDone1) { var dw = document.getElementById('laylaDWrap'); if (dw) { dw.style.opacity = '1'; dw.style.pointerEvents = 'auto'; } }
+      if (laylaDone2) { var rw = document.getElementById('laylaRWrap'); if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; } }
+      checkLaylaComplete();
+    }, 60);
+  }
+  if (n === 12) restoreSortUI();
+}
+
+/* STAGE 2 */
+function toggleNeg(id, mode) {
+  var el = document.getElementById('thc-' + id);
+  if (negSel.has(id)) {
+    negSel.delete(id);
+    el.classList.remove('tc-negative'); el.classList.remove('tc-balanced');
+    var b = el.querySelector('.tc-badge'); if (b) b.textContent = '';
+  } else {
+    negSel.add(id);
+    el.classList.add('tc-' + mode);
+    var b2 = el.querySelector('.tc-badge');
+    if (b2) b2.textContent = mode === 'negative' ? 'Harsh' : 'Balanced';
+  }
+  checkNeg();
+}
+
+function checkNeg() {
+  var negCount = Array.from(negSel).filter(function(id){ return thoughtItems.find(function(t){ return t.id === id; }).mode === 'negative'; }).length;
+  var balCount = Array.from(negSel).filter(function(id){ return thoughtItems.find(function(t){ return t.id === id; }).mode === 'balanced'; }).length;
+  var fb = document.getElementById('negFeedback');
+  var nb = document.getElementById('negNextBtn');
+  if (Array.from(negSel).length >= 5) {
+    if (negCount === 2 && balCount === 3) {
+      negOk = true;
+      if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correctly categorised all five thoughts. "I\'m terrible at everything" - note "everything", not "at this shot" - is an exaggerated global claim. "I always fail" uses absolute language ("always") to transform a single event into a permanent universal pattern. The three balanced thoughts ("I missed one shot", "I can try again", "that didn\'t go well") are accurate, specific, and stay connected to the actual event rather than escalating to identity or permanence.</div>';
+      if (nb) nb.disabled = false;
+    } else {
+      if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct - check your categorisation. Harsh/exaggerated thoughts use absolute language ("always", "everything") or attack identity rather than staying specific to the event. Balanced observations acknowledge what happened accurately without distortion. Click to reclassify.</div>';
+      if (nb) nb.disabled = true; negOk = false;
+    }
+  } else if (negSel.size > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg violet-msg">' + negSel.size + ' of 5 classified. Click all remaining thoughts.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+/* STAGE 3 */
+var trapDefs = [
+  {id:'trap1', opts:[{id:'aon',correct:true},{id:'mr',correct:false},{id:'og',correct:false}]},
+  {id:'trap2', opts:[{id:'aon2',correct:false},{id:'og2',correct:true},{id:'mr2',correct:false}]},
+  {id:'trap3', opts:[{id:'og3',correct:false},{id:'aon3',correct:false},{id:'mr3',correct:true}]}
+];
+
+function answerTrap(tid, optId, correct) {
+  if (trapAnswers[tid]) return;
+  trapAnswers[tid] = {optId: optId, correct: correct};
+  var trap = trapDefs.find(function(t){ return t.id === tid; });
+  if (trap) {
+    trap.opts.forEach(function(opt) {
+      var el = document.getElementById('to-' + tid + '-' + opt.id);
+      if (!el) return;
+      el.style.cursor = 'default';
+      if (opt.id === optId) el.classList.add(correct ? 'to-correct' : 'to-wrong');
+      else if (opt.correct && !correct) el.classList.add('to-reveal');
+    });
+  }
+  checkTraps();
+}
+
+function checkTraps() {
+  var done = Object.keys(trapAnswers).length;
+  var correct = Object.values(trapAnswers).filter(function(a){ return a.correct; }).length;
+  var fb = document.getElementById('trapFeedback');
+  var nb = document.getElementById('trapNextBtn');
+  if (done < 3) {
+    if (fb && done > 0) fb.innerHTML = '<div class="feedback-msg violet-msg">' + done + ' of 3 traps identified. Continue.</div>';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === 3) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All three thought traps correctly identified. All-or-Nothing ("I\'m terrible at everything") treats one miss as total failure with no spectrum. Overgeneralizing ("I always mess up") transforms a single event into a universal permanent pattern through the word "always". Mind Reading ("everyone thinks I\'m bad") claims knowledge of others\' internal thoughts - always assumed negative, never verified. Each trap has a specific structural feature that makes it identifiable - and nameable.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Some correct (' + correct + ' of 3). Incorrect answers are shown with the correct ones revealed. Study the specific feature of each trap: All-or-Nothing = extremes; Overgeneralizing = "always"/"never"; Mind Reading = claiming others\' thoughts.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+/* STAGE 4 */
+function updateDual(val) {
+  dualLevel = parseInt(val);
+  var nVal = dualLevel;
+  var sVal = 100 - dualLevel;
+  var state = getDualState(dualLevel);
+  if (!state) return;
+  var nF = document.getElementById('negFill');
+  var sF = document.getElementById('supFill');
+  var nP = document.getElementById('negPct');
+  var sP = document.getElementById('supPct');
+  var nM = document.getElementById('negMood');
+  var sM = document.getElementById('supMood');
+  var sl = document.getElementById('dualSl');
+  if (nF) nF.style.width = nVal + '%';
+  if (sF) sF.style.width = sVal + '%';
+  if (nP) nP.textContent = nVal + '%';
+  if (sP) sP.textContent = sVal + '%';
+  if (nM) nM.textContent = state.nMood;
+  if (sM) sM.textContent = state.sMood;
+  if (sl) {
+    var g1 = 'rgba(224,80,72,' + (0.30 + nVal/190) + ')';
+    var g2 = 'rgba(24,152,152,' + (0.30 + sVal/190) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+/* STAGE 5 */
+function animateEmo() {
+  emoShown = true;
+  var btn = document.getElementById('emoBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Animating...'; }
+  document.getElementById('shameBar').style.width = '88%';
+  document.getElementById('confBarH').style.width = '14%';
+  setTimeout(function() {
+    document.getElementById('shameBarB').style.width = '22%';
+    document.getElementById('confBarB').style.width = '82%';
+    var info = document.getElementById('emoInfo');
+    if (info) info.innerHTML = '<div class="feedback-msg correct-msg">The same event. The same missed shot. Two completely different self-talk patterns producing two completely different emotional outcomes - and two completely different trajectories for what Ayaan will do next. The thought is the lever. This is what cognitive-behavioral therapy is built on: changing the pattern of self-talk changes the emotional and behavioural response.</div>';
+    var btn2 = document.getElementById('emoBtn');
+    if (btn2) { btn2.disabled = false; btn2.textContent = 'Next: The Makeover Formula ->'; btn2.onclick = function(){ renderStage(6); }; }
+  }, 1200);
+}
+
+/* STAGE 7 */
+function chooseSelfTk1(id) {
+  if (selfTk1Lock) return;
+  selfTk1Lock = true; selfTk1Id = id;
+  var chosen = selfTalkOptions.find(function(o){ return o.id === id; });
+  selfTalkOptions.forEach(function(o) {
+    var el = document.getElementById('st1-' + o.id);
+    if (el) { if (o.id === id) el.classList.add('sel-' + o.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('st1Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🌧️ Negative Self-Talk</span><span id="s1NL">0%</span></div><div class="meter-track"><div class="meter-fill neg-fill" id="s1NF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💪 Confidence Level</span><span id="s1CL">0%</span></div><div class="meter-track"><div class="meter-fill conf-fill" id="s1CF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var nF = document.getElementById('s1NF'), cF = document.getElementById('s1CF');
+    var nL = document.getElementById('s1NL'), cL = document.getElementById('s1CL');
+    if (nF) nF.style.width = chosen.negL + '%';
+    if (cF) cF.style.width = chosen.supL + '%';
+    if (nL) nL.textContent = chosen.negL + '%';
+    if (cL) cL.textContent = chosen.supL + '%';
+  }, 150);
+  var nw = document.getElementById('st1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkRewrite(val) {
+  rewriteText = val;
+  var len = val.trim().length;
+  rewriteValid = len >= 40;
+  var c = document.getElementById('rewriteCounter');
+  var b = document.getElementById('rewriteNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (rewriteValid ? ' met' : ''); }
+  if (b) b.disabled = !rewriteValid;
+}
+
+function checkUpgrade(val) {
+  upgradeText = val;
+  var len = val.trim().length;
+  upgradeValid = len >= 40;
+  var c = document.getElementById('upgradeCounter');
+  var b = document.getElementById('upgradeNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (upgradeValid ? ' met' : ''); }
+  if (b) b.disabled = !upgradeValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ACT 3 */
+var lCount1 = 0;
+var lCount2 = 0;
+
+function selectLaylaHarsh(id, correct) {
+  var el = document.getElementById('lh-' + id);
+  if (el && (el.classList.contains('lb-correct') || el.classList.contains('lb-incorrect'))) return;
+  if (el) el.classList.add(correct ? 'lb-correct' : 'lb-incorrect');
+  lCount1++;
+  if (lCount1 >= 3) {
+    laylaDone1 = true;
+    var fb = document.getElementById('laylaHFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correctly identified. "I am so stupid. I will never be good at this subject" is the harsh self-talk - it attacks identity ("I am stupid"), uses absolute language ("will never"), and transforms one test result into a permanent verdict on a subject. "I am disappointed" is an honest emotional response - not distorted. "I can ask for help and do better next time" is inner coach language - specific and forward-focused.</div>';
+    var dw = document.getElementById('laylaDWrap');
+    if (dw) { dw.style.opacity = '1'; dw.style.pointerEvents = 'auto'; }
+    checkLaylaComplete();
+  }
+}
+
+function selectLaylaDistort(id, correct) {
+  if (laylaDone2) return;
+  laylaDone2 = true;
+  document.querySelectorAll('#laylaDWrap .layla-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('ld-' + id);
+  if (el) el.classList.add(correct ? 'lb-correct' : 'lb-incorrect');
+  var fb = document.getElementById('laylaDFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correctly identified. "I will never be good at maths" is classic All-or-Nothing thinking: one lower-than-expected grade becomes permanent evidence of total inability. There is no middle ground considered - no acknowledgement of past success, no possibility of improvement, no consideration that this test was one data point among many. It is the full All-or-Nothing pattern: either perfect or hopeless, with nothing in between.</div>';
+  } else if (id === 'mind') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Mind Reading is present in many thought patterns but the primary distortion in Layla\'s "I will never be good at maths" is All-or-Nothing thinking - one result = total permanent verdict. The correct distortion is highlighted.</div>';
+    var c2 = document.getElementById('ld-aon');
+    if (c2) c2.classList.add('lb-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Overgeneralizing is related but the specific pattern in "will never be good at maths" is All-or-Nothing - complete failure with no middle ground. The correct distortion is highlighted.</div>';
+    var c3 = document.getElementById('ld-aon');
+    if (c3) c3.classList.add('lb-correct');
+  }
+  var rw = document.getElementById('laylaRWrap');
+  if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+  checkLaylaComplete();
+}
+
+function selectLaylaRewrite(id, correct) {
+  if (laylaDone3) return;
+  laylaDone3 = true;
+  document.querySelectorAll('#laylaRWrap .layla-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('lr-' + id);
+  if (el) el.classList.add(correct ? 'lb-correct' : 'lb-incorrect');
+  var fb = document.getElementById('laylaRFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The best balanced rewrite. "I got a lower grade this time" is specific (this test, this time - not "always" or "at everything"). "That tells me something needs more work" treats the result as information rather than verdict. "I can ask questions and practise the parts I found hard" identifies a concrete, achievable next step. All three components of the inner coach formula: specific acknowledgement, balanced perspective, forward action.</div>';
+  } else if (id === 'smart') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">This is still distorted thinking - it adds an All-or-Nothing conclusion from a conditional premise. The correct rewrite is highlighted: specific, accurate, forward-focused.</div>';
+    var c2 = document.getElementById('lr-honest');
+    if (c2) c2.classList.add('lb-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Dismissing the grade entirely is not balanced - it avoids the useful information the grade contains. The correct rewrite acknowledges the result honestly while responding constructively to it. The correct answer is highlighted.</div>';
+    var c3 = document.getElementById('lr-honest');
+    if (c3) c3.classList.add('lb-correct');
+  }
+  checkLaylaComplete();
+}
+
+function checkLaylaComplete() {
+  if (laylaDone1 && laylaDone2 && laylaDone3) {
+    var b = document.getElementById('laylaNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function handleSortClick(id) {
+  if (sortPlac[id]) return;
+  sortSel = id;
+  document.querySelectorAll('#sortBank .sort-chip').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('sc-' + id);
+  if (el) el.style.outline = '3px solid var(--violet-dark)';
+  var hint = document.getElementById('sortHint');
+  var item = coachCriticItems.find(function(c){ return c.id === id; });
+  if (hint && item) hint.textContent = 'Click a zone: "' + item.text + '"';
+}
+
+function placeSort(zone) {
+  if (!sortSel) return;
+  var item = coachCriticItems.find(function(c){ return c.id === sortSel; });
+  if (!item) return;
+  sortPlac[sortSel] = zone;
+  var el = document.getElementById('sc-' + sortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSortItem(\'' + sortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  sortSel = null;
+  var hint = document.getElementById('sortHint');
+  if (hint) hint.textContent = 'Click another statement to continue';
+  checkSort();
+}
+
+function removeSortItem(id, zone) {
+  delete sortPlac[id];
+  var el = document.getElementById('sc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = coachCriticItems.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSort();
+}
+
+function restoreSortUI() {
+  Object.keys(sortPlac).forEach(function(id) {
+    var zone = sortPlac[id];
+    var item = coachCriticItems.find(function(c){ return c.id === id; });
+    var el = document.getElementById('sc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSortItem(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSort();
+}
+
+function checkSort() {
+  var total = Object.keys(sortPlac).length;
+  var correct = coachCriticItems.filter(function(c){ return sortPlac[c.id] === c.zone; }).length;
+  var fb = document.getElementById('sortFeedback');
+  var nb = document.getElementById('sortNextBtn');
+  if (total < coachCriticItems.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg violet-msg">' + total + ' of 8 placed.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === coachCriticItems.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. Inner critic statements attack identity ("you\'re so useless", "how could you be so stupid", "you always ruin things", "nobody wants you around") - they use absolute language, global claims, and identity attacks. Inner coach statements stay specific, acknowledge difficulty without exaggeration, point toward action, and treat the person as capable of growth. Notice that the coach can acknowledge hard truths - "this is hard" is coaching, not criticism - as long as it also offers direction and belief.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 8). Remove incorrect items. Ask: does this statement attack identity or acknowledge a specific difficulty? Does it close down possibility or point toward what is possible? Critics attack. Coaches train.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function answerQuiz(qi, oi, correct) {
+  if (quizAnswers[qi] !== undefined) return;
+  quizAnswers[qi] = correct;
+  var q = quizData[qi];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qi + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === oi) el.classList.add(correct ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qi);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (correct ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = correct ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  negSel = new Set(); negOk = false;
+  trapAnswers = {};
+  dualLevel = 85;
+  emoShown = false;
+  selfTk1Id = null; selfTk1Lock = false;
+  rewriteText = ''; rewriteValid = false;
+  upgradeText = ''; upgradeValid = false;
+  reflectText = ''; reflectValid = false;
+  laylaDone1 = false; laylaDone2 = false; laylaDone3 = false; laylaCount1 = 0;
+  lCount1 = 0; lCount2 = 0;
+  sortPlac = {}; sortSel = null;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#7828d0','#189898','#e85048','#d89020','#18c870','#4808a0','#c8a8f8','#a0f0c0'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Mistake Recovery Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff8f2;
+  --card:#ffffff;
+  --coral:#e05840;--coral-dark:#a02008;--coral-light:#f8c0b0;
+  --amber:#e89820;--amber-dark:#905800;--amber-light:#fce0a0;
+  --violet:#7848c8;--violet-dark:#481090;--violet-light:#c8b0f0;
+  --green:#28c870;--green-dark:#0a8048;--green-light:#a0f0c8;
+  --rose:#e04878;--rose-dark:#a01848;
+  --sky:#2878d8;--sky-dark:#0848a8;
+  --text:#181020;--text-soft:#483858;
+  --shadow-sm:0 4px 16px rgba(112,32,8,0.12);
+  --shadow-md:0 8px 32px rgba(112,32,8,0.16);
+  --shadow-lg:0 16px 48px rgba(112,32,8,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 8% 12%,rgba(224,88,64,0.18) 0%,transparent 46%),
+    radial-gradient(circle at 92% 80%,rgba(120,72,200,0.15) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(40,200,112,0.10) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--coral-dark),var(--violet-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--coral-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(160,32,8,0.09);color:var(--coral-dark);border:1.5px solid rgba(160,32,8,0.24)}
+.act-banner.act2{background:rgba(72,16,144,0.09);color:var(--violet-dark);border:1.5px solid rgba(72,16,144,0.24)}
+.act-banner.act3{background:rgba(10,128,72,0.09);color:var(--green-dark);border:1.5px solid rgba(10,128,72,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(224,88,64,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral-dark),var(--violet-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(160,32,8,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(224,88,64,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--coral-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(224,88,64,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(224,88,64,0.09),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--coral-dark);background:rgba(224,88,64,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(72,16,144,0.09)}
+.stage-label.green{color:var(--green-dark);background:rgba(10,128,72,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(224,88,64,0.09),rgba(120,72,200,0.07));border:1.5px solid rgba(224,88,64,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--coral-dark);font-style:normal}
+.story-box p span.green{color:var(--green-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(224,88,64,0.10),rgba(120,72,200,0.09));border:2px solid rgba(224,88,64,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--coral-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* EMOTION CHIPS */
+.emotion-chips{display:flex;flex-wrap:wrap;gap:11px;margin:18px 0 26px}
+.emotion-chip{background:var(--bg);border:2px solid rgba(224,88,64,0.22);border-radius:999px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:7px}
+.emotion-chip:hover{border-color:var(--coral-dark);color:var(--text);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.emotion-chip.ec-selected{background:linear-gradient(135deg,var(--coral-dark),var(--violet-dark));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(160,32,8,0.28);animation:correctPop 0.35s ease}
+.emotion-chip.ec-wrong{border-color:var(--amber-dark);background:rgba(232,152,32,0.09);color:var(--amber-dark);animation:wrongShake 0.4s ease}
+
+/* SORT */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;min-height:52px;padding:12px 14px;background:rgba(224,88,64,0.06);border:2px dashed rgba(224,88,64,0.26);border-radius:var(--radius-sm)}
+.sort-card-item{background:#fff;border:2px solid rgba(224,88,64,0.24);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-card-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--coral-dark)}
+.sort-card-item.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:100px;border:2px solid}
+.sort-zone.zone-shame{border-color:rgba(160,32,8,0.32);background:rgba(224,88,64,0.07)}
+.sort-zone.zone-growth{border-color:rgba(10,128,72,0.30);background:rgba(40,200,112,0.07)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-shame .sz-title{color:var(--coral-dark)}
+.sort-zone.zone-growth .sz-title{color:var(--green-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:5px}
+.sz-remove{cursor:pointer;font-size:14px;color:var(--text-soft);transition:color 0.2s}
+.sz-remove:hover{color:var(--coral-dark)}
+
+/* INNER CRITIC CARDS */
+.critic-options{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.critic-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(224,88,64,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.critic-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--coral)}
+.critic-btn .crb-icon{font-size:26px;flex-shrink:0}
+.critic-btn .crb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.critic-btn .crb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.critic-btn.crit-shame{border-color:var(--coral-dark);background:rgba(224,88,64,0.09);animation:wrongShake 0.4s ease}
+.critic-btn.crit-neutral{border-color:var(--amber-dark);background:rgba(232,152,32,0.09)}
+.critic-btn.crit-growth{border-color:var(--green-dark);background:rgba(40,200,112,0.09);animation:correctPop 0.35s ease}
+
+/* DUAL SHAME/GROWTH METER */
+.dual-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(224,88,64,0.07),rgba(40,200,112,0.06));border:1.5px solid rgba(224,88,64,0.20);border-radius:var(--radius-sm);padding:24px}
+.dual-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.dual-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.dual-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--coral-dark);box-shadow:0 3px 14px rgba(160,32,8,0.36);cursor:pointer;transition:transform 0.2s ease}
+.dual-slider::-webkit-slider-thumb:hover,.dual-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.dual-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--coral-dark);cursor:pointer}
+.dual-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dual-bar-side{padding:16px;border-radius:var(--radius-sm);transition:background 0.5s ease;border:2px solid}
+.dual-bar-side.shame-side{border-color:rgba(160,32,8,0.28);background:rgba(224,88,64,0.07)}
+.dual-bar-side.growth-side{border-color:rgba(10,128,72,0.28);background:rgba(40,200,112,0.07)}
+.dbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dbs-emoji{font-size:24px}
+.dbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.dbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.dbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.shame-side .dbs-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 6px rgba(160,32,8,0.28)}
+.growth-side .dbs-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark));box-shadow:0 2px 6px rgba(10,128,72,0.28)}
+.dbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.shame-side .dbs-pct{color:var(--coral-dark)}
+.growth-side .dbs-pct{color:var(--green-dark)}
+.dbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:36px}
+
+/* CYCLE STEPS */
+.cycle-match{display:flex;flex-direction:column;gap:10px;margin:18px 0 22px}
+.cycle-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(224,88,64,0.16);border-radius:var(--radius-sm);padding:14px 18px;transition:var(--t);animation:fadeUp 0.4s ease both}
+.cycle-row.cr-matched{border-color:var(--violet-dark);background:linear-gradient(135deg,rgba(120,72,200,0.09),rgba(224,88,64,0.07))}
+.cycle-row .cr-num{width:28px;height:28px;border-radius:50%;background:var(--violet-dark);color:#fff;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cycle-row .cr-step{font-size:14px;font-weight:900;color:var(--text);margin-bottom:3px}
+.cycle-row .cr-def{font-size:13px;font-weight:700;color:var(--text-soft);line-height:1.5}
+.cycle-row .cr-match{font-size:13px;font-weight:800;color:var(--violet-dark);margin-top:3px;font-style:italic}
+
+/* RECOVERY PATHS */
+.path-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.path-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(224,88,64,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.path-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--coral)}
+.path-btn .pb-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease}
+.path-btn:hover .pb-icon{transform:scale(1.10)}
+.path-btn .pb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.path-btn .pb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.path-btn.sel-harmful{border-color:var(--coral-dark);background:rgba(224,88,64,0.08);animation:wrongShake 0.4s ease}
+.path-btn.sel-ok{border-color:var(--amber-dark);background:rgba(232,152,32,0.09);animation:correctPop 0.4s ease}
+.path-btn.sel-best{border-color:var(--green-dark);background:rgba(40,200,112,0.09);animation:correctPop 0.4s ease}
+
+/* METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(224,88,64,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.shame-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 8px rgba(160,32,8,0.28)}
+.meter-fill.conf-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark));box-shadow:0 2px 8px rgba(10,128,72,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,88,64,0.09);border:1.5px solid rgba(160,32,8,0.22)}
+.outcome-box.ok{background:rgba(232,152,32,0.10);border:1.5px solid rgba(144,88,0,0.22)}
+.outcome-box.best{background:rgba(40,200,112,0.09);border:1.5px solid rgba(10,128,72,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* NOOR SCENARIO */
+.noor-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.noor-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(224,88,64,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.noor-btn:hover{border-color:var(--coral);transform:translateX(3px)}
+.noor-btn .nb-icon{font-size:24px;flex-shrink:0}
+.noor-btn .nb-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.noor-btn .nb-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.noor-btn.nb-correct{border-color:var(--green-dark);background:rgba(40,200,112,0.10);animation:correctPop 0.4s ease}
+.noor-btn.nb-incorrect{border-color:var(--coral-dark);background:rgba(224,88,64,0.08);animation:wrongShake 0.4s ease}
+
+/* APOLOGY CARDS */
+.apology-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 22px}
+.apology-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(224,88,64,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.apology-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--coral)}
+.apology-btn .apb-icon{font-size:26px;flex-shrink:0}
+.apology-btn .apb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.apology-btn .apb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.apology-btn.apo-harmful{border-color:var(--coral-dark);background:rgba(224,88,64,0.08);animation:wrongShake 0.4s ease}
+.apology-btn.apo-ok{border-color:var(--amber-dark);background:rgba(232,152,32,0.09);animation:correctPop 0.4s ease}
+.apology-btn.apo-best{border-color:var(--green-dark);background:rgba(40,200,112,0.09);animation:correctPop 0.4s ease}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(224,88,64,0.08),rgba(120,72,200,0.07),rgba(40,200,112,0.06));border:2px solid rgba(224,88,64,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(224,88,64,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result-shame{background:rgba(224,88,64,0.08);border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row.formula-result-growth{background:rgba(40,200,112,0.09);border-radius:var(--radius-sm);padding:12px 16px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--violet-dark);padding:2px 0}
+.formula-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(224,88,64,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--coral);background:rgba(224,88,64,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--green-dark);background:rgba(40,200,112,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(224,88,64,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--green-dark);background:rgba(40,200,112,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(40,200,112,0.16);color:#0a5830}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,88,64,0.12);color:#801010}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(40,200,112,0.13);color:#0a5830;border:1.5px solid rgba(10,128,72,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(224,88,64,0.10);color:#801010;border:1.5px solid rgba(160,32,8,0.22)}
+.feedback-msg.info-msg{background:rgba(72,16,144,0.08);color:var(--violet-dark);border:1.5px solid rgba(72,16,144,0.20)}
+.feedback-msg.amber-msg{background:rgba(232,152,32,0.10);color:var(--amber-dark);border:1.5px solid rgba(144,88,0,0.22)}
+.feedback-msg.green-msg{background:rgba(10,128,72,0.09);color:var(--green-dark);border:1.5px solid rgba(10,128,72,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(224,88,64,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(72,56,88,0.38)}
+.reflection-input:focus{border-color:var(--coral-dark);box-shadow:0 0 0 3px rgba(160,32,8,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--green-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--coral-dark),var(--violet-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(160,32,8,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(160,32,8,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(224,88,64,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(224,88,64,0.08);border-color:var(--coral-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(224,88,64,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--coral-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(224,88,64,0.18);border-radius:999px}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(232,152,32,0.14),rgba(120,72,200,0.11));border:1.5px solid rgba(232,152,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(224,88,64,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(255,248,242,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(224,88,64,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(224,88,64,0.06),rgba(120,72,200,0.05),rgba(40,200,112,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .sort-zones{grid-template-columns:1fr}
+  .dual-bars{grid-template-columns:1fr}
+  .formula-split{grid-template-columns:1fr}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🔴 Recovery Lab</div>
+    <h1>The <span>Mistake Recovery</span> Lab</h1>
+    <p>Understand mistakes - Stop shame spirals - Build bounce-back skills</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌱</div>
+    <h2>Resilience Unlocked!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now understand the difference between shame and growth - and how to choose the path that makes you stronger.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Shame Spotter</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🌱</span><div class="b-title">Growth Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">⚡</span><div class="b-title">Bounce-Back Expert</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let emotionSel     = new Set();
+let emotionOk      = false;
+let sortPlac       = {};
+let sortSel        = null;
+let criticChoice   = null;
+let dualLevel      = 75;
+let path1Id        = null;
+let path1Locked    = false;
+let rewriteText    = '';
+let rewriteValid   = false;
+let bounceText     = '';
+let bounceValid    = false;
+let reflectText    = '';
+let reflectValid   = false;
+let noorShDone     = false;
+let noorRespDone   = false;
+let noorRepDone    = false;
+let noorShCount    = 0;
+let apoChoice      = null;
+let apoLocked      = false;
+let quizAnswers    = {};
+
+const emotionData = [
+  {id:'embarrassed', icon:'😳', text:'Embarrassed', correct:true},
+  {id:'ashamed',     icon:'😞', text:'Ashamed',     correct:true},
+  {id:'angry',       icon:'😠', text:'Angry',       correct:false},
+  {id:'proud',       icon:'😊', text:'Proud',       correct:false},
+  {id:'confident',   icon:'💪', text:'Confident',   correct:false}
+];
+
+const sortCards = [
+  {id:'made',    text:'I made a mistake.',        zone:'growth'},
+  {id:'failure', text:'I am a failure.',          zone:'shame'},
+  {id:'learn',   text:'I can learn from this.',   zone:'growth'},
+  {id:'dumb',    text:'Everyone thinks I am dumb.',zone:'shame'},
+  {id:'try',     text:'I should try again.',      zone:'growth'}
+];
+
+const dualStates = [
+  {range:[0,15],  sLabel:'Minimal', gLabel:'Strong', sMood:'Almost no shame spiral. Self-compassion is fully accessible. Growth thinking is dominant.', gMood:'Full access to learning, reflection and forward momentum. Mistakes feel like information, not verdicts.'},
+  {range:[16,40], sLabel:'Low', gLabel:'Good', sMood:'Mild self-criticism. Uncomfortable but manageable. Capable of perspective with effort.', gMood:'Growth mindset present and accessible. Able to separate identity from the action.'},
+  {range:[41,60], sLabel:'Moderate', gLabel:'Reduced', sMood:'Significant shame response. Negative self-talk beginning to dominate. Regulation tools would help.', gMood:'Growth thinking reduced but still reachable. May need conscious effort to access balanced thinking.'},
+  {range:[61,80], sLabel:'High', gLabel:'Low', sMood:'Strong shame spiral. "I am the mistake" thinking dominant. Hard to access compassion or perspective.', gMood:'Low growth access. Trapped in identity-based thinking. Forward action feels almost impossible from here.'},
+  {range:[81,100],sLabel:'Maximum', gLabel:'Minimal', sMood:'Full shame collapse. Complete identity fusion with the mistake. Genuine emotional crisis territory.', gMood:'Growth thinking almost inaccessible. Crisis-level shame response. Support from a trusted adult is important here.'}
+];
+
+const recoveryPaths = [
+  {
+    id:'avoid', icon:'🔴', text:'Never speak up in class again to protect himself', sub:'Total avoidance - silence as a shield against future humiliation',
+    quality:'harmful', shameLevel:88, confLevel:9,
+    outcome:{title:'Shame Wins - Silence Grows', body:'By choosing permanent silence, Hamza allows the shame spiral to set the rules for his behaviour indefinitely. Each time he does not speak up, his brain receives confirmation: "Speaking up is dangerous - staying quiet is safe." The shame grows stronger with every opportunity he avoids. Over weeks and months, the silence spreads beyond this classroom to other areas of his life. The mistake has become identity: "I am someone who does not speak up."', tip:'Research: Avoidance is the primary mechanism by which shame maintains its grip over time. Every avoidance strengthens shame\'s authority. The only long-term path out of shame is through it - through small, progressive acts of engagement that provide evidence against the shame narrative.'}
+  },
+  {
+    id:'quiet', icon:'🟡', text:'Stay quiet for the rest of the lesson but return next time', sub:'Temporary withdrawal with partial recovery - the middle path',
+    quality:'ok', shameLevel:50, confLevel:42,
+    outcome:{title:'Partial Recovery', body:'Staying quiet for the rest of this lesson but intending to return is a more nuanced choice. Hamza protects himself from immediate re-exposure while not locking himself into permanent silence. But "staying quiet and feeling bad" leaves the shame processing incomplete. The lesson ends with the shame still active, rather than being addressed. Recovery is incomplete but the door has not been permanently closed.', tip:'Principle: Returning next lesson is valuable. But the most powerful recovery happens in the session where the mistake occurred - because immediate small action provides the strongest counter-evidence to the shame narrative.'}
+  },
+  {
+    id:'raise', icon:'🟢', text:'Raise his hand again later in the same lesson - a small question he is confident about', sub:'Active recovery within the same context - courage self-repair',
+    quality:'best', shameLevel:22, confLevel:82,
+    outcome:{title:'The Recovery Move', body:'This is the most powerful response available to Hamza. By raising his hand again - not to prove anything, but simply to participate - he provides his brain with immediate counter-evidence to the shame narrative. His brain witnesses: "I spoke up, I was wrong, and I survived. I can speak up again." Each additional act of participation dismantles the shame story further. The mistake becomes a moment in the lesson, not a verdict on his intelligence.', tip:'Research: Same-session recovery is dramatically more effective than delayed recovery at reducing shame responses. The shorter the gap between the shame event and the corrective experience, the weaker the shame\'s neurological imprint becomes.'}
+  }
+];
+
+const apologyOptions = [
+  {
+    id:'blame', icon:'🔴', text:'"It was not my fault - the cup was right at the edge."', sub:'Deflection - shifts responsibility to remove discomfort',
+    quality:'harmful', connLevel:8, trustLevel:5,
+    outcome:{title:'Deflection Closes the Door', body:'Deflecting blame removes Hamza\'s short-term discomfort but causes two significant problems: it communicates to the friend that her feelings about the damaged project do not matter, and it misses the opportunity to practise genuine responsibility. True repair requires taking ownership of impact regardless of intention. "It was not my fault" is shame avoidance dressed as defence.', tip:'Research: Deflecting responsibility after causing harm to someone else activates shame-based self-protection rather than genuine accountability. It protects the self at the cost of the relationship and long-term trust.'}
+  },
+  {
+    id:'sorry', icon:'🟡', text:'"Sorry."', sub:'Minimal acknowledgement - genuine but incomplete',
+    quality:'ok', connLevel:48, trustLevel:44,
+    outcome:{title:'A Start, But Incomplete', body:'"Sorry" communicates genuine regret but leaves the friend\'s experience unacknowledged and provides no repair action. A one-word apology can feel dismissive even when sincere, because it does not demonstrate that Noor has understood the impact of what happened or that she intends to make it right. It is better than deflection, but it is not full repair.', tip:'Principle: An effective apology has three components - acknowledging what happened, communicating genuine regret, and offering to repair. "Sorry" alone provides only the second component.'}
+  },
+  {
+    id:'full', icon:'🟢', text:'"I am really sorry I spilled on your project. I did not mean to, but I know that is not what matters right now. Can we fix it together?"', sub:'Full repair - acknowledgement, ownership, and action',
+    quality:'best', connLevel:88, trustLevel:84,
+    outcome:{title:'Full Repair', body:'This response demonstrates all three components of genuine repair: specific acknowledgement of what happened ("I spilled on your project"), ownership of impact separate from intention ("I know that is not what matters right now"), and a concrete repair offer ("Can we fix it together?"). Crucially, it moves from guilt - which is about the action - rather than shame - which would collapse into "I am a terrible friend." The focus is outward, toward the friend, not inward toward self-punishment.', tip:'Research: Effective repair conversations shift the focus from self-protection to relationship restoration. They communicate that the other person\'s experience matters more than avoiding discomfort. This distinction is the difference between guilt (responsible, reparable) and shame (identity-based, paralyzing).'}
+  }
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is the key difference between shame and responsibility after making a mistake?',
+    options:[
+      {icon:'🔑', text:'Responsibility says "I did something wrong" - shame says "I am something wrong." Responsibility enables action; shame collapses into identity.', correct:true},
+      {icon:'😞', text:'Shame and responsibility are effectively the same feeling - both help motivate improvement after mistakes', correct:false},
+      {icon:'🙈', text:'Responsibility means ignoring the mistake; shame means caring too much about other people\'s opinions', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. This is the most important distinction in the entire lab. Responsibility is action-focused: "I made a mistake, I can acknowledge it, learn from it, and repair where possible." Shame is identity-focused: "I am a failure, I am stupid, I am broken." Responsibility motivates forward action. Shame creates spirals that make action feel impossible. The two feel similar from the inside - both are uncomfortable - but they lead to completely different outcomes.',
+      incorrect:'Not quite. The critical distinction is between action and identity. Responsibility attaches the mistake to the behaviour: "I did something wrong." Shame attaches it to the self: "I am something wrong." One is specific and reparable. The other is global and crushing. Guilt and responsibility are uncomfortable but functional - they motivate repair. Shame is different: it immobilises.'
+    }
+  },
+  {
+    q:'Question 2: What most effectively strengthens a growth mindset after a mistake?',
+    options:[
+      {icon:'🙅', text:'Ignoring the mistake completely and moving on as quickly as possible', correct:false},
+      {icon:'🌱', text:'Acknowledging the mistake specifically, separating identity from action, and identifying one concrete learning or next step', correct:true},
+      {icon:'😤', text:'Replaying the mistake repeatedly to ensure you fully understand how it happened', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. Growth mindset after a mistake is built through three specific steps working together: specific acknowledgement (what happened without minimising or exaggerating), identity separation (I made a mistake, not I am a mistake), and forward orientation (what can I learn or do differently). All three are needed. Acknowledgement without identity separation produces shame. Identity separation without acknowledgement produces denial. Forward orientation without the first two produces bypassed shame.',
+      incorrect:'Not quite. Growth mindset is not built by ignoring mistakes or by ruminating on them. It requires a specific three-part sequence: honest acknowledgement of what happened, deliberate separation of identity from the action, and identification of a concrete learning or next step. This sequence transforms mistakes from threats to identity into information for improvement.'
+    }
+  },
+  {
+    q:'Question 3: Why does the specific language of self-talk matter so much after making a mistake?',
+    options:[
+      {icon:'💭', text:'It matters because the brain takes self-talk literally - "I am stupid" is processed as an identity fact, not just a frustrated expression', correct:true},
+      {icon:'😴', text:'It does not really matter - the brain knows we do not mean these things literally, so self-talk has no real impact', correct:false},
+      {icon:'📢', text:'Self-talk only matters if we say it out loud - internal thoughts have no significant effect on our emotional state', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. The brain processes self-talk with remarkable literalness. "I am stupid" is not filed as "a frustrated expression" - it is filed as an assessment of self. Over repeated exposure, this kind of identity-based self-talk directly shapes the brain\'s self-concept and influences behaviour. "I made a mistake on that question" is neurologically different from "I am stupid" even when both are triggered by the same event. The specificity and accuracy of the language determines whether the brain builds shame or growth.',
+      incorrect:'Not quite. Self-talk has significant and measurable neurological impact regardless of whether it is said out loud. The brain processes internal language as information about the self. Repeated identity-based self-talk ("I am stupid", "I always mess up") directly shapes the brain\'s self-model over time. Situation-specific self-talk ("I got that wrong", "this was a mistake") keeps the mistake separate from identity. The distinction matters enormously for long-term emotional health.'
+    }
+  }
+];
+
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔴', 2:'🟣', 3:'🟢'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getDualState(v) {
+  return dualStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Mistakes') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #009</div>' +
+    '<h2>A Mistake Is Not the Same As Being a Mistake</h2>' +
+    '<p>Welcome to the Mistake Recovery Lab. Every human being who has ever learned anything has made mistakes along the way. Errors, failures, wrong answers, misjudgements - these are not obstacles to growth, they are the mechanism of it. The problem is not the mistake itself. The problem is what we tell ourselves about the mistake in the seconds and minutes after it happens. That story - the inner narrative - is what determines whether a mistake becomes a stepping stone or a source of shame that shrinks us.</p>' +
+    '<div class="story-box" data-icon="✋">' +
+      '<p><span>Hamza</span> is eleven years old. He has been paying close attention in history class, and when the teacher asks a question, he feels confident enough to raise his hand. He answers clearly and with conviction. And he is wrong. A few classmates laugh - not cruelly, but it is audible. Hamza feels his face go hot. A tight, sinking feeling spreads through his chest. He wants to disappear. And then the thoughts arrive:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"I am so stupid. I should never have said anything. Everyone thinks I am an idiot now. I will never raise my hand again."</p></div>' +
+    '<p>Within about ten seconds of getting an answer wrong, Hamza has moved from a single factual error to a global verdict about his intelligence and a permanent behavioural restriction. This is a shame spiral - and it is one of the most damaging and most common responses to making mistakes. Today you will learn to recognise it, interrupt it, and choose a different path.</p>' +
+    '<div class="feedback-msg info-msg">🔑 <strong>The core distinction:</strong> There is a fundamental and life-changing difference between "I made a mistake" and "I am a mistake." The first is about a specific action in a specific moment - it is temporary, reparable, and informative. The second is an identity statement - it is global, crushing, and false. Learning to keep these two things separate is the most important skill in this entire lab.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Recovery Lab</button>' +
+  '</div>';
+}
+
+function s2() {
+  emotionSel = new Set(); emotionOk = false;
+  var chips = emotionData.map(function(e) {
+    return '<div class="emotion-chip" id="ec-' + e.id + '" onclick="toggleEmotion(\'' + e.id + '\',' + e.correct + ')">' +
+      e.icon + ' ' + e.text +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Mistakes') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Emotion Identification</div>' +
+    '<h2>What Is Hamza Feeling?</h2>' +
+    '<p>The moment after Hamza\'s answer is wrong and the laughter sounds, a complex emotional response activates rapidly. Understanding exactly what emotions are present - and distinguishing between them - is the first step to being able to respond skillfully rather than reactively. The specific emotions in this moment are important because they point toward what kind of response will actually help.</p>' +
+    '<p>Look at the five emotion options carefully. Which two are most likely and most accurately present in Hamza\'s experience right now? Select them both.</p>' +
+    '<div class="emotion-chips">' + chips + '</div>' +
+    '<div id="emotFeedback"></div>' +
+    '<button class="btn-primary" id="emotNextBtn" onclick="renderStage(3)" disabled>Next: Shame vs Responsibility -></button>' +
+  '</div>';
+}
+
+function s3() {
+  sortPlac = {}; sortSel = null;
+  var bank = sortCards.map(function(c) {
+    return '<div class="sort-card-item" id="sbc-' + c.id + '" onclick="handleSortClick(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Mistakes') +
+    backBtn(2,'Back to Emotions') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Shame vs Responsibility</div>' +
+    '<h2>Two Very Different Voices</h2>' +
+    '<p>After a mistake, the mind produces two fundamentally different types of thoughts - and they sound surprisingly similar from the inside. One type of thought is shame-based: it attacks the self, generalises the mistake to identity, and collapses perspective. The other type is growth-based: it acknowledges what happened specifically, keeps the mistake separate from the self, and points toward learning or action.</p>' +
+    '<p>Sort each statement into the correct category. Read carefully - the distinction can be subtle.</p>' +
+    '<div class="sort-bank" id="sortBank">' + bank + '</div>' +
+    '<div id="sortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a statement, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-shame" onclick="placeSort(\'shame\')">' +
+        '<div class="sz-title">Shame Voice</div>' +
+        '<div class="sz-items" id="zone-shame"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-growth" onclick="placeSort(\'growth\')">' +
+        '<div class="sz-title">Growth Voice</div>' +
+        '<div class="sz-items" id="zone-growth"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sortFeedback"></div>' +
+    '<button class="btn-primary" id="sortNextBtn" onclick="renderStage(4)" disabled>Next: Inner Critic Detector -></button>' +
+  '</div>';
+}
+
+function s4() {
+  criticChoice = null;
+  var options = [
+    {id:'always',  icon:'🔴', label:'Harsh Inner Critic', text:'"I always mess everything up."', sub:'Absolute language, identity fusion, generalisation from one event', type:'shame'},
+    {id:'didnt',   icon:'🟡', label:'Realistic Observation', text:'"That did not go well."', sub:'Specific to the moment, neutral, no identity statement', type:'neutral'},
+    {id:'fix',     icon:'🟢', label:'Growth Response', text:'"I can fix this and try again."', sub:'Forward-focused, action-oriented, keeps identity separate', type:'growth'}
+  ];
+  var btns = options.map(function(o) {
+    return '<button class="critic-btn" id="cb-' + o.id + '" onclick="chooseCritic(\'' + o.id + '\',\'' + o.type + '\')">' +
+      '<span class="crb-icon">' + o.icon + '</span>' +
+      '<div><div class="crb-text">' + o.label + ': ' + o.text + '</div><div class="crb-sub">' + o.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Mistakes') +
+    backBtn(3,'Back to Sorting') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Inner Critic Detector</div>' +
+    '<h2>Spot the Harsh Inner Critic</h2>' +
+    '<p>Everyone has an inner voice - a running commentary on their actions and experiences. But after a mistake, the inner voice often shifts into a harsh critic mode that uses language that would be unacceptable from another person. "I always mess everything up" would sound cruel from a classmate. But we say it to ourselves automatically, without noticing how damaging it is.</p>' +
+    '<p>Three thoughts are available below. One is the harsh inner critic speaking. One is a realistic neutral observation. One is a genuine growth response. Identify which one is the harsh inner critic - the one that attacks identity rather than addressing the action.</p>' +
+    '<div class="critic-options">' + btns + '</div>' +
+    '<div id="criticFeedback"></div>' +
+    '<button class="btn-primary" id="criticNextBtn" onclick="renderStage(5)" disabled>Next: Shame vs Growth Meter -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Mistakes') +
+    backBtn(4,'Back to Inner Critic') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Shame vs Growth Meter</div>' +
+    '<h2>Where Is Hamza\'s Mind Right Now?</h2>' +
+    '<p>The balance between shame and growth mindset exists on a spectrum. When shame is high, growth is low - and vice versa. Where someone sits on this spectrum in the moments after a mistake is largely determined by their self-talk. The thoughts they choose - or learn to choose - directly shift the meter. Move the slider to estimate where Hamza\'s mind sits right now, after the moment we witnessed.</p>' +
+    '<div class="dual-meter-wrap">' +
+      '<div class="dual-slider-labels"><span>🌱 Full Growth</span><span>⚖️ Balanced</span><span>💔 Full Shame</span></div>' +
+      '<input type="range" class="dual-slider" id="dualSl" min="0" max="100" value="75" oninput="updateDual(this.value)"/>' +
+      '<div class="dual-bars">' +
+        '<div class="dual-bar-side shame-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">💔</span><span class="dbs-title">Shame Level</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="shameFill" style="width:75%"></div></div>' +
+          '<div class="dbs-pct" id="shamePct">75%</div>' +
+          '<div class="dbs-mood" id="shameMood">Strong shame spiral. Identity-based thinking dominant.</div>' +
+        '</div>' +
+        '<div class="dual-bar-side growth-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🌱</span><span class="dbs-title">Growth Level</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="growthFill" style="width:25%"></div></div>' +
+          '<div class="dbs-pct" id="growthPct">25%</div>' +
+          '<div class="dbs-mood" id="growthMood">Low growth access. Forward thinking feels nearly impossible.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg amber-msg">📊 <strong>Hamza\'s realistic state:</strong> The combination of public embarrassment, social laughter, and immediate identity-based self-talk ("I am stupid", "never raise my hand again") typically places someone in the High Shame range. At this level, growth thinking requires a deliberate conscious choice - it will not happen automatically. That is precisely what this lab is training.</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Recovery Formula -></button>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {step:'Mistake', def:'Something specific goes wrong in a specific moment', match:'Hamza answers a question incorrectly'},
+    {step:'Emotion', def:'The immediate emotional response that activates in the body', match:'Face goes hot, chest tightens, wanting to disappear'},
+    {step:'Thought', def:'The interpretation the mind places on the event', match:'"I am so stupid. Everyone thinks I am an idiot."'},
+    {step:'Choice', def:'The conscious or unconscious decision about what comes next', match:'Hamza chooses between shame spiral, avoidance, or growth response'},
+    {step:'Outcome', def:'The long-term consequence of the choice for learning and confidence', match:'Shame shrinks him or growth expands his capacity'}
+  ];
+  var rows = steps.map(function(s, i) {
+    return '<div class="cycle-row cr-matched" style="animation-delay:' + (i*0.08) + 's">' +
+      '<div class="cr-num">' + (i+1) + '</div>' +
+      '<div><div class="cr-step">' + s.step + '</div><div class="cr-def">' + s.def + '</div><div class="cr-match">Hamza: ' + s.match + '</div></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Mistakes') +
+    backBtn(5,'Back to Dual Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - Recovery Formula</div>' +
+    '<h2>How Mistakes Become Shame Spirals - or Growth</h2>' +
+    '<p>The sequence from mistake to outcome is predictable - but the outcome is not inevitable. The critical variable is the choice at Stage 4. Two paths diverge at exactly the same point in the sequence: one leads to shame spiral, the other to growth. Understanding where the fork in the road appears gives you the opportunity to consciously choose your direction.</p>' +
+    '<div class="cycle-match">' + rows + '</div>' +
+    '<div class="formula-box" style="margin-top:8px">' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
+        '<div class="formula-row formula-result-shame" style="margin:0"><span class="fr-icon">💔</span><div><div class="fr-title">Shame Path</div><div class="fr-desc">Identity attack + avoidance. Shame grows. Capacity shrinks. Behaviour becomes more restricted over time.</div></div></div>' +
+        '<div class="formula-row formula-result-growth" style="margin:0"><span class="fr-icon">🌱</span><div><div class="fr-title">Growth Path</div><div class="fr-desc">Identity separation + action. Shame shrinks. Capacity grows. Brain builds resilience and flexibility.</div></div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg green-msg">🏅 <strong>Badge Progress:</strong> Shame Spotter Level 1 - almost earned! Continue to Act 2 to rewrite the story...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Rewriting the Story -></button>' +
+  '</div>';
+}
+
+function s7() {
+  path1Locked = false; path1Id = null;
+  var cards = recoveryPaths.map(function(p) {
+    return '<button class="path-btn" id="p1-' + p.id + '" onclick="chooseP1(\'' + p.id + '\')">' +
+      '<span class="pb-icon">' + p.icon + '</span>' +
+      '<div><div class="pb-text">' + p.text + '</div><div class="pb-sub">' + p.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewriting the Story') +
+    backBtn(6,'Back to Recovery Formula') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Choose Recovery Path</div>' +
+    '<h2>What Should Hamza Do Next?</h2>' +
+    '<p>Hamza is sitting at his desk, face hot, shame active, thoughts racing. Three paths are available to him right now. Each will have a different impact on his shame level, his confidence, and his long-term relationship with speaking up. The brain is watching this choice carefully - it will learn from whatever Hamza does next. Choose the path you believe will serve him best long-term and see how the meters respond.</p>' +
+    '<div class="path-options" id="p1Grid">' + cards + '</div>' +
+    '<div id="p1Outcome"></div>' +
+    '<div id="p1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Rewrite the Mistake Thought -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  rewriteValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewriting the Story') +
+    backBtn(7,'Back to Recovery Path') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Rewrite the Mistake Thought</div>' +
+    '<h2>Change the Story Hamza Tells Himself</h2>' +
+    '<p>The thought "I am so stupid" does enormous damage - not because Hamza has bad intentions, but because the brain takes identity-based language literally. Every time the brain hears "I am stupid," it files that information as a fact about the self. Over repetition, it shapes behaviour: "Stupid people do not raise their hands, so I should not raise my hand." Rewriting this thought is not about forced positivity - it is about accuracy.</p>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:18px">' +
+      'Your rewritten thought should include three elements:<br/>' +
+      '<strong>Acknowledge the mistake:</strong> What happened, specifically and without exaggeration<br/>' +
+      '<strong>Separate identity from action:</strong> Keep "I got something wrong" distinct from "I am wrong"<br/>' +
+      '<strong>Forward-looking action:</strong> What can Hamza do next from this moment' +
+    '</div>' +
+    '<label class="input-label">Instead of "I am so stupid," Hamza could say to himself...</label>' +
+    '<textarea class="reflection-input" id="rewriteInput" oninput="checkRewrite(this.value)" placeholder="For example: I got that answer wrong - it happens, and it does not mean I am stupid. Lots of people get things wrong sometimes, including people who are genuinely intelligent. I know the material and I was trying my best. I can listen to the correct answer now, learn from it, and raise my hand again later when I am confident..." rows="5"></textarea>' +
+    '<div class="char-counter" id="rewriteCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why language precision matters:</strong> "I got that wrong" and "I am stupid" feel similar from inside the shame experience, but they activate different neural pathways. Specific and accurate language - "I made a mistake on that question" - targets the action. Global language - "I am an idiot" - targets identity. The target determines the damage.</div>' +
+    '<button class="btn-primary" id="rewriteNextBtn" onclick="renderStage(9)" disabled>Next: Bounce-Back Plan -></button>' +
+  '</div>';
+}
+
+function s9() {
+  bounceValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewriting the Story') +
+    backBtn(8,'Back to Thought Rewrite') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Bounce-Back Plan</div>' +
+    '<h2>Build Your Personal Bounce-Back Plan</h2>' +
+    '<p>A bounce-back plan is a pre-decided sequence of responses that you can activate automatically in the moments after a mistake - before the shame spiral has time to take hold. Having this plan already decided in advance is crucial because shame activates rapidly, and the thinking brain has reduced capacity during high-shame moments. The plan needs to be simple enough to access under pressure.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your plan should include three components:<br/>' +
+      '<strong>Pause:</strong> A specific physical action to interrupt the immediate shame response<br/>' +
+      '<strong>Balanced thought:</strong> The specific self-talk to deploy in that moment - accurate but not cruel<br/>' +
+      '<strong>Action step:</strong> One concrete small action to take immediately that moves forward rather than backward' +
+    '</div>' +
+    '<label class="input-label">If I make a mistake in front of others, I can...</label>' +
+    '<textarea class="reflection-input" id="bounceInput" oninput="checkBounce(this.value)" placeholder="For example: I can take one slow breath to pause the automatic shame response. Then I can remind myself: this is one mistake, one moment, not a verdict. Everyone makes mistakes including people I respect. Then I can do one small thing that shows me I am still capable - ask a question, contribute something small, keep participating..." rows="5"></textarea>' +
+    '<div class="char-counter" id="bounceCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">⚡ <strong>Why plans work:</strong> Research on emotional regulation consistently shows that pre-decided response plans dramatically outperform in-the-moment improvised responses, especially under shame or stress. A plan written in advance means your thinking brain has already done the work before your shame brain gets involved.</div>' +
+    '<button class="btn-primary" id="bounceNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Growth -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Rewriting the Story') +
+    backBtn(9,'Back to Bounce-Back Plan') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Do Mistakes Actually Help the Brain Grow?</h2>' +
+    '<p>Growth mindset is not just a motivational phrase - it is a neurological description. When we make a mistake and then engage with what went wrong, the brain forms new neural connections. When we receive corrective feedback and process it, the prefrontal cortex literally rewires itself. Mistakes that are processed through curiosity rather than collapsed into shame create measurable changes in neural architecture.</p>' +
+    '<p>Answer all three questions thoughtfully:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. What specifically happens in the brain when we make a mistake and process it with curiosity rather than shame?<br/>' +
+      '2. Why does shame spiral often prevent the learning that the mistake could have provided?<br/>' +
+      '3. Think of a mistake you have made that taught you something genuinely valuable. What did you learn, and what would you have missed if shame had prevented you from engaging with it?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about neural connection formation, what shame does to available cognitive resources, and a real example from your own experience where a mistake became a teacher..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg green-msg" style="margin-bottom:16px">🌱 <strong>Badge Progress:</strong> Growth Builder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Apply and Repair -></button>' +
+  '</div>';
+}
+
+function s11() {
+  noorShDone = false; noorRespDone = false; noorRepDone = false; noorShCount = 0;
+  var shameThoughts = [
+    {id:'bad',    icon:'💔', text:'"I am such a terrible friend - this always happens with me."', correct:true},
+    {id:'resp',   icon:'✅', text:'"I was not careful enough and I knocked the cup - I should apologise."', correct:false},
+    {id:'ignore', icon:'🚪', text:'"Maybe she did not notice it was me."', correct:false},
+    {id:'panic',  icon:'😱', text:'"This is a disaster - everything is ruined and she will never forgive me."', correct:true}
+  ];
+  var shBtns = shameThoughts.map(function(s) {
+    return '<button class="noor-btn" id="ns-' + s.id + '" onclick="selectNoorShame(\'' + s.id + '\',' + s.correct + ')">' +
+      '<span class="nb-icon">' + s.icon + '</span>' +
+      '<div><div class="nb-text">' + s.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var respOpts = [
+    {id:'run',    icon:'🏃', text:'Leave the room quickly without saying anything', correct:false},
+    {id:'own',    icon:'💬', text:'Take a breath, own what happened, and offer to help fix it', correct:true},
+    {id:'blame',  icon:'🔀', text:'Quietly move the remaining cup away so no one notices you did it', correct:false}
+  ];
+  var respBtns = respOpts.map(function(r) {
+    return '<button class="noor-btn" id="nr-' + r.id + '" onclick="selectNoorResp(\'' + r.id + '\',' + r.correct + ')">' +
+      '<span class="nb-icon">' + r.icon + '</span>' +
+      '<div><div class="nb-text">' + r.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var repairOpts = [
+    {id:'stare', icon:'😶', text:'Stand there feeling terrible without doing anything', correct:false},
+    {id:'fix',   icon:'🛠️', text:'Help reprint or rewrite the damaged section during break time', correct:true},
+    {id:'say',   icon:'🙏', text:'Tell her it was an accident and walk away without offering more', correct:false}
+  ];
+  var repBtns = repairOpts.map(function(r) {
+    return '<button class="noor-btn" id="nrp-' + r.id + '" onclick="selectNoorRepair(\'' + r.id + '\',' + r.correct + ')">' +
+      '<span class="nb-icon">' + r.icon + '</span>' +
+      '<div><div class="nb-text">' + r.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Repair') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Noor\'s Accident</h2>' +
+    '<div class="story-box" data-icon="🥤">' +
+      '<p><span class="green">Noor</span> is ten years old. During a group project session, she reaches across the table and accidentally knocks over her cup of juice. It spills across her friend\'s carefully decorated project poster - the one her friend has been working on for three weeks. The ink begins to run. Noor freezes. Her face goes completely blank. The room seems to slow down.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify Noor\'s shame thoughts</div>' +
+    '<p>Some of these thoughts are shame-based. Some are responsible acknowledgement. Select the two that show shame thinking.</p>' +
+    '<div class="noor-options">' + shBtns + '</div>' +
+    '<div id="noorShFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Choose the responsible response</div>' +
+    '<div id="noorRespWrap" style="opacity:0.4;pointer-events:none"><div class="noor-options">' + respBtns + '</div></div>' +
+    '<div id="noorRespFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose the repair action</div>' +
+    '<div id="noorRepWrap" style="opacity:0.4;pointer-events:none"><div class="noor-options">' + repBtns + '</div></div>' +
+    '<div id="noorRepFeedback"></div>' +
+    '<button class="btn-primary" id="noorNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Repair Conversation Builder -></button>' +
+  '</div>';
+}
+
+function s12() {
+  apoChoice = null; apoLocked = false;
+  var btns = apologyOptions.map(function(a) {
+    return '<button class="apology-btn" id="ap-' + a.id + '" onclick="chooseApo(\'' + a.id + '\')">' +
+      '<span class="apb-icon">' + a.icon + '</span>' +
+      '<div><div class="apb-text">' + a.text + '</div><div class="apb-sub">' + a.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Repair') +
+    backBtn(11,'Back to Noor\'s Scenario') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 12 - Repair Conversation</div>' +
+    '<h2>What Does Noor Say?</h2>' +
+    '<p>After a mistake that has affected someone else, what we say matters enormously. The words we choose communicate whether we are prioritising our own comfort or genuinely engaging with the other person\'s experience. An effective apology is not about reducing our own guilt as quickly as possible - it is about acknowledging impact, taking responsibility, and offering genuine repair.</p>' +
+    '<p>Choose the response that represents the most complete and effective repair communication. See how each choice affects the connection and trust meters.</p>' +
+    '<div class="apology-options">' + btns + '</div>' +
+    '<div id="apoOutcome"></div>' +
+    '<div id="apoNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(13)">Next: Skill Check Quiz -></button></div>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Repair') +
+    backBtn(12,'Back to Repair Conversation') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have navigated all three acts of the Mistake Recovery Lab with genuine depth. Let\'s see how clearly the core concepts have settled in. Answer all three questions carefully - draw on everything you have explored today about shame, growth, and what happens in the moments after we make a mistake.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Resilience Builder!</h2>' +
+    '<p>You completed the full Mistake Recovery Lab - all 3 Acts, 14 stages, and a genuine exploration of one of the most important and most misunderstood aspects of emotional intelligence. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Shame Spotter</div><div class="b-sub">Recognised the spiral</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🌱</span><div class="b-title">Growth Builder</div><div class="b-sub">Rewrote the story</div></div>' +
+      '<div class="badge-item"><span class="b-icon">⚡</span><div class="b-title">Bounce-Back Expert</div><div class="b-sub">Built repair skills</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🔍</span><div><div class="sk-title">Shame vs Responsibility</div><div class="sk-desc">Responsibility says "I did something wrong" - it is specific, temporary, and reparable. Shame says "I am something wrong" - it is global, identity-based, and paralyzing. Both feel uncomfortable from the inside, but only one enables growth. The key skill is catching the moment the mind shifts from the action to the self, and choosing to stay with the action.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🌱</span><div><div class="sk-title">Growth Thinking After Mistakes</div><div class="sk-desc">Mistakes are not evidence of fixed inadequacy - they are information about what to do differently. The brain literally forms new neural connections when mistakes are processed through curiosity rather than shame. "I got that wrong - what did I miss?" is neurologically different from "I am wrong." One builds capacity. The other shrinks it. The choice is made in the specific language of self-talk.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">⚡</span><div><div class="sk-title">Repair and Bounce-Back</div><div class="sk-desc">After a mistake that affects others, genuine repair requires three components: specific acknowledgement of what happened, ownership of impact separate from intention, and a concrete offer to help. After a mistake that affects only ourselves, the bounce-back plan - pause, balanced thought, action step - transforms the moment from a shame event into a recovery moment. The shorter the gap between mistake and recovery action, the more powerful the resilience built.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="🌱" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'The people who accomplish great things are not the ones who never make mistakes. They are the ones who have learned to recover from mistakes without being defined by them. Every time you choose growth over shame after a mistake, you build a slightly stronger recovery muscle. Every time you choose a balanced thought over an identity attack, you teach your brain that mistakes are events, not verdicts. You are not your mistakes. You are what you do with them. 🌱' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--coral-dark),var(--violet-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* POST-RENDER */
+function postRender(n) {
+  if (n === 2) {
+    emotionSel.forEach(function(id) {
+      var el = document.getElementById('ec-' + id);
+      if (el) {
+        var item = emotionData.find(function(e){ return e.id === id; });
+        if (item) el.classList.add(item.correct ? 'ec-selected' : 'ec-wrong');
+      }
+    });
+    checkEmotions();
+  }
+  if (n === 3) restoreSortUI();
+  if (n === 5) updateDual(dualLevel);
+  if (n === 8 && rewriteText) {
+    var ta = document.getElementById('rewriteInput');
+    if (ta) ta.value = rewriteText;
+    checkRewrite(rewriteText);
+  }
+  if (n === 9 && bounceText) {
+    var ta2 = document.getElementById('bounceInput');
+    if (ta2) ta2.value = bounceText;
+    checkBounce(bounceText);
+  }
+  if (n === 10 && reflectText) {
+    var ta3 = document.getElementById('reflectInput');
+    if (ta3) ta3.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (noorShDone) {
+        var rw = document.getElementById('noorRespWrap');
+        if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+      }
+      if (noorRespDone) {
+        var rpw = document.getElementById('noorRepWrap');
+        if (rpw) { rpw.style.opacity = '1'; rpw.style.pointerEvents = 'auto'; }
+      }
+      checkNoorComplete();
+    }, 60);
+  }
+}
+
+/* ACT 1 */
+function toggleEmotion(id, correct) {
+  var el = document.getElementById('ec-' + id);
+  if (emotionSel.has(id)) {
+    emotionSel.delete(id);
+    el.classList.remove('ec-selected'); el.classList.remove('ec-wrong');
+  } else {
+    emotionSel.add(id);
+    el.classList.add(correct ? 'ec-selected' : 'ec-wrong');
+  }
+  checkEmotions();
+}
+
+function checkEmotions() {
+  var correctSel = Array.from(emotionSel).filter(function(id) {
+    return emotionData.find(function(e){ return e.id === id; }).correct;
+  });
+  var wrongSel = Array.from(emotionSel).filter(function(id) {
+    return !emotionData.find(function(e){ return e.id === id; }).correct;
+  });
+  var fb = document.getElementById('emotFeedback');
+  var nb = document.getElementById('emotNextBtn');
+  if (correctSel.length === 2 && wrongSel.length === 0) {
+    emotionOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correct - embarrassment and shame are both present and closely related in Hamza\'s experience. Embarrassment is the immediate acute response to being seen making a mistake in public - it is sharp and very physically felt (the hot face, wanting to disappear). Shame is deeper and more identity-based - it is the collapse inward, the "I am" rather than "I did" response. Both activate simultaneously in a public mistake moment, which is why it feels so overwhelming so quickly.</div>';
+    if (nb) nb.disabled = false;
+  } else if (wrongSel.length > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Some of your selections are not accurate. Proud and confident are the opposite of what Hamza is experiencing - they require a positive self-assessment that shame has completely eliminated. While anger can sometimes follow shame, it is not the primary or most immediate emotion in this moment. Embarrassment and shame are the accurate and primary responses.</div>';
+    if (nb) nb.disabled = true; emotionOk = false;
+  } else {
+    if (fb && emotionSel.size > 0) fb.innerHTML = '<div class="feedback-msg amber-msg">One correct emotion found. Look for the second one that describes the deeper identity-based response.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function handleSortClick(id) {
+  if (sortPlac[id]) return;
+  sortSel = id;
+  document.querySelectorAll('.sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('sbc-' + id);
+  if (el) el.style.outline = '3px solid var(--coral-dark)';
+  var hint = document.getElementById('sortHint');
+  if (hint) hint.textContent = 'Now click a zone to place: "' + sortCards.find(function(c){ return c.id === id; }).text + '"';
+}
+
+function placeSort(zone) {
+  if (!sortSel) return;
+  var card = sortCards.find(function(c){ return c.id === sortSel; });
+  if (!card) return;
+  sortPlac[sortSel] = zone;
+  var el = document.getElementById('sbc-' + sortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = card.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + card.text + '<span class="sz-remove" onclick="removeSort(\'' + sortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  var hint = document.getElementById('sortHint');
+  if (hint) hint.textContent = 'Click another statement to continue';
+  sortSel = null;
+  checkSortDone();
+}
+
+function removeSort(id, zone) {
+  delete sortPlac[id];
+  var el = document.getElementById('sbc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = sortCards.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSortDone();
+}
+
+function restoreSortUI() {
+  Object.keys(sortPlac).forEach(function(id) {
+    var zone = sortPlac[id];
+    var card = sortCards.find(function(c){ return c.id === id; });
+    var el = document.getElementById('sbc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && card) {
+      var correct = card.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + card.text + '<span class="sz-remove" onclick="removeSort(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSortDone();
+}
+
+function checkSortDone() {
+  var total = Object.keys(sortPlac).length;
+  var correct = sortCards.filter(function(c){ return sortPlac[c.id] === c.zone; }).length;
+  var fb = document.getElementById('sortFeedback');
+  var nb = document.getElementById('sortNextBtn');
+  if (total < sortCards.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg amber-msg">' + total + ' of 5 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === sortCards.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. The two shame statements ("I am a failure" and "Everyone thinks I am dumb") both make global identity claims based on a single event. The three growth statements ("I made a mistake", "I can learn from this", "I should try again") all stay specific to the action and point forward. This distinction - event-specific vs identity-global - is the entire difference between a shame voice and a growth voice.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 5). Remove incorrect items. Ask: does this statement make a claim about the person\'s identity ("I am...") or about a specific action ("I made..." / "I can...")? Identity claims are shame. Action claims are growth.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function chooseCritic(id, type) {
+  if (criticChoice) return;
+  criticChoice = id;
+  document.querySelectorAll('.critic-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('cb-' + id);
+  if (el) el.classList.add('crit-' + type);
+  var fb = document.getElementById('criticFeedback');
+  var nb = document.getElementById('criticNextBtn');
+  if (type === 'shame') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correct. "I always mess everything up" is the harsh inner critic. The word "always" is the tell: it takes a single mistake and uses it to make a sweeping claim about permanent inability. No one always gets everything wrong - this is an absolute statement that is factually false and deeply cruel. Notice that it sounds forceful and certain, which makes it feel true. But intensity is not accuracy. The inner critic speaks with confidence and authority about things it has no right to conclude.</div>';
+  } else if (type === 'neutral') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">"That did not go well" is a realistic, neutral observation - not the harsh inner critic. It stays specific to the moment and makes no identity claim. The harsh inner critic uses absolute language ("always", "never", "everyone") and attacks identity rather than describing an event. Look for the option that uses absolute language and makes a global claim about Hamza\'s identity.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">"I can fix this and try again" is a growth response - the opposite of the harsh inner critic. It is forward-focused and keeps identity separate from the action. The harsh inner critic attacks with absolute language. Look for the option that uses "always" or "never" and makes a sweeping claim about Hamza\'s identity or ability.</div>';
+  }
+  if (nb) nb.disabled = false;
+}
+
+function updateDual(val) {
+  dualLevel = parseInt(val);
+  var shameVal = dualLevel;
+  var growthVal = 100 - dualLevel;
+  var state = getDualState(dualLevel);
+  if (!state) return;
+  var sf = document.getElementById('shameFill');
+  var gf = document.getElementById('growthFill');
+  var sp = document.getElementById('shamePct');
+  var gp = document.getElementById('growthPct');
+  var sm = document.getElementById('shameMood');
+  var gm = document.getElementById('growthMood');
+  var sl = document.getElementById('dualSl');
+  if (sf) sf.style.width = shameVal + '%';
+  if (gf) gf.style.width = growthVal + '%';
+  if (sp) sp.textContent = shameVal + '%';
+  if (gp) gp.textContent = growthVal + '%';
+  if (sm) sm.textContent = state.sMood;
+  if (gm) gm.textContent = state.gMood;
+  if (sl) {
+    var g1 = 'rgba(224,88,64,' + (0.3 + shameVal/180) + ')';
+    var g2 = 'rgba(40,200,112,' + (0.3 + growthVal/180) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+/* ACT 2 */
+function chooseP1(id) {
+  if (path1Locked) return;
+  path1Locked = true; path1Id = id;
+  var chosen = recoveryPaths.find(function(p){ return p.id === id; });
+  recoveryPaths.forEach(function(p) {
+    var el = document.getElementById('p1-' + p.id);
+    if (el) { if (p.id === id) el.classList.add('sel-' + p.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('p1Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💔 Shame Level (long-term)</span><span id="p1SL">0%</span></div><div class="meter-track"><div class="meter-fill shame-fill" id="p1SF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💪 Confidence Level</span><span id="p1CL">0%</span></div><div class="meter-track"><div class="meter-fill conf-fill" id="p1CF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var sf = document.getElementById('p1SF'), cf = document.getElementById('p1CF');
+    var sl = document.getElementById('p1SL'), cl = document.getElementById('p1CL');
+    if (sf) sf.style.width = chosen.shameLevel + '%';
+    if (cf) cf.style.width = chosen.confLevel + '%';
+    if (sl) sl.textContent = chosen.shameLevel + '%';
+    if (cl) cl.textContent = chosen.confLevel + '%';
+  }, 150);
+  var nw = document.getElementById('p1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkRewrite(val) {
+  rewriteText = val;
+  var len = val.trim().length;
+  rewriteValid = len >= 40;
+  var c = document.getElementById('rewriteCounter');
+  var b = document.getElementById('rewriteNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (rewriteValid ? ' met' : ''); }
+  if (b) b.disabled = !rewriteValid;
+}
+
+function checkBounce(val) {
+  bounceText = val;
+  var len = val.trim().length;
+  bounceValid = len >= 40;
+  var c = document.getElementById('bounceCounter');
+  var b = document.getElementById('bounceNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (bounceValid ? ' met' : ''); }
+  if (b) b.disabled = !bounceValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ACT 3 */
+var noorShCount2 = 0;
+var noorShCorrect = 0;
+
+function selectNoorShame(id, correct) {
+  var el = document.getElementById('ns-' + id);
+  if (el && (el.classList.contains('nb-correct') || el.classList.contains('nb-incorrect'))) return;
+  if (el) el.classList.add(correct ? 'nb-correct' : 'nb-incorrect');
+  noorShCount2++;
+  if (correct) noorShCorrect++;
+  if (noorShCount2 >= 4) {
+    noorShDone = true;
+    var fb = document.getElementById('noorShFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The shame thoughts identified. "I am such a terrible friend - this always happens with me" uses absolute language ("always") and collapses a single accident into a permanent identity claim about friendship quality. "This is a disaster - everything is ruined and she will never forgive me" catastrophises the situation beyond any realistic proportion. Both are shame responses. The responsible thought ("I was not careful enough - I should apologise") stays with the action. The deflection thought ("Maybe she did not notice") is avoidance.</div>';
+    var rw = document.getElementById('noorRespWrap');
+    if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+    checkNoorComplete();
+  }
+}
+
+function selectNoorResp(id, correct) {
+  if (noorRespDone) return;
+  noorRespDone = true;
+  document.querySelectorAll('#noorRespWrap .noor-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('nr-' + id);
+  if (el) el.classList.add(correct ? 'nb-correct' : 'nb-incorrect');
+  var fb = document.getElementById('noorRespFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The most responsible response. Taking a breath before acting is the pause that prevents a shame-driven reactive response. Owning what happened opens the repair conversation. Offering to help transforms the moment from an accident into a demonstration of genuine care for the friendship. This sequence - pause, own, offer - is the foundation of effective repair after a mistake that affects someone else.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Leaving or deflecting are both shame-driven responses that prioritise Noor\'s own discomfort over the friend\'s experience and the friendship\'s wellbeing. The correct response - take a breath, own it, offer to help - is highlighted.</div>';
+    var correct2 = document.getElementById('nr-own');
+    if (correct2) correct2.classList.add('nb-correct');
+  }
+  var rpw = document.getElementById('noorRepWrap');
+  if (rpw) { rpw.style.opacity = '1'; rpw.style.pointerEvents = 'auto'; }
+  checkNoorComplete();
+}
+
+function selectNoorRepair(id, correct) {
+  if (noorRepDone) return;
+  noorRepDone = true;
+  document.querySelectorAll('#noorRepWrap .noor-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('nrp-' + id);
+  if (el) el.classList.add(correct ? 'nb-correct' : 'nb-incorrect');
+  var fb = document.getElementById('noorRepFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The repair action. Helping reprint or rewrite the damaged section transforms the apology from words into concrete action. Research consistently shows that repair actions have a more powerful effect on relationship trust than apologies alone. They demonstrate that Noor is genuinely invested in the friend\'s wellbeing - not just in relieving her own guilt as quickly as possible.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Standing helplessly or leaving with a verbal apology alone both prioritise Noor\'s discomfort management over genuine repair. Concrete help - giving time, effort, and energy to fix what was damaged - is the most powerful repair action available. The correct option is highlighted.</div>';
+    var c2 = document.getElementById('nrp-fix');
+    if (c2) c2.classList.add('nb-correct');
+  }
+  checkNoorComplete();
+}
+
+function checkNoorComplete() {
+  if (noorShDone && noorRespDone && noorRepDone) {
+    var b = document.getElementById('noorNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function chooseApo(id) {
+  if (apoLocked) return;
+  apoLocked = true; apoChoice = id;
+  var chosen = apologyOptions.find(function(a){ return a.id === id; });
+  apologyOptions.forEach(function(a) {
+    var el = document.getElementById('ap-' + a.id);
+    if (el) { if (a.id === id) el.classList.add('apo-' + a.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('apoOutcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🔗 Connection Level</span><span id="apCL">0%</span></div><div class="meter-track"><div class="meter-fill conf-fill" id="apCF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🤝 Trust Level</span><span id="apTL">0%</span></div><div class="meter-track"><div class="meter-fill shame-fill" id="apTF" style="background:linear-gradient(90deg,var(--violet-light),var(--violet-dark))"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var cf = document.getElementById('apCF'), tf = document.getElementById('apTF');
+    var cl = document.getElementById('apCL'), tl = document.getElementById('apTL');
+    if (cf) cf.style.width = chosen.connLevel + '%';
+    if (tf) tf.style.width = chosen.trustLevel + '%';
+    if (cl) cl.textContent = chosen.connLevel + '%';
+    if (tl) tl.textContent = chosen.trustLevel + '%';
+  }, 150);
+  var nw = document.getElementById('apoNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  emotionSel = new Set(); emotionOk = false;
+  sortPlac = {}; sortSel = null;
+  criticChoice = null; dualLevel = 75;
+  path1Id = null; path1Locked = false;
+  rewriteText = ''; rewriteValid = false;
+  bounceText = ''; bounceValid = false;
+  reflectText = ''; reflectValid = false;
+  noorShDone = false; noorRespDone = false; noorRepDone = false;
+  noorShCount = 0; noorShCount2 = 0; noorShCorrect = 0;
+  apoChoice = null; apoLocked = false;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#e05840','#e89820','#7848c8','#28c870','#481090','#a02008','#f8c0b0','#a0f0c8'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

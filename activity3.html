@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Anger Volcano Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff8f0;
+  --card:#ffffff;
+  --coral:#f4856a;--coral-dark:#c9482a;--coral-light:#ffc4b0;
+  --amber:#f4a830;--amber-dark:#c47808;--amber-light:#ffd98a;
+  --violet:#7c5cbf;--violet-dark:#5038a0;--violet-light:#c9b8f0;
+  --ember:#e05838;--ember-dark:#a82810;
+  --mint:#3fa87d;--mint-light:#a8e6cf;
+  --sky:#4a90d9;--sky-light:#a8c5f0;
+  --calm:#6ec6b8;--calm-dark:#3a9080;
+  --text:#2a2040;--text-soft:#6458a0;
+  --shadow-sm:0 4px 16px rgba(120,60,20,0.12);
+  --shadow-md:0 8px 32px rgba(120,60,20,0.16);
+  --shadow-lg:0 16px 48px rgba(120,60,20,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 10% 15%,rgba(244,133,106,0.22) 0%,transparent 48%),
+    radial-gradient(circle at 90% 80%,rgba(124,92,191,0.18) 0%,transparent 48%),
+    radial-gradient(circle at 55% 45%,rgba(244,168,48,0.14) 0%,transparent 55%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--ember),var(--violet));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--coral-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+/* ACT BANNER */
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(200,72,42,0.09);color:var(--coral-dark);border:1.5px solid rgba(200,72,42,0.25)}
+.act-banner.act2{background:rgba(124,92,191,0.09);color:var(--violet);border:1.5px solid rgba(124,92,191,0.25)}
+.act-banner.act3{background:rgba(63,168,125,0.09);color:var(--mint);border:1.5px solid rgba(63,168,125,0.25)}
+.act-banner .act-icon{font-size:19px}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(244,133,106,0.18);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral-dark),var(--violet));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(200,72,42,0.4)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(244,133,106,0.25);transition:var(--t)}
+.stage-dot.active{background:var(--coral-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--mint)}
+
+/* STAGE CARD */
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(244,133,106,0.15);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(244,133,106,0.12),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--coral-dark);background:rgba(244,133,106,0.12);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet);background:rgba(124,92,191,0.10)}
+.stage-label.mint{color:var(--mint);background:rgba(63,168,125,0.10)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+/* STORY BOX */
+.story-box{background:linear-gradient(135deg,rgba(244,133,106,0.10),rgba(124,92,191,0.08));border:1.5px solid rgba(244,133,106,0.28);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--coral-dark);font-style:normal}
+.story-box p span.violet{color:var(--violet)}
+.story-box p span.mint{color:var(--mint)}
+.thought-highlight{background:linear-gradient(135deg,rgba(224,88,56,0.14),rgba(244,168,48,0.12));border:2px solid rgba(224,88,56,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-highlight::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-highlight p{font-size:15px;font-weight:900;color:var(--ember-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* SELECTION GRID */
+.clue-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0 28px}
+.clue-grid.three-col{grid-template-columns:repeat(3,1fr)}
+.clue-card{background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:var(--radius-sm);padding:18px 16px;cursor:pointer;transition:var(--t);text-align:center;position:relative;overflow:hidden}
+.clue-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--coral)}
+.clue-card.selected{border-color:var(--coral-dark);background:linear-gradient(135deg,rgba(244,133,106,0.18),rgba(244,168,48,0.12));box-shadow:0 0 0 3px rgba(200,72,42,0.15),var(--shadow-sm);transform:translateY(-2px)}
+.clue-card.selected-warning{border-color:var(--amber-dark);background:linear-gradient(135deg,rgba(244,168,48,0.18),rgba(244,133,106,0.10));box-shadow:0 0 0 3px rgba(196,120,8,0.18)}
+.clue-card.selected-danger{border-color:var(--ember-dark);background:rgba(224,88,56,0.12);box-shadow:0 0 0 3px rgba(168,40,16,0.15)}
+.clue-card.selected-correct{border-color:var(--mint);background:rgba(63,168,125,0.12);box-shadow:0 0 0 3px rgba(63,168,125,0.2)}
+.clue-card.selected-incorrect{border-color:var(--coral-dark);background:rgba(244,133,106,0.12)}
+.clue-icon{font-size:28px;margin-bottom:8px;display:block;transition:transform 0.3s ease}
+.clue-card:hover .clue-icon,.clue-card.selected .clue-icon,.clue-card.selected-warning .clue-icon,.clue-card.selected-danger .clue-icon{transform:scale(1.2)}
+.clue-text{font-size:13px;font-weight:800;color:var(--text);line-height:1.35}
+.clue-badge{position:absolute;top:7px;right:7px;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--mint);color:#fff;opacity:0;transform:scale(0);transition:var(--t)}
+.clue-card.selected-correct .clue-badge{opacity:1;transform:scale(1)}
+.clue-hint{font-size:13px;color:var(--text-soft);font-weight:700;text-align:center;margin-top:-8px;margin-bottom:20px}
+
+/* VOLCANO METER */
+.volcano-meter-wrap{margin:22px 0 28px}
+.volcano-labels{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;font-weight:800;color:var(--text-soft)}
+.volcano-slider{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:999px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--calm) 0%,var(--amber) 50%,var(--ember) 75%,var(--ember-dark) 100%)}
+.volcano-slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--coral-dark);box-shadow:0 3px 12px rgba(200,72,42,0.4);cursor:pointer;transition:transform 0.2s ease}
+.volcano-slider::-webkit-slider-thumb:hover,.volcano-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.volcano-slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--coral-dark);cursor:pointer}
+.volcano-display{margin-top:18px;text-align:center;padding:18px 20px;border-radius:var(--radius-sm);transition:background 0.5s ease,border-color 0.5s ease;border:2px solid rgba(244,133,106,0.25)}
+.volcano-display .vol-emoji{font-size:40px;display:block;margin-bottom:8px;transition:all 0.4s ease}
+.volcano-display .vol-label{font-size:17px;font-weight:900}
+.volcano-display .vol-desc{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:6px;line-height:1.5}
+
+/* ANIMATED ANGER / CALM BARS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(200,72,42,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.anger{background:linear-gradient(90deg,var(--amber),var(--ember-dark));box-shadow:0 2px 8px rgba(200,72,42,0.35)}
+.meter-fill.calm{background:linear-gradient(90deg,var(--calm),var(--mint));box-shadow:0 2px 8px rgba(63,168,125,0.3)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,88,56,0.12);border:1.5px solid rgba(168,40,16,0.28)}
+.outcome-box.ok{background:rgba(244,168,48,0.14);border:1.5px solid rgba(196,120,8,0.28)}
+.outcome-box.best{background:rgba(63,168,125,0.12);border:1.5px solid rgba(63,168,125,0.28)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* TOOL CARDS */
+.tool-grid{display:flex;flex-direction:column;gap:14px;margin:20px 0 24px}
+.tool-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.tool-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--coral)}
+.tool-btn .t-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease;margin-top:2px}
+.tool-btn:hover .t-icon{transform:scale(1.12)}
+.tool-btn .t-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.tool-btn .t-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.tool-btn.sel-best{border-color:var(--mint);background:rgba(63,168,125,0.10);animation:correctPop 0.4s ease}
+.tool-btn.sel-ok{border-color:var(--amber-dark);background:rgba(244,168,48,0.12);animation:correctPop 0.4s ease}
+.tool-btn.sel-harmful{border-color:var(--ember-dark);background:rgba(224,88,56,0.10);animation:wrongShake 0.4s ease}
+
+/* VOLCANO STAGES */
+.volcano-stages{display:flex;flex-direction:column;gap:10px;margin:18px 0 24px}
+.vs-row{display:flex;align-items:flex-start;gap:14px;border-radius:var(--radius-sm);padding:14px 18px;border:1.5px solid;transition:var(--t)}
+.vs-row.stage-spark{border-color:rgba(244,168,48,0.35);background:rgba(244,168,48,0.08)}
+.vs-row.stage-pressure{border-color:rgba(244,133,106,0.4);background:rgba(244,133,106,0.08)}
+.vs-row.stage-lava{border-color:rgba(224,88,56,0.4);background:rgba(224,88,56,0.08)}
+.vs-row.stage-explosion{border-color:rgba(168,40,16,0.45);background:rgba(168,40,16,0.08)}
+.vs-row.stage-aftermath{border-color:rgba(124,92,191,0.3);background:rgba(124,92,191,0.06)}
+.vs-row .vs-icon{font-size:26px;flex-shrink:0}
+.vs-row .vs-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:3px}
+.vs-row .vs-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.55}
+
+/* TRIGGER CARDS */
+.trigger-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 26px}
+.trigger-card{background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:var(--radius-sm);padding:18px 16px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.trigger-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--coral)}
+.trigger-card .tr-icon{font-size:28px;display:block;margin-bottom:10px;transition:transform 0.3s ease}
+.trigger-card:hover .tr-icon{transform:scale(1.15)}
+.trigger-card .tr-label{font-size:13px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:4px}
+.trigger-card .tr-sub{font-size:11.5px;font-weight:600;color:var(--text-soft)}
+.trigger-card.tr-correct{border-color:var(--mint);background:rgba(63,168,125,0.10);animation:correctPop 0.4s ease}
+.trigger-card.tr-incorrect{border-color:var(--ember-dark);background:rgba(224,88,56,0.08);animation:wrongShake 0.4s ease}
+
+/* THOUGHT SELECTOR */
+.thought-option{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:var(--radius-sm);padding:16px 18px;cursor:pointer;transition:var(--t);margin-bottom:12px;font-family:'Nunito',sans-serif;width:100%;text-align:left}
+.thought-option:hover{border-color:var(--coral);background:rgba(244,133,106,0.06);transform:translateX(3px)}
+.thought-option .th-icon{font-size:24px;flex-shrink:0}
+.thought-option .th-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.45}
+.thought-option .th-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.thought-option.th-selected-high{border-color:var(--ember-dark);background:rgba(224,88,56,0.10);animation:wrongShake 0.4s ease}
+.thought-option.th-selected-low{border-color:var(--mint);background:rgba(63,168,125,0.08);animation:correctPop 0.4s ease}
+
+/* REPAIR CARDS */
+.repair-grid{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.repair-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:var(--radius-sm);padding:16px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.repair-btn:hover{border-color:var(--coral);transform:translateX(3px);box-shadow:var(--shadow-sm)}
+.repair-btn .r-icon{font-size:24px;flex-shrink:0}
+.repair-btn .r-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.repair-btn .r-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:3px}
+.repair-btn.r-correct{border-color:var(--mint);background:rgba(63,168,125,0.10);animation:correctPop 0.4s ease}
+.repair-btn.r-incorrect{border-color:var(--ember-dark);background:rgba(224,88,56,0.08);animation:wrongShake 0.4s ease}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(63,168,125,0.18);color:#226a50;border:1.5px solid rgba(63,168,125,0.3)}
+.feedback-msg.incorrect-msg{background:rgba(224,88,56,0.14);color:#8a2010;border:1.5px solid rgba(168,40,16,0.28)}
+.feedback-msg.info-msg{background:rgba(124,92,191,0.09);color:var(--violet);border:1.5px solid rgba(124,92,191,0.25)}
+.feedback-msg.amber-msg{background:rgba(244,168,48,0.14);color:var(--amber-dark);border:1.5px solid rgba(196,120,8,0.28)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(244,133,106,0.28);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(100,88,160,0.45)}
+.reflection-input:focus{border-color:var(--coral-dark);box-shadow:0 0 0 3px rgba(200,72,42,0.14);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--mint)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--coral-dark),var(--violet));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(200,72,42,0.32);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,72,42,0.42)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(244,133,106,0.3);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(244,133,106,0.08);border-color:var(--coral-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(244,133,106,0.28);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--coral-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(244,133,106,0.22);border-radius:999px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--coral);background:rgba(244,133,106,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--mint);background:rgba(63,168,125,0.14);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--ember-dark);background:rgba(224,88,56,0.10);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--mint);background:rgba(63,168,125,0.08);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(63,168,125,0.18);color:#226a50}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,88,56,0.14);color:#8a2010}
+
+/* BADGE GRID */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(244,168,48,0.16),rgba(244,133,106,0.12));border:1.5px solid rgba(244,168,48,0.38);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+/* SKILLS SUMMARY */
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(244,133,106,0.18);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+/* CELEBRATION */
+.celebration-overlay{position:fixed;inset:0;background:rgba(255,248,240,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(244,133,106,0.2);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,133,106,0.07),rgba(124,92,191,0.06),rgba(244,168,48,0.05));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* MOOD CHIPS */
+.mood-chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.mood-chip{background:var(--bg);border:2px solid rgba(244,133,106,0.22);border-radius:999px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.mood-chip:hover{border-color:var(--coral-dark);color:var(--text);background:rgba(244,133,106,0.08)}
+.mood-chip.selected{background:linear-gradient(135deg,var(--coral-dark),var(--violet));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(200,72,42,0.28)}
+
+/* ANIMATIONS */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .clue-grid{gap:10px}
+  .clue-grid.three-col{grid-template-columns:repeat(2,1fr)}
+  .trigger-grid{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+  .badge-item{padding:14px 8px}
+  .badge-item .b-icon{font-size:28px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🌋 Volcano Lab</div>
+    <h1>The Anger <span>Volcano</span> Lab</h1>
+    <p>Understand anger - Catch escalation early - Build a cool-down plan</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌋</div>
+    <h2>Lab Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now have real tools to manage anger before it manages you.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🌋</span><div class="b-title">Volcano Spotter</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🧊</span><div class="b-title">Calm Strategist</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🤝</span><div class="b-title">Repair Expert</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+/* ============================================= CONSTANTS & STATE ============================================= */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+// Act 1 state
+let selectedWarningSigns  = new Set();
+let warnSignsAnswered     = false;
+let volcanoLevel          = 50;
+let triggerAnswered       = false;
+let triggerCorrect        = false;
+let thoughtAnswered       = false;
+let volcanoMatchDone      = false;
+
+// Act 2 state
+let tool1Choice           = null;
+let tool1Locked           = false;
+let tool2Choice           = null;
+let coolPlanValid         = false;
+let act2ReflValid         = false;
+let coolPlanText          = '';
+let act2ReflText          = '';
+
+// Act 3 state
+let saraLevelDone         = false;
+let saraThoughtDone       = false;
+let saraToolDone          = false;
+let saraLevelValue        = 50;
+let repairAnswered        = false;
+let repairCorrect         = false;
+let personalChips         = new Set();
+let quizAnswers           = {};
+
+/* ============================================= DATA ============================================= */
+const warningSigns = [
+  {id:'fists',   icon:'✊', text:'Clenched fists',       type:'early'},
+  {id:'jaw',     icon:'😬', text:'Tight jaw',             type:'early'},
+  {id:'heart',   icon:'💓', text:'Fast heartbeat',        type:'early'},
+  {id:'yell',    icon:'📢', text:'Yelling voice',         type:'explosion'},
+  {id:'throw',   icon:'💥', text:'Throwing objects',      type:'explosion'},
+  {id:'walk',    icon:'🚶', text:'Walking away calmly',   type:'cool'}
+];
+
+const volcanoLevels = [
+  {range:[0,10],   emoji:'😌', label:'Calm', desc:'Feeling relaxed and at ease. No emotional pressure building.', bg:'rgba(110,198,184,0.12)', border:'rgba(110,198,184,0.35)', color:'var(--calm-dark)'},
+  {range:[11,30],  emoji:'😕', label:'Irritated', desc:'Something is mildly bothering you. A small flicker of frustration.', bg:'rgba(244,168,48,0.10)', border:'rgba(196,120,8,0.28)', color:'var(--amber-dark)'},
+  {range:[31,55],  emoji:'😤', label:'Frustrated', desc:'The pressure is building. You notice heat rising and thoughts quickening.', bg:'rgba(244,133,106,0.12)', border:'rgba(200,72,42,0.28)', color:'var(--coral-dark)'},
+  {range:[56,78],  emoji:'😠', label:'Angry', desc:'Strong anger is present. Your body is fully activated and it is hard to think clearly.', bg:'rgba(224,88,56,0.12)', border:'rgba(168,40,16,0.32)', color:'var(--ember)'},
+  {range:[79,100], emoji:'🤬', label:'Exploding', desc:'Full eruption. Impulse control is at its lowest and words or actions can cause real harm.', bg:'rgba(168,40,16,0.12)', border:'rgba(168,40,16,0.42)', color:'var(--ember-dark)'}
+];
+
+const triggerCards = [
+  {id:'accident',  icon:'🧱', label:'The accident', sub:'Cousin bumped the table - an honest mistake', correct:true},
+  {id:'malice',    icon:'😈', label:'"Trying to ruin it"', sub:'What his mind added - not what actually happened', correct:false},
+  {id:'tired',     icon:'😴', label:'Being tired', sub:'His energy level made him more reactive', correct:false},
+  {id:'unappreciated', icon:'💔', label:'Feeling unvalued', sub:'A deeper story his mind connected to this moment', correct:false}
+];
+
+const thoughtOptions = [
+  {id:'worst', text:'"Why does this ALWAYS happen? Nothing ever works out for me."', sub:'All-or-nothing + catastrophizing', level:'high', icon:'🔥'},
+  {id:'mad',   text:'"I am so angry right now. This really upset me."', sub:'Accurate acknowledgement of feeling', level:'medium', icon:'😤'},
+  {id:'calm',  text:'"That is really frustrating. I can rebuild it."', sub:'Honest and forward-looking', level:'low', icon:'🧊'}
+];
+
+const regulationTools = [
+  {
+    id:'breathe', icon:'🌬️', text:'Deep breathing', sub:'Breathe in for 4 counts, hold 2, out for 6',
+    quality:'best', angerLevel:22, calmLevel:80,
+    outcome:{title:'✅ Deep Breathing Works', body:'Slow, deliberate breathing directly activates the parasympathetic nervous system - the body\'s built-in calm response. As Ayaan breathes out slowly, his heart rate drops, his hands relax, and the heat in his face begins to fade. The volcanic pressure decreases significantly before it can reach explosion level.', tip:'Science says: A long exhale signals the brain that there is no real threat. This is one of the fastest evidence-based tools for anger regulation.'}
+  },
+  {
+    id:'count', icon:'🔢', text:'Count backwards from 20', sub:'Slowly and deliberately, focusing only on the numbers',
+    quality:'best', angerLevel:30, calmLevel:70,
+    outcome:{title:'✅ Counting Creates a Pause', body:'Counting backwards forces the thinking brain (prefrontal cortex) to engage. While Ayaan is focused on the sequence, his reactive brain has a moment to step back from the immediate surge of anger. The numbers create a mental gap between the trigger and the response.', tip:'Science says: Deliberate counting engages working memory and pulls attention away from the anger trigger, reducing the emotional intensity.'}
+  },
+  {
+    id:'walk', icon:'🚶', text:'Walk away from the situation', sub:'Remove yourself until you feel more regulated',
+    quality:'ok', angerLevel:45, calmLevel:60,
+    outcome:{title:'👍 Walking Away Helps', body:'Physically removing himself from the scene gives Ayaan space from the trigger. Movement also helps metabolise some of the stress hormones flooding his body. The challenge is returning to address the situation once calm - avoidance alone does not resolve the underlying frustration.', tip:'Tip: Walking away works best as a temporary measure paired with another tool. Return and reconnect once the anger level has dropped.'}
+  },
+  {
+    id:'yell', icon:'📢', text:'Yell louder to release it', sub:'Express the feeling as intensely as possible',
+    quality:'harmful', angerLevel:88, calmLevel:10,
+    outcome:{title:'❌ Yelling Escalates, Not Releases', body:'Despite the common belief that "venting" helps, research shows the opposite: yelling and intense expression tend to intensify anger rather than release it. Ayaan\'s heart rate increases further. His cousin becomes frightened or defensive. The situation escalates, making regulation harder - not easier.', tip:'Science says: Emotional venting strengthens anger pathways in the brain. The most effective strategy is to reduce physiological arousal first, then address the situation.'}
+  }
+];
+
+const volcanoStages = [
+  {cls:'stage-spark',     icon:'✨', title:'1. Spark',     desc:'The triggering event - the thing that lights the match. Often small, sometimes unexpected. (The Lego structure collapsing)'},
+  {cls:'stage-pressure',  icon:'🔥', title:'2. Pressure',  desc:'Anger begins building beneath the surface. Physical signals appear - tight muscles, racing heart, hot face. Thoughts start fueling the feeling.'},
+  {cls:'stage-lava',      icon:'🌡️', title:'3. Lava',     desc:'The critical window. Anger is strong and rising but has not yet exploded. THIS is the moment regulation tools work best.'},
+  {cls:'stage-explosion', icon:'💥', title:'4. Explosion', desc:'The eruption. Words or actions may cause damage. Impulse control is at its lowest. This is the hardest point to regulate from.'},
+  {cls:'stage-aftermath', icon:'🌫️', title:'5. Aftermath', desc:'The cool-down period. Shame, regret, or fatigue often follow. This is the time for repair, reflection, and rebuilding trust.'}
+];
+
+const repairOptions = [
+  {id:'blame',   icon:'😤', text:'"It\'s all your fault. You always ruin everything."', sub:'Blame and generalisation - this escalates conflict', correct:false},
+  {id:'repair',  icon:'🤝', text:'"I was really upset when that happened. I\'m calmer now. Can we figure out how to fix it together?"', sub:'Honest feeling + openness to repair - emotionally intelligent', correct:true},
+  {id:'dismiss', icon:'😶', text:'"Whatever. It doesn\'t matter."', sub:'Emotional shutdown - avoids the issue without resolution', correct:false}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is typically the EARLIEST warning sign that anger is building?',
+    options:[
+      {icon:'✊', text:'Physical body signals - like a tight jaw, clenched fists, or fast heartbeat', correct:true},
+      {icon:'💥', text:'Throwing or breaking things in the heat of the moment', correct:false},
+      {icon:'😴', text:'Feeling tired and wanting to sleep', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right! Early warning signs are physical - they appear in the body before the explosion. Recognising them early is the key because the Lava Stage is the last chance to regulate before an eruption.',
+      incorrect:'Not quite. The earliest signs of anger are physical - tight muscles, a fast heartbeat, clenched hands, heat in the face. These appear long before an explosion and are the most important signals to learn to notice.'
+    }
+  },
+  {
+    q:'Question 2: Why do our THOUGHTS make anger more intense?',
+    options:[
+      {icon:'🧠', text:'Thoughts tell the brain whether a situation is threatening - more dramatic thoughts activate more intense emotional responses', correct:true},
+      {icon:'😊', text:'Thoughts have no real effect - feelings are purely physical reactions in the body', correct:false},
+      {icon:'🤷', text:'Anger and thinking are completely separate and do not influence each other', correct:false}
+    ],
+    feedback:{
+      correct:'Spot on! The brain uses our thoughts to decide how serious a threat is. A thought like "this ALWAYS happens" signals to the brain that the situation is much more dangerous than it actually is - which triggers a stronger anger response.',
+      incorrect:'Not quite. Our thoughts directly fuel emotional intensity. The brain interprets our inner narrative to decide how threatening a situation is. More catastrophic thoughts ("this always happens, nothing ever works") create much stronger anger responses than accurate, specific ones.'
+    }
+  },
+  {
+    q:'Question 3: Which response is most likely to PREVENT anger from escalating further?',
+    options:[
+      {icon:'📢', text:'Expressing the anger loudly to release the pressure immediately', correct:false},
+      {icon:'🌬️', text:'Using a slow breathing technique to lower physical arousal before responding', correct:true},
+      {icon:'🏃', text:'Permanently avoiding everything that triggers the anger', correct:false}
+    ],
+    feedback:{
+      correct:'Correct! Slow breathing lowers the physical arousal (heart rate, muscle tension) that drives escalation. By reducing the body\'s stress response first, you create the space needed to choose a thoughtful response rather than an impulsive one.',
+      incorrect:'Not this one. Research shows that venting intensifies anger rather than releasing it. Permanent avoidance prevents learning. Slow breathing - particularly a long exhale - is the most evidence-backed tool for preventing escalation because it directly lowers physiological arousal.'
+    }
+  }
+];
+
+/* ============================================= UTILITIES ============================================= */
+function backBtn(stage, label) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + stage + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + label + '</button></div>';
+}
+function actBanner(act, text) {
+  const icons = {1:'🔴', 2:'🟣', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getVolcanoLevel(v) {
+  return volcanoLevels.find(function(l){ return v >= l.range[0] && v <= l.range[1]; });
+}
+
+/* ============================================= PROGRESS ============================================= */
+function updateProgress(stage) {
+  const pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  const dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (let i = 1; i <= TOTAL_STAGES; i++) {
+    const d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ============================================= RENDER ROUTER ============================================= */
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  const fns = [null, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ============================================= STAGE HTML BUILDERS ============================================= */
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand the Volcano') +
+    '<div class="stage-label"><span class="dot"></span> Case File #003</div>' +
+    '<h2>The Volcano Inside</h2>' +
+    '<p>Welcome to the Anger Volcano Lab. Anger is one of the most powerful emotions a human being experiences - and one of the most misunderstood. Today you will learn how anger actually works, how to spot it building early, and what to do before it erupts. This is not about eliminating anger. It is about understanding and mastering it.</p>' +
+    '<p>Your first case has just arrived.</p>' +
+    '<div class="story-box" data-icon="🧱">' +
+      '<p><span>Ayaan</span> is ten years old. He has spent two hours building an intricate Lego city - bridges, towers, a market district. Every piece placed with care and concentration. His younger cousin runs in excitedly, bumps the table without noticing, and the entire structure collapses in a cascade of plastic. Ayaan freezes for half a second. Then his body reacts before his mind catches up: his hands ball into fists, his jaw clamps tight, his face goes hot. His heart is hammering. And a thought roars through his mind:</p>' +
+    '</div>' +
+    '<div class="thought-highlight"><p>"Why does this ALWAYS happen?! Nothing I build ever stays. I HATE this."</p></div>' +
+    '<p>That feeling rising inside Ayaan - the heat, the tightness, the urge to do something - is exactly like a volcano building pressure. Understanding how it works is the first step to mastering it.</p>' +
+    '<div class="feedback-msg info-msg">🌋 <strong>Volcano Concept:</strong> Anger is not a switch that flips from off to on. It builds in stages - from a small spark to a full eruption. The secret is learning to read the pressure gauges early - before the lava starts flowing.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">🔍 Begin Investigation</button>' +
+  '</div>';
+}
+
+function s2() {
+  const cards = warningSigns.map(function(s) {
+    return '<div class="clue-card" id="warn-' + s.id + '" onclick="toggleWarningSign(\'' + s.id + '\',\'' + s.type + '\')">' +
+      '<span class="clue-icon">' + s.icon + '</span>' +
+      '<div class="clue-text">' + s.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand the Volcano') +
+    backBtn(1, 'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Warning Signs</div>' +
+    '<h2>Spot the Body\'s Early Signals</h2>' +
+    '<p>Anger always sends signals before it erupts. The body acts as an early warning system - if you learn to read its signals, you have time to intervene. Look at the cards below and <strong>select all three early warning signs</strong> of anger building - the ones that appear before any explosion.</p>' +
+    '<div class="feedback-msg amber-msg" style="margin-bottom:18px">⚠️ Some of these are explosion behaviours (what happens when anger is already out of control) and one is a healthy response. You need to identify the three that are <strong>early warning signs</strong>.</div>' +
+    '<div class="clue-hint">👆 Select the 3 early warning signs</div>' +
+    '<div class="clue-grid three-col" id="warnGrid">' + cards + '</div>' +
+    '<div id="warnFeedback"></div>' +
+    '<button class="btn-primary" id="warnNextBtn" onclick="renderStage(3)" disabled>Next: Escalation Meter -></button>' +
+  '</div>';
+}
+
+function s3() {
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand the Volcano') +
+    backBtn(2, 'Back to Warning Signs') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Escalation Level</div>' +
+    '<h2>How High Is Ayaan\'s Volcano?</h2>' +
+    '<p>Anger exists on a spectrum. Understanding where someone sits on that spectrum determines which tools are appropriate and how urgently they need to act. Think about everything you read about Ayaan - his clenched fists, his racing heart, the roaring thought - and estimate where his anger sits on the volcano scale right now.</p>' +
+    '<div class="volcano-meter-wrap">' +
+      '<div class="volcano-labels"><span>😌 Calm</span><span>😕 Irritated</span><span>😤 Frustrated</span><span>😠 Angry</span><span>🤬 Exploding</span></div>' +
+      '<input type="range" class="volcano-slider" id="volcanoSlider" min="0" max="100" value="50" oninput="updateVolcanoDisplay(this.value)"/>' +
+    '</div>' +
+    '<div class="volcano-display" id="volcanoDisplay">' +
+      '<span class="vol-emoji" id="volEmoji">😤</span>' +
+      '<div class="vol-label" id="volLabel">Frustrated</div>' +
+      '<div class="vol-desc" id="volDesc">The pressure is building. You notice heat rising and thoughts quickening.</div>' +
+    '</div>' +
+    '<br/>' +
+    '<div class="feedback-msg info-msg">💡 <strong>Notice:</strong> The lava stage (50-75%) is the most critical window. This is when regulation tools work best. Once the volcano erupts, it is much harder to intervene effectively.</div>' +
+    '<button class="btn-primary" onclick="renderStage(4)">Next: Identify the Trigger -></button>' +
+  '</div>';
+}
+
+function s4() {
+  triggerAnswered = false;
+  const cards = triggerCards.map(function(t) {
+    return '<div class="trigger-card" id="trigger-' + t.id + '" onclick="selectTrigger(\'' + t.id + '\',' + t.correct + ')">' +
+      '<span class="tr-icon">' + t.icon + '</span>' +
+      '<div class="tr-label">' + t.label + '</div>' +
+      '<div class="tr-sub">' + t.sub + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand the Volcano') +
+    backBtn(3, 'Back to Escalation') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Trigger Analysis</div>' +
+    '<h2>What Actually Triggered the Anger?</h2>' +
+    '<p>Here is an important distinction that changes everything: there is what <em>actually happened</em>, and there is what <em>the mind added to it</em>. These are two very different things - and the mind\'s additions are often what fuel the anger most intensely.</p>' +
+    '<div class="thought-highlight"><p>Ayaan\'s thought: "Why does this ALWAYS happen? Nothing I build ever stays."</p></div>' +
+    '<p>Which of the four cards below represents <strong>the actual event</strong> - what objectively happened - without any mental interpretation added?</p>' +
+    '<div class="trigger-grid">' + cards + '</div>' +
+    '<div id="triggerFeedback"></div>' +
+    '<button class="btn-primary" id="triggerNextBtn" onclick="renderStage(5)" disabled>Next: Thoughts and Anger -></button>' +
+  '</div>';
+}
+
+function s5() {
+  thoughtAnswered = false;
+  const opts = thoughtOptions.map(function(t) {
+    return '<button class="thought-option" id="thought-' + t.id + '" onclick="selectThought(\'' + t.id + '\',\'' + t.level + '\')">' +
+      '<span class="th-icon">' + t.icon + '</span>' +
+      '<div><div class="th-text">' + t.text + '</div><div class="th-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand the Volcano') +
+    backBtn(4, 'Back to Triggers') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Thought and Anger</div>' +
+    '<h2>Which Thought Fuels the Fire Most?</h2>' +
+    '<p>After the Lego structure collapses, Ayaan has a choice - even though it does not feel like one - about how he narrates the situation to himself. Different inner stories create dramatically different levels of anger. Look at the three possible thoughts below and choose which one <strong>increases anger the most</strong>.</p>' +
+    '<div style="margin:20px 0 8px">' + opts + '</div>' +
+    '<div id="thoughtFeedback"></div>' +
+    '<button class="btn-primary" id="thoughtNextBtn" onclick="renderStage(6)" disabled>Next: The Volcano Model -></button>' +
+  '</div>';
+}
+
+function s6() {
+  const stages = volcanoStages.map(function(vs) {
+    return '<div class="vs-row ' + vs.cls + '">' +
+      '<span class="vs-icon">' + vs.icon + '</span>' +
+      '<div><div class="vs-title">' + vs.title + '</div><div class="vs-desc">' + vs.desc + '</div></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand the Volcano') +
+    backBtn(5, 'Back to Thoughts') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - Volcano Model</div>' +
+    '<h2>The Full Volcano Model</h2>' +
+    '<p>Every anger episode follows a similar pattern. Understanding the five stages means you can intervene at exactly the right moment - before the eruption - rather than trying to manage the aftermath. Read through each stage and notice how Ayaan\'s experience fits this model perfectly.</p>' +
+    '<div class="volcano-stages">' + stages + '</div>' +
+    '<div class="feedback-msg info-msg">' +
+      '💡 <strong>The most important insight:</strong> The Lava Stage (Stage 3) is the golden window. Anger is strong enough to feel real and urgent - but has not yet exploded into actions that cause damage. Every regulation skill you will learn in Act 2 works best right here.' +
+    '</div>' +
+    '<div class="feedback-msg" style="background:rgba(63,168,125,0.12);color:var(--mint);border:1.5px solid rgba(63,168,125,0.28);margin-bottom:20px">' +
+      '🌋 <strong>Badge Progress:</strong> Volcano Spotter Level 1 - almost earned! Continue to Act 2 to learn the cool-down tools...' +
+    '</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Cool the Volcano -></button>' +
+  '</div>';
+}
+
+function s7() {
+  tool1Locked = false; tool1Choice = null;
+  const cards = regulationTools.map(function(t) {
+    return '<button class="tool-btn" id="tool-' + t.id + '" onclick="chooseTool1(\'' + t.id + '\')">' +
+      '<span class="t-icon">' + t.icon + '</span>' +
+      '<div><div class="t-text">' + t.text + '</div><div class="t-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Cool the Volcano') +
+    backBtn(6, 'Back to Volcano Model') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Choose a Tool</div>' +
+    '<h2>Which Regulation Tool Would You Use?</h2>' +
+    '<p>Ayaan is in the Lava Stage. His anger is strong and rising - but he has not yet exploded. This is the most important moment: the window where a good regulation tool can dramatically change the outcome. Four options are available to him. Which one would you choose - and what do you think will happen?</p>' +
+    '<div class="tool-grid" id="toolGrid1">' + cards + '</div>' +
+    '<div id="tool1Outcome"></div>' +
+    '<div id="tool1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">-> Try Another Tool and Compare</button></div>' +
+  '</div>';
+}
+
+function s8() {
+  tool2Choice = null;
+  const first = regulationTools.find(function(t){ return t.id === tool1Choice; });
+  const remaining = regulationTools.filter(function(t){ return t.id !== tool1Choice; });
+  const cards = remaining.map(function(t) {
+    return '<button class="tool-btn" id="try-' + t.id + '" onclick="chooseTool2(\'' + t.id + '\')">' +
+      '<span class="t-icon">' + t.icon + '</span>' +
+      '<div><div class="t-text">' + t.text + '</div><div class="t-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Cool the Volcano') +
+    backBtn(7, 'Back to Tool Selection') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Compare Two Tools</div>' +
+    '<h2>See What Changes Side by Side</h2>' +
+    '<p>You chose <strong>' + first.icon + ' ' + first.text + '</strong> for Ayaan. Now try one of the remaining tools and compare both outcomes. Seeing the difference in the anger and calm meters makes the impact of each choice visible and concrete.</p>' +
+    '<div class="section-divider">Try another tool</div>' +
+    '<div class="tool-grid" id="toolGrid2">' + cards + '</div>' +
+    '<div id="tool2Outcome"></div>' +
+    '<div id="tool2NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(9)">-> Build Your Cool-Down Plan</button></div>' +
+  '</div>';
+}
+
+function s9() {
+  coolPlanValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Cool the Volcano') +
+    backBtn(8, 'Back to Comparison') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Your Cool-Down Plan</div>' +
+    '<h2>Build Your Personal Plan</h2>' +
+    '<p>The most effective anger management is personalised. A plan that you have written in your own words - based on your own body signals and your own preferred tools - is far more likely to work in a real moment than a general list of tips. Write your plan below.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your plan should include three things:<br/>' +
+      'Body signal: What physical feeling tells me anger is building?<br/>' +
+      'Action: What specific tool will I use at that moment?<br/>' +
+      'Thought shift: What can I remind myself to help lower the intensity?' +
+    '</div>' +
+    '<label class="input-label">When I feel my anger building, I can...</label>' +
+    '<textarea class="reflection-input" id="coolPlanInput" oninput="checkCoolPlan(this.value)" ' +
+      'placeholder="For example: When I notice my jaw getting tight and my fists clenching, I know anger is building. I will step away from the situation and breathe slowly - in for 4, hold 2, out for 6. I will remind myself that one bad moment does not define everything..." ' +
+      'rows="5"></textarea>' +
+    '<div class="char-counter" id="coolPlanCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why writing matters:</strong> Articulating a plan in advance creates a mental script your brain can access in the heat of a moment. Written plans are significantly more likely to be followed than unwritten intentions.</div>' +
+    '<button class="btn-primary" id="coolPlanNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Anger -></button>' +
+  '</div>';
+}
+
+function s10() {
+  act2ReflValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Cool the Volcano') +
+    backBtn(9, 'Back to Cool-Down Plan') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Anger Is Not the Enemy</h2>' +
+    '<p>Before we move to the final act, there is an important idea to sit with: anger is not a bad emotion. It is not a character flaw. It is a signal - often an important and valid one - that something feels unfair, threatening, or deeply important to you.</p>' +
+    '<p>The problem is never feeling angry. The problem is what happens when anger goes unregulated and erupts in ways that hurt ourselves or others.</p>' +
+    '<p>In your response below, answer this question thoughtfully:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Why is anger itself not "bad" or wrong?<br/>' +
+      '2. What specifically makes uncontrolled anger potentially harmful?<br/>' +
+      '3. How does understanding the Volcano Model change how you think about your own anger?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="act2ReflInput" oninput="checkAct2Refl(this.value)" ' +
+      'placeholder="Write your reflection here... Think about what anger is actually trying to tell you, what happens when it erupts without control, and how knowing the stages early gives you real power over your own responses..." ' +
+      'rows="5"></textarea>' +
+    '<div class="char-counter" id="act2ReflCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg" style="background:rgba(124,92,191,0.09);color:var(--violet);border:1.5px solid rgba(124,92,191,0.25);margin-bottom:16px">' +
+      '🧊 <strong>Badge Progress:</strong> Calm Strategist Level 1 - almost earned! One final act to go...' +
+    '</div>' +
+    '<button class="btn-primary" id="act2ReflNextBtn" onclick="renderStage(11)" disabled>-> Continue to Act 3: Transfer and Repair</button>' +
+  '</div>';
+}
+
+function s11() {
+  saraLevelDone = false; saraThoughtDone = false; saraToolDone = false;
+  const tools = regulationTools.filter(function(t){ return t.id !== 'yell'; }).map(function(t) {
+    return '<button class="tool-btn" id="sara-tool-' + t.id + '" onclick="selectSaraTool(\'' + t.id + '\',\'' + t.quality + '\')">' +
+      '<span class="t-icon">' + t.icon + '</span>' +
+      '<div><div class="t-text">' + t.text + '</div><div class="t-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Transfer and Repair') +
+    backBtn(10, 'Back to Act 2') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 11 - New Case File</div>' +
+    '<h2>A Brand New Case</h2>' +
+    '<p>Everything you have learned about anger - the warning signs, the escalation stages, the regulation tools - now needs to be applied in a completely new situation with a different character. This is where skills become real.</p>' +
+    '<div class="story-box" data-icon="🎨">' +
+      '<p><span class="mint">Sara</span> is eleven years old and has spent three afternoons working on a watercolour painting for the school art show. It is her best work yet - soft blues and greens layered carefully. Today, a friend reaches across the table carelessly and knocks over a jar of red paint. It spreads across Sara\'s painting in a vivid, irreversible stain. Sara\'s whole body goes rigid. She feels heat rising up her neck. A tight, burning feeling fills her chest. Her hands grip the table edge. And a thought appears: <em>"She RUINED it. She never thinks. This always happens when she\'s around."</em></p>' +
+    '</div>' +
+
+    '<div class="section-divider">Step 1 of 3 - Estimate Sara\'s escalation level</div>' +
+    '<p>Where is Sara on the Volcano scale right now?</p>' +
+    '<div class="volcano-meter-wrap">' +
+      '<div class="volcano-labels"><span>😌 Calm</span><span>😠 Angry</span><span>🤬 Exploding</span></div>' +
+      '<input type="range" class="volcano-slider" id="saraSlider" min="0" max="100" value="50" oninput="updateSaraDisplay(this.value)"/>' +
+    '</div>' +
+    '<div class="volcano-display" id="saraDisplay" style="margin-bottom:8px">' +
+      '<span class="vol-emoji" id="saraEmoji">😤</span>' +
+      '<div class="vol-label" id="saraLabel">Frustrated</div>' +
+    '</div>' +
+    '<button class="btn-primary" id="saraLevelBtn" onclick="confirmSaraLevel()" style="margin-bottom:20px;background:linear-gradient(135deg,var(--coral-dark),var(--amber-dark))">Confirm Escalation Level</button>' +
+    '<div id="saraLevelFeedback"></div>' +
+
+    '<div class="section-divider">Step 2 of 3 - Which thought is fueling Sara\'s anger most?</div>' +
+    '<div id="saraThoughtWrap" style="opacity:0.4;pointer-events:none">' +
+      '<button class="thought-option" id="sara-th-always" onclick="selectSaraThought(\'always\')">' +
+        '<span class="th-icon">🔥</span><div><div class="th-text">"She RUINED it. She NEVER thinks. This ALWAYS happens."</div><div class="th-sub">Generalising and catastrophising - maximum fuel</div></div>' +
+      '</button>' +
+      '<button class="thought-option" id="sara-th-upset" onclick="selectSaraThought(\'upset\')">' +
+        '<span class="th-icon">😤</span><div><div class="th-text">"I am so upset. This painting meant a lot to me."</div><div class="th-sub">Honest and accurate - moderate intensity</div></div>' +
+      '</button>' +
+    '</div>' +
+    '<div id="saraThoughtFeedback"></div>' +
+
+    '<div class="section-divider">Step 3 of 3 - Choose Sara\'s regulation tool</div>' +
+    '<div id="saraToolWrap" style="opacity:0.4;pointer-events:none">' +
+      '<div class="tool-grid">' + tools + '</div>' +
+    '</div>' +
+    '<div id="saraToolFeedback"></div>' +
+    '<button class="btn-primary" id="saraNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Repair Conversation -></button>' +
+  '</div>';
+}
+
+function s12() {
+  repairAnswered = false;
+  const options = repairOptions.map(function(r) {
+    return '<button class="repair-btn" id="repair-' + r.id + '" onclick="selectRepair(\'' + r.id + '\',' + r.correct + ')">' +
+      '<span class="r-icon">' + r.icon + '</span>' +
+      '<div><div class="r-text">' + r.text + '</div><div class="r-sub">' + r.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Transfer and Repair') +
+    backBtn(11, 'Back to Sara\'s Story') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 12 - Repair Conversation</div>' +
+    '<h2>After the Volcano: Repair</h2>' +
+    '<p>Sara has used her regulation tool. She has taken a breath and stepped back from the immediate surge. Now comes one of the most important skills in emotional intelligence: <strong>repair</strong>. Repair is the act of rebuilding connection and understanding after anger has created distance or damage.</p>' +
+    '<p>Sara\'s friend is still sitting there, unsure whether to apologise or leave. What should Sara say? Choose the response that is most likely to genuinely resolve the situation and preserve the friendship.</p>' +
+    '<div class="repair-grid">' + options + '</div>' +
+    '<div id="repairFeedback"></div>' +
+    '<button class="btn-primary" id="repairNextBtn" onclick="renderStage(13)" disabled style="margin-top:4px">Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  const qs = quizData.map(function(q, i) {
+    const opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="quiz-opt-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" id="quiz-q-' + i + '" style="animation-delay:' + (i * 0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="quiz-feedback-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Transfer and Repair') +
+    backBtn(12, 'Back to Repair') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Anger Volcano Lab with real focus. Let\'s see how deeply the core concepts have settled in. Answer all three questions - take your time, there is no rush.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Mission Complete!') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Strategist!</h2>' +
+    '<p>You completed the full Anger Volcano Lab - all 3 Acts, 14 stages, and a genuine journey into one of the most powerful and complex emotions a person can experience. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🌋</span><div class="b-title">Volcano Spotter</div><div class="b-sub">Identified all 5 stages</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🧊</span><div class="b-title">Calm Strategist</div><div class="b-sub">Mastered cool-down tools</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🤝</span><div class="b-title">Repair Expert</div><div class="b-sub">Rebuilt after the eruption</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🌋</span><div><div class="sk-title">The Volcano Model</div><div class="sk-desc">Anger builds in five stages - Spark, Pressure, Lava, Explosion, Aftermath. The Lava Stage is the critical window where regulation tools work best. Recognising early body signals (tight jaw, fast heartbeat, clenched fists) gives you time to act before the eruption.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🧊</span><div><div class="sk-title">Regulation Tools That Work</div><div class="sk-desc">Deep breathing, counting backwards, and strategic withdrawal are evidence-based tools that lower physiological arousal. Venting and yelling intensify anger rather than releasing it. A personalised written plan is significantly more effective than an unwritten one.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🤝</span><div><div class="sk-title">Repair After Anger</div><div class="sk-desc">Managing anger does not end when the feeling passes - it includes repairing relationships. Honest, open statements that acknowledge feelings and invite connection are far more effective than blame, dismissal, or silence. Repair is a skill, not just an impulse.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="⭐" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Anger is not your enemy. It is a signal - sometimes of injustice, sometimes of pain, sometimes of something you care deeply about. The goal is never to feel no anger. The goal is to hear the signal, understand it, and choose your response rather than being controlled by it. You have the tools now. The volcano does not have to erupt every time. You are the one holding the cooling mechanism. Keep practising. 🌋' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--mint),var(--violet));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ============================================= POST-RENDER RESTORE ============================================= */
+function postRender(n) {
+  if (n === 2) {
+    selectedWarningSigns.forEach(function(id) {
+      var el = document.getElementById('warn-' + id);
+      var sign = warningSigns.find(function(s){ return s.id === id; });
+      if (el && sign) {
+        if (sign.type === 'early') el.classList.add('selected-warning');
+        else if (sign.type === 'explosion') el.classList.add('selected-danger');
+        else el.classList.add('selected-cool');
+      }
+    });
+    checkWarnCount();
+  }
+  if (n === 3) updateVolcanoDisplay(volcanoLevel);
+  if (n === 4 && triggerAnswered) {
+    setTimeout(function() {
+      var c = document.getElementById('trigger-accident');
+      if (c) c.classList.add('tr-correct');
+      var fb = document.getElementById('triggerFeedback');
+      if (fb) fb.innerHTML = buildTriggerFeedback(triggerCorrect);
+      var nb = document.getElementById('triggerNextBtn');
+      if (nb) nb.disabled = false;
+    }, 50);
+  }
+  if (n === 9 && coolPlanText) {
+    var ta = document.getElementById('coolPlanInput');
+    if (ta) ta.value = coolPlanText;
+    checkCoolPlan(coolPlanText);
+  }
+  if (n === 10 && act2ReflText) {
+    var ta2 = document.getElementById('act2ReflInput');
+    if (ta2) ta2.value = act2ReflText;
+    checkAct2Refl(act2ReflText);
+  }
+  if (n === 11) {
+    updateSaraDisplay(saraLevelValue);
+    setTimeout(function() {
+      if (saraLevelDone) {
+        var fb = document.getElementById('saraLevelFeedback');
+        if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Level confirmed. Sara\'s anger is at the ' + getVolcanoLevel(saraLevelValue).label + ' stage.</div>';
+        var tw = document.getElementById('saraThoughtWrap');
+        if (tw) tw.style = 'opacity:1;pointer-events:auto';
+      }
+      if (saraThoughtDone) {
+        var tw2 = document.getElementById('saraToolWrap');
+        if (tw2) tw2.style = 'opacity:1;pointer-events:auto';
+      }
+      checkSaraComplete();
+    }, 60);
+  }
+  if (n === 12) {
+    if (repairAnswered) {
+      setTimeout(function() {
+        var c = document.getElementById('repair-repair');
+        if (c) c.classList.add('r-correct');
+        var fb = document.getElementById('repairFeedback');
+        if (fb) fb.innerHTML = buildRepairFeedback(repairCorrect);
+        var nb = document.getElementById('repairNextBtn');
+        if (nb) nb.disabled = false;
+      }, 50);
+    }
+  }
+}
+
+/* ============================================= ACT 1 INTERACTIONS ============================================= */
+function toggleWarningSign(id, type) {
+  var el = document.getElementById('warn-' + id);
+  if (selectedWarningSigns.has(id)) {
+    selectedWarningSigns.delete(id);
+    el.className = 'clue-card';
+  } else {
+    selectedWarningSigns.add(id);
+    if (type === 'early') el.classList.add('selected-warning');
+    else if (type === 'explosion') el.classList.add('selected-danger');
+    else el.classList.add('selected');
+  }
+  checkWarnCount();
+}
+
+function checkWarnCount() {
+  var earlySelected = 0;
+  selectedWarningSigns.forEach(function(id) {
+    var sign = warningSigns.find(function(s){ return s.id === id; });
+    if (sign && sign.type === 'early') earlySelected++;
+  });
+  var fb = document.getElementById('warnFeedback');
+  var nb = document.getElementById('warnNextBtn');
+  if (earlySelected >= 3) {
+    if (!warnSignsAnswered) {
+      warnSignsAnswered = true;
+      if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Excellent! You correctly identified the three early warning signs: clenched fists, tight jaw, and fast heartbeat. These are the body\'s early alarm system - physical signals that appear before the explosion. Learning to notice them early is one of the most powerful anger management skills.</div>';
+      if (nb) nb.disabled = false;
+    }
+  } else {
+    warnSignsAnswered = false;
+    if (fb) fb.innerHTML = selectedWarningSigns.size > 0 ? '<div class="feedback-msg amber-msg">Keep selecting - you need all 3 early warning signs. Think about what happens in the body BEFORE anger explodes.</div>' : '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function updateVolcanoDisplay(value) {
+  volcanoLevel = parseInt(value);
+  var level = getVolcanoLevel(volcanoLevel);
+  if (!level) return;
+  var display = document.getElementById('volcanoDisplay');
+  var emoji = document.getElementById('volEmoji');
+  var label = document.getElementById('volLabel');
+  var desc = document.getElementById('volDesc');
+  if (emoji) emoji.textContent = level.emoji;
+  if (label) { label.textContent = level.label; label.style.color = level.color; }
+  if (desc) desc.textContent = level.desc;
+  if (display) { display.style.background = level.bg; display.style.borderColor = level.border; }
+}
+
+function buildTriggerFeedback(correct) {
+  if (correct) {
+    return '<div class="feedback-msg correct-msg">Correct! The actual event was the accident - the cousin bumped the table. Everything else ("trying to ruin it", "never works out", "I hate this") was added by Ayaan\'s mind. This distinction is crucial: the accident alone does not cause maximum anger. The mind\'s story about the accident is what fuels the fire most intensely.</div>';
+  }
+  return '<div class="feedback-msg incorrect-msg">Not quite. The actual objective event was simply the accident - the cousin bumped the table. All the other options represent interpretations the mind added. The correct answer is now highlighted. Understanding the difference between what happened and what the mind says about it is one of the most important emotional intelligence insights.</div>';
+}
+
+function selectTrigger(id, correct) {
+  if (triggerAnswered) return;
+  triggerAnswered = true; triggerCorrect = correct;
+  var el = document.getElementById('trigger-' + id);
+  if (el) el.classList.add(correct ? 'tr-correct' : 'tr-incorrect');
+  if (!correct) {
+    setTimeout(function() {
+      var c = document.getElementById('trigger-accident');
+      if (c) c.classList.add('tr-correct');
+    }, 700);
+  }
+  var fb = document.getElementById('triggerFeedback');
+  if (fb) fb.innerHTML = buildTriggerFeedback(correct);
+  var nb = document.getElementById('triggerNextBtn');
+  if (nb) nb.disabled = false;
+}
+
+function selectThought(id, level) {
+  if (thoughtAnswered) return;
+  thoughtAnswered = true;
+  var el = document.getElementById('thought-' + id);
+  if (el) el.classList.add(level === 'high' ? 'th-selected-high' : 'th-selected-low');
+  var fb = document.getElementById('thoughtFeedback');
+  var nb = document.getElementById('thoughtNextBtn');
+  var msg = '';
+  if (level === 'high') {
+    msg = '<div class="feedback-msg correct-msg">Correct - the "ALWAYS" and "NEVER" thought creates maximum anger. Words like always, never, nothing, and everything are generalising catastrophe signals that tell the brain the situation is an enormous, permanent threat. This thought transforms a single frustrating event into proof of a terrible life pattern. That interpretation is what escalates anger from frustrating to explosive.</div>';
+  } else if (level === 'medium') {
+    msg = '<div class="feedback-msg amber-msg">This thought is more accurate than the first - it acknowledges the feeling honestly without over-generalising. It creates moderate anger because it is honest but does not add catastrophic interpretation. The thought that fuels anger MOST is the one full of "always" and "never" - try the first option.</div>';
+    thoughtAnswered = false;
+  } else {
+    msg = '<div class="feedback-msg amber-msg">This is actually the best-quality thought - specific, honest, and forward-looking. It creates the least anger because it does not catastrophise or generalise. But the question asks which thought increases anger MOST. Try the first option.</div>';
+    thoughtAnswered = false;
+  }
+  if (fb) fb.innerHTML = msg;
+  if (thoughtAnswered && nb) nb.disabled = false;
+}
+
+/* ============================================= ACT 2 INTERACTIONS ============================================= */
+function buildMeterHTML(tool, prefix) {
+  return '<div class="meters-wrap">' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🔥 Anger Level</span><span id="' + prefix + 'ALvl">0%</span></div><div class="meter-track"><div class="meter-fill anger" id="' + prefix + 'AFill"></div></div></div>' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🧊 Calm Level</span><span id="' + prefix + 'CLvl">0%</span></div><div class="meter-track"><div class="meter-fill calm" id="' + prefix + 'CFill"></div></div></div>' +
+  '</div>' +
+  '<div class="outcome-box ' + tool.quality + '"><div class="outcome-title">' + tool.outcome.title + '</div>' + tool.outcome.body + '<div class="outcome-tip">' + tool.outcome.tip + '</div></div>';
+}
+
+function animateMeters(aId, cId, aLvlId, cLvlId, aVal, cVal) {
+  setTimeout(function() {
+    var af = document.getElementById(aId), cf = document.getElementById(cId);
+    var al = document.getElementById(aLvlId), cl = document.getElementById(cLvlId);
+    if (af) af.style.width = aVal + '%';
+    if (cf) cf.style.width = cVal + '%';
+    if (al) al.textContent = aVal + '%';
+    if (cl) cl.textContent = cVal + '%';
+  }, 150);
+}
+
+function chooseTool1(id) {
+  if (tool1Locked) return;
+  tool1Locked = true; tool1Choice = id;
+  var chosen = regulationTools.find(function(t){ return t.id === id; });
+  regulationTools.forEach(function(t) {
+    var el = document.getElementById('tool-' + t.id);
+    if (el) { if (t.id === id) el.classList.add('sel-' + t.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('tool1Outcome');
+  if (out) out.innerHTML = buildMeterHTML(chosen, 't1');
+  animateMeters('t1AFill', 't1CFill', 't1ALvl', 't1CLvl', chosen.angerLevel, chosen.calmLevel);
+  var nw = document.getElementById('tool1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function chooseTool2(id) {
+  if (tool2Choice) return;
+  tool2Choice = id;
+  var chosen = regulationTools.find(function(t){ return t.id === id; });
+  var first = regulationTools.find(function(t){ return t.id === tool1Choice; });
+  var el = document.getElementById('try-' + id);
+  if (el) el.classList.add('sel-' + chosen.quality);
+  regulationTools.filter(function(t){ return t.id !== tool1Choice; }).forEach(function(t) {
+    var e = document.getElementById('try-' + t.id);
+    if (e) e.style.cursor = 'default';
+  });
+  var out = document.getElementById('tool2Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="section-divider">Your first tool: ' + first.icon + '</div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🔥 Anger</span><span>' + first.angerLevel + '%</span></div><div class="meter-track"><div class="meter-fill anger" style="width:' + first.angerLevel + '%"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🧊 Calm</span><span>' + first.calmLevel + '%</span></div><div class="meter-track"><div class="meter-fill calm" style="width:' + first.calmLevel + '%"></div></div></div>' +
+      '<div class="section-divider">This tool: ' + chosen.icon + '</div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🔥 Anger</span><span>' + chosen.angerLevel + '%</span></div><div class="meter-track"><div class="meter-fill anger" id="t2AFill"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🧊 Calm</span><span>' + chosen.calmLevel + '%</span></div><div class="meter-track"><div class="meter-fill calm" id="t2CFill"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var a = document.getElementById('t2AFill'), c = document.getElementById('t2CFill');
+    if (a) a.style.width = chosen.angerLevel + '%';
+    if (c) c.style.width = chosen.calmLevel + '%';
+  }, 150);
+  var nw = document.getElementById('tool2NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkCoolPlan(val) {
+  coolPlanText = val;
+  var len = val.trim().length;
+  coolPlanValid = len >= 40;
+  var c = document.getElementById('coolPlanCounter');
+  var b = document.getElementById('coolPlanNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (coolPlanValid ? ' met' : ''); }
+  if (b) b.disabled = !coolPlanValid;
+}
+
+function checkAct2Refl(val) {
+  act2ReflText = val;
+  var len = val.trim().length;
+  act2ReflValid = len >= 40;
+  var c = document.getElementById('act2ReflCounter');
+  var b = document.getElementById('act2ReflNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (act2ReflValid ? ' met' : ''); }
+  if (b) b.disabled = !act2ReflValid;
+}
+
+/* ============================================= ACT 3 INTERACTIONS ============================================= */
+function updateSaraDisplay(value) {
+  saraLevelValue = parseInt(value);
+  var level = getVolcanoLevel(saraLevelValue);
+  if (!level) return;
+  var emoji = document.getElementById('saraEmoji');
+  var label = document.getElementById('saraLabel');
+  var display = document.getElementById('saraDisplay');
+  if (emoji) emoji.textContent = level.emoji;
+  if (label) { label.textContent = level.label; label.style.color = level.color; }
+  if (display) { display.style.background = level.bg; display.style.borderColor = level.border; }
+}
+
+function confirmSaraLevel() {
+  saraLevelDone = true;
+  var level = getVolcanoLevel(saraLevelValue);
+  var fb = document.getElementById('saraLevelFeedback');
+  if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Level confirmed. Sara is at the <strong>' + level.label + '</strong> stage (' + saraLevelValue + '%). Given the physical signals described - rigid body, heat rising, chest tightening - Sara is likely in the Lava to Angry range. Now unlock the thought analysis.</div>';
+  var tw = document.getElementById('saraThoughtWrap');
+  if (tw) { tw.style.opacity = '1'; tw.style.pointerEvents = 'auto'; }
+  var btn = document.getElementById('saraLevelBtn');
+  if (btn) btn.disabled = true;
+}
+
+function selectSaraThought(id) {
+  if (saraThoughtDone) return;
+  saraThoughtDone = true;
+  var el = document.getElementById('sara-th-' + id);
+  if (el) el.classList.add(id === 'always' ? 'th-selected-high' : 'th-selected-low');
+  var fb = document.getElementById('saraThoughtFeedback');
+  var msg = id === 'always'
+    ? '<div class="feedback-msg correct-msg">Correct! The "always, never, ruined" thought is the high-fuel thought. It takes one painful moment and transforms it into a permanent pattern of bad luck and bad relationships. This catastrophising dramatically increases anger intensity beyond what the event alone would create.</div>'
+    : '<div class="feedback-msg amber-msg">This is actually the more accurate and helpful thought - but the question asks which one fuels anger the MOST. The "ALWAYS, NEVER, RUINED" thought is the maximum-fuel option because of its catastrophising and generalising language.</div>';
+  if (fb) fb.innerHTML = msg;
+  var tw = document.getElementById('saraToolWrap');
+  if (tw) { tw.style.opacity = '1'; tw.style.pointerEvents = 'auto'; }
+  checkSaraComplete();
+}
+
+function selectSaraTool(id, quality) {
+  if (saraToolDone) return;
+  saraToolDone = true;
+  var tool = regulationTools.find(function(t){ return t.id === id; });
+  var el = document.getElementById('sara-tool-' + id);
+  if (el) el.classList.add('sel-' + quality);
+  regulationTools.filter(function(t){ return t.id !== 'yell'; }).forEach(function(t) {
+    var e = document.getElementById('sara-tool-' + t.id);
+    if (e) e.style.cursor = 'default';
+  });
+  var fb = document.getElementById('saraToolFeedback');
+  var msg = quality === 'best'
+    ? '<div class="feedback-msg correct-msg">Excellent choice! ' + tool.icon + ' ' + tool.text + ' will help Sara lower her physiological arousal before responding. This is exactly the right moment to use this tool - she is in the Lava Stage, which is the golden window for regulation.</div>'
+    : '<div class="feedback-msg amber-msg">A reasonable choice. ' + tool.icon + ' ' + tool.text + ' can help, though deep breathing or counting backwards tend to produce stronger regulation effects by directly lowering heart rate and engaging the thinking brain.</div>';
+  if (fb) fb.innerHTML = msg;
+  checkSaraComplete();
+}
+
+function checkSaraComplete() {
+  if (saraLevelDone && saraThoughtDone && saraToolDone) {
+    var b = document.getElementById('saraNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function buildRepairFeedback(correct) {
+  if (correct) {
+    return '<div class="feedback-msg correct-msg">Perfect choice. This response does three important things: it honestly names the feeling without blame ("I was really upset"), it signals that Sara has regulated ("I\'m calmer now"), and it invites collaboration ("Can we figure this out together?"). This is emotionally intelligent repair - it validates the experience without assigning blame, and it moves toward connection rather than distance.</div>' +
+      '<div class="outcome-box best" style="margin-top:14px"><div class="outcome-title">What Happens Next</div>Sara\'s friend feels the door open rather than close. She can apologise genuinely. The friendship has a real chance to recover - and both of them learn that anger does not have to permanently damage what matters to them.<div class="outcome-tip">Repair skill: The most effective repair statements acknowledge feeling + invite connection. "I felt... Can we...?" is a powerful format.</div></div>';
+  }
+  return '<div class="feedback-msg incorrect-msg">Not the best choice. Blame ("your fault") escalates conflict and makes the friend defensive rather than empathetic. Dismissal ("whatever") shuts down connection without resolution. The correct response has been highlighted - notice how it names the feeling honestly while opening the door to repair.</div>';
+}
+
+function selectRepair(id, correct) {
+  if (repairAnswered) return;
+  repairAnswered = true; repairCorrect = correct;
+  var el = document.getElementById('repair-' + id);
+  if (el) el.classList.add(correct ? 'r-correct' : 'r-incorrect');
+  if (!correct) {
+    setTimeout(function() {
+      var c = document.getElementById('repair-repair');
+      if (c) c.classList.add('r-correct');
+    }, 700);
+  }
+  repairOptions.forEach(function(r) {
+    var e = document.getElementById('repair-' + r.id);
+    if (e) e.style.cursor = 'default';
+  });
+  var fb = document.getElementById('repairFeedback');
+  if (fb) fb.innerHTML = buildRepairFeedback(correct);
+  var nb = document.getElementById('repairNextBtn');
+  if (nb) nb.disabled = false;
+}
+
+/* ============================================= QUIZ ============================================= */
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('quiz-opt-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('quiz-feedback-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var b = document.getElementById('quizNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+/* ============================================= RESTART ============================================= */
+function restartLab() {
+  selectedWarningSigns = new Set();
+  warnSignsAnswered = false; volcanoLevel = 50;
+  triggerAnswered = false; triggerCorrect = false;
+  thoughtAnswered = false; volcanoMatchDone = false;
+  tool1Choice = null; tool1Locked = false; tool2Choice = null;
+  coolPlanValid = false; act2ReflValid = false;
+  coolPlanText = ''; act2ReflText = '';
+  saraLevelDone = false; saraThoughtDone = false; saraToolDone = false;
+  saraLevelValue = 50; repairAnswered = false; repairCorrect = false;
+  personalChips = new Set(); quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+/* ============================================= CONFETTI ============================================= */
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#f4856a','#f4a830','#7c5cbf','#e05838','#3fa87d','#c9482a','#c47808','#6ec6b8'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5,
+      drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+/* ============================================= INIT ============================================= */
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

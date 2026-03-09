@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Emotion Skills Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sky:#e8f4ff;
+  --white:#ffffff;
+  --text:#1a1a2e;
+  --soft:#5a6080;
+  --c1:#ff6b6b;--c1l:#fff0f0;--c1d:#cc3333;
+  --c2:#ff9f43;--c2l:#fff5e6;--c2d:#cc6600;
+  --c3:#ffd32a;--c3l:#fffbe0;--c3d:#997700;
+  --c4:#26de81;--c4l:#e6fff3;--c4d:#0a7a3c;
+  --c5:#2bcbba;--c5l:#e0faf8;--c5d:#0a6b60;
+  --c6:#45aaf2;--c6l:#e8f4ff;--c6d:#0a5a9e;
+  --c7:#a55eea;--c7l:#f3e8ff;--c7d:#5c2090;
+  --c8:#fd9644;--c8l:#fff3e8;--c8d:#a04400;
+  --shadow:0 8px 32px rgba(26,26,46,0.10);
+  --shadow-hover:0 16px 48px rgba(26,26,46,0.18);
+  --radius:24px;--radius-sm:14px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--sky);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* -- FLOATING BLOBS --------------------------------------- */
+.blob-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:0.22;animation:blobFloat 14s ease-in-out infinite}
+.blob1{width:520px;height:520px;background:#a78bfa;top:-120px;left:-100px;animation-delay:0s}
+.blob2{width:420px;height:420px;background:#34d399;top:30%;right:-80px;animation-delay:-5s}
+.blob3{width:360px;height:360px;background:#fbbf24;bottom:-80px;left:20%;animation-delay:-9s}
+.blob4{width:300px;height:300px;background:#f472b6;bottom:20%;right:15%;animation-delay:-3s}
+@keyframes blobFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.06)}}
+
+/* -- WRAPPER ---------------------------------------------- */
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1}
+
+/* -- HERO ------------------------------------------------- */
+.hero{text-align:center;padding:64px 20px 48px;animation:fadeDown 0.7s ease both}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid rgba(167,139,250,0.35);border-radius:999px;padding:8px 20px;font-size:13px;font-weight:800;color:#7c3aed;letter-spacing:1px;text-transform:uppercase;margin-bottom:22px;box-shadow:0 4px 18px rgba(124,58,237,0.12)}
+.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(42px,8vw,80px);line-height:1.05;margin-bottom:14px;background:linear-gradient(135deg,#7c3aed,#2563eb,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(16px,2.5vw,21px);font-weight:700;color:var(--soft);margin-bottom:36px;line-height:1.5}
+.hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:40px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:2px solid rgba(0,0,0,0.06);border-radius:999px;padding:9px 18px;font-size:13.5px;font-weight:800;color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,0.07);transition:transform 0.2s,box-shadow 0.2s}
+.pill:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12)}
+.pill span{font-size:18px}
+.hero-stars{font-size:28px;letter-spacing:4px;opacity:0.7}
+
+/* -- SECTION TITLE ---------------------------------------- */
+.section-head{text-align:center;margin:8px 0 36px}
+.section-head h2{font-family:'Fredoka One',cursive;font-size:clamp(26px,4vw,36px);color:var(--text);margin-bottom:8px}
+.section-head p{font-size:15px;font-weight:600;color:var(--soft)}
+
+/* -- GRID ------------------------------------------------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+
+/* -- CARD ------------------------------------------------- */
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border:2px solid transparent;transition:transform 0.28s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.28s ease,border-color 0.28s ease;position:relative;overflow:hidden;display:flex;flex-direction:column;animation:cardIn 0.5s ease both}
+.card:hover{transform:translateY(-8px) scale(1.02);box-shadow:var(--shadow-hover)}
+.card-top{padding:28px 24px 18px;flex:1}
+.card-num{font-size:11px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;opacity:0.55;margin-bottom:12px}
+.card-icon{font-size:44px;margin-bottom:14px;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.12));transition:transform 0.3s ease}
+.card:hover .card-icon{transform:scale(1.15) rotate(-4deg)}
+.card h3{font-family:'Fredoka One',cursive;font-size:19px;line-height:1.25;margin-bottom:7px;color:var(--text)}
+.card p{font-size:13px;font-weight:600;color:var(--soft);line-height:1.6}
+.card-stripe{height:6px;width:100%}
+.card-btn{display:block;margin:0 20px 20px;padding:13px;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;letter-spacing:0.3px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,filter 0.2s;text-decoration:none;text-align:center}
+.card-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.18);filter:brightness(1.06)}
+.card-btn:active{transform:translateY(0)}
+
+/* -- CARD COLOUR THEMES ----------------------------------- */
+.t1{border-color:rgba(255,107,107,0.25)}.t1 .card-num{color:var(--c1d)}.t1 .card-stripe{background:var(--c1)}.t1 .card-btn{background:linear-gradient(135deg,var(--c1),#ff4757);color:#fff;box-shadow:0 4px 16px rgba(255,107,107,0.35)}
+.t2{border-color:rgba(255,159,67,0.25)}.t2 .card-num{color:var(--c2d)}.t2 .card-stripe{background:var(--c2)}.t2 .card-btn{background:linear-gradient(135deg,var(--c2),#e67e00);color:#fff;box-shadow:0 4px 16px rgba(255,159,67,0.35)}
+.t3{border-color:rgba(255,211,42,0.35)}.t3 .card-num{color:var(--c3d)}.t3 .card-stripe{background:var(--c3)}.t3 .card-btn{background:linear-gradient(135deg,var(--c3),#e6b800);color:#553300;box-shadow:0 4px 16px rgba(255,211,42,0.35)}
+.t4{border-color:rgba(38,222,129,0.25)}.t4 .card-num{color:var(--c4d)}.t4 .card-stripe{background:var(--c4)}.t4 .card-btn{background:linear-gradient(135deg,var(--c4),#0ab360);color:#fff;box-shadow:0 4px 16px rgba(38,222,129,0.35)}
+.t5{border-color:rgba(43,203,186,0.25)}.t5 .card-num{color:var(--c5d)}.t5 .card-stripe{background:var(--c5)}.t5 .card-btn{background:linear-gradient(135deg,var(--c5),#0a9e90);color:#fff;box-shadow:0 4px 16px rgba(43,203,186,0.35)}
+.t6{border-color:rgba(69,170,242,0.25)}.t6 .card-num{color:var(--c6d)}.t6 .card-stripe{background:var(--c6)}.t6 .card-btn{background:linear-gradient(135deg,var(--c6),#1a7fd4);color:#fff;box-shadow:0 4px 16px rgba(69,170,242,0.35)}
+.t7{border-color:rgba(165,94,234,0.25)}.t7 .card-num{color:var(--c7d)}.t7 .card-stripe{background:var(--c7)}.t7 .card-btn{background:linear-gradient(135deg,var(--c7),#7c2fd4);color:#fff;box-shadow:0 4px 16px rgba(165,94,234,0.35)}
+.t8{border-color:rgba(253,150,68,0.25)}.t8 .card-num{color:var(--c8d)}.t8 .card-stripe{background:var(--c8)}.t8 .card-btn{background:linear-gradient(135deg,var(--c8),#d06010);color:#fff;box-shadow:0 4px 16px rgba(253,150,68,0.35)}
+
+/* -- STAGGER DELAYS --------------------------------------- */
+.card:nth-child(1){animation-delay:0.05s}.card:nth-child(2){animation-delay:0.10s}.card:nth-child(3){animation-delay:0.15s}.card:nth-child(4){animation-delay:0.20s}.card:nth-child(5){animation-delay:0.25s}.card:nth-child(6){animation-delay:0.30s}.card:nth-child(7){animation-delay:0.35s}.card:nth-child(8){animation-delay:0.40s}.card:nth-child(9){animation-delay:0.45s}.card:nth-child(10){animation-delay:0.50s}.card:nth-child(11){animation-delay:0.55s}.card:nth-child(12){animation-delay:0.60s}.card:nth-child(13){animation-delay:0.65s}.card:nth-child(14){animation-delay:0.70s}.card:nth-child(15){animation-delay:0.75s}.card:nth-child(16){animation-delay:0.80s}
+
+/* -- PROGRESS BAR ----------------------------------------- */
+.progress-section{background:#fff;border-radius:var(--radius);padding:28px 32px;margin-bottom:36px;box-shadow:var(--shadow);animation:fadeUp 0.6s 0.3s ease both}
+.progress-section h3{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);margin-bottom:6px}
+.progress-section p{font-size:13px;font-weight:600;color:var(--soft);margin-bottom:16px}
+.prog-track{height:16px;background:rgba(124,58,237,0.10);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#7c3aed,#2563eb,#059669);transition:width 1s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(124,58,237,0.30)}
+.prog-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;font-weight:800;color:var(--soft)}
+
+/* -- FOOTER ----------------------------------------------- */
+footer{text-align:center;padding:40px 24px 48px;position:relative;z-index:1}
+.footer-stars{font-size:22px;letter-spacing:6px;margin-bottom:14px}
+.footer-msg{font-family:'Fredoka One',cursive;font-size:clamp(15px,2.5vw,20px);color:var(--soft);line-height:1.6;max-width:600px;margin:0 auto 18px}
+.footer-tiny{font-size:12px;font-weight:600;color:rgba(90,96,128,0.55)}
+
+/* -- ANIMATIONS ------------------------------------------- */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(22px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* -- RESPONSIVE ------------------------------------------- */
+@media(max-width:600px){
+  .hero{padding:40px 10px 32px}
+  .hero-pills{gap:8px}
+  .pill{font-size:12px;padding:7px 13px}
+  .grid{grid-template-columns:1fr;gap:16px}
+  .wrap{padding:0 14px 60px}
+  .progress-section{padding:20px}
+}
+@media(min-width:601px) and (max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="blob-wrap">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+</div>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-badge">&#x1F9EA; Learning Lab</div>
+    <h1>Emotion Skills Lab</h1>
+    <p class="hero-sub">Interactive missions to build your emotional intelligence</p>
+    <div class="hero-pills">
+      <div class="pill"><span>&#x1F60A;</span> Understand Emotions</div>
+      <div class="pill"><span>&#x1F4AA;</span> Build Confidence</div>
+      <div class="pill"><span>&#x1F9E0;</span> Solve Problems</div>
+      <div class="pill"><span>&#x1F9D8;</span> Manage Feelings</div>
+      <div class="pill"><span>&#x1F91D;</span> Strengthen Friendships</div>
+    </div>
+    <div class="hero-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+  </section>
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <h3>Your Mission Progress</h3>
+    <p>Complete all 16 activities to become an Emotion Skills Champion!</p>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-labels"><span id="progDone">0 of 16 completed</span><span>16 Missions Total</span></div>
+  </div>
+
+  <!-- SECTION HEADING -->
+  <div class="section-head">
+    <h2>Choose Your Mission &#x1F680;</h2>
+    <p>Click any card below to start that activity. Each mission takes about 15-20 minutes.</p>
+  </div>
+
+  <!-- ACTIVITY GRID -->
+  <div class="grid">
+
+    <div class="card t1">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 01</div>
+        <span class="card-icon">&#x1F50D;</span>
+        <h3>Emotion Detective Mission</h3>
+        <p>Investigate clues to identify emotions and become a master emotion detective.</p>
+      </div>
+      <a class="card-btn" href="activity1.html">Start Activity</a>
+    </div>
+
+    <div class="card t2">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 02</div>
+        <span class="card-icon">&#x1F9EA;</span>
+        <h3>Thought Trap Lab</h3>
+        <p>Learn to spot sneaky negative thoughts and replace them with helpful ones.</p>
+      </div>
+      <a class="card-btn" href="activity2.html">Start Activity</a>
+    </div>
+
+    <div class="card t3">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 03</div>
+        <span class="card-icon">&#x1F30B;</span>
+        <h3>Anger Volcano Lab</h3>
+        <p>Understand how anger builds up and discover tools to cool it down safely.</p>
+      </div>
+      <a class="card-btn" href="activity3.html">Start Activity</a>
+    </div>
+
+    <div class="card t4">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 04</div>
+        <span class="card-icon">&#x1F680;</span>
+        <h3>Confidence Builder Quest</h3>
+        <p>Go on a quest to discover your strengths and build rock-solid confidence.</p>
+      </div>
+      <a class="card-btn" href="activity4.html">Start Activity</a>
+    </div>
+
+    <div class="card t5">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 05</div>
+        <span class="card-icon">&#x1F321;</span>
+        <h3>Stress Thermometer Lab</h3>
+        <p>Measure your stress levels and learn smart strategies to keep them in check.</p>
+      </div>
+      <a class="card-btn" href="activity5.html">Start Activity</a>
+    </div>
+
+    <div class="card t6">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 06</div>
+        <span class="card-icon">&#x1F495;</span>
+        <h3>Empathy Explorer Lab</h3>
+        <p>Step into other people's shoes and discover the superpower of understanding feelings.</p>
+      </div>
+      <a class="card-btn" href="activity6.html">Start Activity</a>
+    </div>
+
+    <div class="card t7">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 07</div>
+        <span class="card-icon">&#x1F981;</span>
+        <h3>Fear Facing Formula</h3>
+        <p>Learn the step-by-step formula for facing your fears with courage and calm.</p>
+      </div>
+      <a class="card-btn" href="activity7.html">Start Activity</a>
+    </div>
+
+    <div class="card t8">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 08</div>
+        <span class="card-icon">&#x1F9D8;</span>
+        <h3>Calm Brain Switch</h3>
+        <p>Discover powerful techniques to switch your brain from stressed to calm in seconds.</p>
+      </div>
+      <a class="card-btn" href="activity8.html">Start Activity</a>
+    </div>
+
+    <div class="card t1">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 09</div>
+        <span class="card-icon">&#x1F527;</span>
+        <h3>Mistake Recovery Lab</h3>
+        <p>Learn how to bounce back from mistakes stronger, wiser, and more confident than before.</p>
+      </div>
+      <a class="card-btn" href="activity9.html">Start Activity</a>
+    </div>
+
+    <div class="card t2">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 10</div>
+        <span class="card-icon">&#x1F5E3;</span>
+        <h3>Social Confidence Simulator</h3>
+        <p>Practise real social situations and build the confidence to connect with others.</p>
+      </div>
+      <a class="card-btn" href="activity10.html">Start Activity</a>
+    </div>
+
+    <div class="card t3">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 11</div>
+        <span class="card-icon">&#x1F3AF;</span>
+        <h3>Focus &amp; Distraction Trainer</h3>
+        <p>Train your brain to stay on target and beat distractions like a pro.</p>
+      </div>
+      <a class="card-btn" href="activity11.html">Start Activity</a>
+    </div>
+
+    <div class="card t4">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 12</div>
+        <span class="card-icon">&#x2696;</span>
+        <h3>Emotional Regulation Mastery</h3>
+        <p>Master the art of managing your emotions so they never take control of you.</p>
+      </div>
+      <a class="card-btn" href="activity12.html">Start Activity</a>
+    </div>
+
+    <div class="card t5">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 13</div>
+        <span class="card-icon">&#x1F4AD;</span>
+        <h3>The Self-Talk Makeover</h3>
+        <p>Transform the voice inside your head from critic to coach and cheer yourself on.</p>
+      </div>
+      <a class="card-btn" href="activity13.html">Start Activity</a>
+    </div>
+
+    <div class="card t6">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 14</div>
+        <span class="card-icon">&#x1F9F0;</span>
+        <h3>Emotion Regulation Toolkit</h3>
+        <p>Build your personal toolkit of emotion regulation strategies for every situation.</p>
+      </div>
+      <a class="card-btn" href="activity14.html">Start Activity</a>
+    </div>
+
+    <div class="card t7">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 15</div>
+        <span class="card-icon">&#x1F91D;</span>
+        <h3>Friendship Repair Workshop</h3>
+        <p>Learn how to mend broken friendships and rebuild trust the right way.</p>
+      </div>
+      <a class="card-btn" href="activity15.html">Start Activity</a>
+    </div>
+
+    <div class="card t8">
+      <div class="card-stripe"></div>
+      <div class="card-top">
+        <div class="card-num">Mission 16</div>
+        <span class="card-icon">&#x1F4C5;</span>
+        <h3>Balanced Life Planner</h3>
+        <p>Design a healthy weekly plan that balances work, play, rest, and friendships.</p>
+      </div>
+      <a class="card-btn" href="activity16.html">Start Activity</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-stars">&#x1F31F; &#x2B50; &#x1F31F;</div>
+  <p class="footer-msg">Every activity you complete helps you become stronger, calmer, and more confident. Keep going - you are doing amazing!</p>
+  <p class="footer-tiny">Emotion Skills Lab &bull; 16 Interactive Missions</p>
+</footer>
+
+<script>
+var TOTAL = 16;
+var done = parseInt(localStorage.getItem('eslDone') || '0');
+if (done > TOTAL) done = TOTAL;
+var pct = Math.round((done / TOTAL) * 100);
+document.getElementById('progFill').style.width = pct + '%';
+document.getElementById('progDone').textContent = done + ' of ' + TOTAL + ' completed';
+</script>
+</body>
+</html>

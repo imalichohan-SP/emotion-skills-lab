@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Stress Thermometer Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f5ff;
+  --card:#ffffff;
+  --blue:#4a82d4;--blue-dark:#2a52a0;--blue-light:#a8c4f0;
+  --teal:#2ab8b0;--teal-dark:#1a7870;--teal-light:#a8e0dc;
+  --violet:#7060c0;--violet-dark:#4838a0;--violet-light:#c4b8f0;
+  --green:#38b870;--green-dark:#1a8048;--green-light:#a8e0c0;
+  --amber:#e8a020;--amber-dark:#a86800;--amber-light:#fcd880;
+  --orange:#e86820;--orange-dark:#b03000;
+  --red:#d83030;--red-dark:#a00808;
+  --calm:#38c8a8;--calm-dark:#1a9080;
+  --text:#182038;--text-soft:#4858a0;
+  --shadow-sm:0 4px 16px rgba(42,82,160,0.12);
+  --shadow-md:0 8px 32px rgba(42,82,160,0.16);
+  --shadow-lg:0 16px 48px rgba(42,82,160,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 8% 14%,rgba(74,130,212,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 92% 78%,rgba(42,184,176,0.18) 0%,transparent 46%),
+    radial-gradient(circle at 50% 48%,rgba(112,96,192,0.11) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--blue-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+/* ACT BANNER */
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(42,82,160,0.09);color:var(--blue-dark);border:1.5px solid rgba(42,82,160,0.24)}
+.act-banner.act2{background:rgba(72,56,160,0.09);color:var(--violet-dark);border:1.5px solid rgba(72,56,160,0.24)}
+.act-banner.act3{background:rgba(26,128,72,0.09);color:var(--green-dark);border:1.5px solid rgba(26,128,72,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(74,130,212,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-dark),var(--teal-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(42,82,160,0.38)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(74,130,212,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--blue-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+/* STAGE CARD */
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(74,130,212,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(74,130,212,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue-dark);background:rgba(74,130,212,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(72,56,160,0.09)}
+.stage-label.green{color:var(--green-dark);background:rgba(26,128,72,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+/* STORY + THOUGHT */
+.story-box{background:linear-gradient(135deg,rgba(74,130,212,0.09),rgba(42,184,176,0.08));border:1.5px solid rgba(74,130,212,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--blue-dark);font-style:normal}
+.story-box p span.teal{color:var(--teal-dark)}
+.story-box p span.green{color:var(--green-dark)}
+.thought-highlight{background:linear-gradient(135deg,rgba(216,48,48,0.10),rgba(112,96,192,0.09));border:2px solid rgba(216,48,48,0.26);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-highlight::before{content:'⚡';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-highlight p{font-size:15px;font-weight:900;color:var(--red-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* STRESS THERMOMETER VISUAL */
+.thermo-wrap{margin:22px 0 28px}
+.thermo-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.thermo-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.thermo-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);box-shadow:0 3px 14px rgba(42,82,160,0.36);cursor:pointer;transition:transform 0.2s ease}
+.thermo-slider::-webkit-slider-thumb:hover,.thermo-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.thermo-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);cursor:pointer}
+.thermo-display{margin-top:18px;text-align:center;padding:20px 22px;border-radius:var(--radius-sm);transition:background 0.6s ease,border-color 0.6s ease;border:2px solid rgba(74,130,212,0.25)}
+.thermo-display .td-bar-wrap{height:18px;background:rgba(74,130,212,0.10);border-radius:999px;overflow:hidden;margin-bottom:14px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.thermo-display .td-bar{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1),background 0.7s ease}
+.thermo-display .td-emoji{font-size:40px;display:block;margin-bottom:8px;transition:all 0.4s ease}
+.thermo-display .td-label{font-size:18px;font-weight:900;transition:color 0.5s ease}
+.thermo-display .td-desc{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:6px;line-height:1.55}
+
+/* ANIMATED METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(74,130,212,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.stress{background:linear-gradient(90deg,var(--amber),var(--red-dark));box-shadow:0 2px 8px rgba(168,0,8,0.28)}
+.meter-fill.calm{background:linear-gradient(90deg,var(--teal-light),var(--calm-dark));box-shadow:0 2px 8px rgba(26,144,128,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(216,48,48,0.09);border:1.5px solid rgba(160,8,8,0.22)}
+.outcome-box.ok{background:rgba(232,160,32,0.10);border:1.5px solid rgba(168,104,0,0.24)}
+.outcome-box.best{background:rgba(42,184,176,0.09);border:1.5px solid rgba(26,144,128,0.24)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* SELECTION CARDS (body signs, cycle matching) */
+.sign-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 26px}
+.sign-card{background:var(--bg);border:2px solid rgba(74,130,212,0.20);border-radius:var(--radius-sm);padding:16px 12px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.sign-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.sign-card.sc-selected{border-color:var(--blue-dark);background:linear-gradient(135deg,rgba(74,130,212,0.14),rgba(42,184,176,0.10));box-shadow:0 0 0 3px rgba(42,82,160,0.15),var(--shadow-sm);transform:translateY(-2px)}
+.sign-card.sc-wrong{border-color:var(--red-dark);background:rgba(216,48,48,0.07);animation:wrongShake 0.4s ease}
+.sign-card .si-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.sign-card:hover .si-icon,.sign-card.sc-selected .si-icon{transform:scale(1.15)}
+.sign-card .si-text{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.3}
+.sign-card .si-check{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;background:var(--blue-dark);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.sign-card.sc-selected .si-check{opacity:1;transform:scale(1)}
+
+/* SORT ACTIVITY */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;min-height:52px;padding:12px 14px;background:rgba(74,130,212,0.06);border:2px dashed rgba(74,130,212,0.26);border-radius:var(--radius-sm)}
+.sort-card-item{background:#fff;border:2px solid rgba(74,130,212,0.26);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-card-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.sort-card-item.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.sort-zone.zone-helpful{border-color:rgba(26,128,72,0.32);background:rgba(56,184,112,0.07)}
+.sort-zone.zone-harmful{border-color:rgba(160,8,8,0.28);background:rgba(216,48,48,0.06)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-helpful .sz-title{color:var(--green-dark)}
+.sort-zone.zone-harmful .sz-title{color:var(--red-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:5px}
+.sz-remove{cursor:pointer;font-size:14px;color:var(--text-soft);transition:color 0.2s}
+.sz-remove:hover{color:var(--red-dark)}
+
+/* TRIGGER CARDS */
+.trigger-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 26px}
+.trigger-card{background:var(--bg);border:2px solid rgba(74,130,212,0.20);border-radius:var(--radius-sm);padding:18px 14px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.trigger-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.trigger-card .tr-icon{font-size:28px;display:block;margin-bottom:10px;transition:transform 0.3s ease}
+.trigger-card:hover .tr-icon{transform:scale(1.14)}
+.trigger-card .tr-label{font-size:13px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:3px}
+.trigger-card .tr-type{font-size:11.5px;font-weight:700;color:var(--text-soft)}
+.trigger-card.tr-external{border-color:var(--blue-dark);background:rgba(74,130,212,0.10);animation:correctPop 0.4s ease}
+.trigger-card.tr-thought{border-color:var(--violet-dark);background:rgba(112,96,192,0.09);animation:correctPop 0.4s ease}
+.trigger-card.tr-wrong{border-color:var(--red-dark);animation:wrongShake 0.4s ease}
+
+/* CYCLE CARDS */
+.cycle-steps{display:flex;flex-direction:column;gap:10px;margin:18px 0 22px}
+.cycle-step{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(74,130,212,0.18);border-radius:var(--radius-sm);padding:14px 18px;transition:var(--t)}
+.cycle-step.cs-active{border-color:var(--blue-dark);background:linear-gradient(135deg,rgba(74,130,212,0.10),rgba(42,184,176,0.08));animation:fadeUp 0.4s ease both}
+.cycle-step .cs-num{width:28px;height:28px;border-radius:50%;background:var(--blue-dark);color:#fff;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cycle-step .cs-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:3px}
+.cycle-step .cs-match{font-size:13px;font-weight:700;color:var(--text-soft);line-height:1.5}
+.cycle-step .cs-zayd{font-size:13px;font-weight:800;color:var(--blue-dark);margin-top:3px;font-style:italic}
+
+/* CALM TOOLS */
+.tool-grid{display:flex;flex-direction:column;gap:13px;margin:18px 0 22px}
+.tool-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(74,130,212,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.tool-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.tool-btn .tb-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease;margin-top:2px}
+.tool-btn:hover .tb-icon{transform:scale(1.10)}
+.tool-btn .tb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.tool-btn .tb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.tool-btn.sel-best{border-color:var(--calm-dark);background:rgba(42,184,176,0.09);animation:correctPop 0.4s ease}
+.tool-btn.sel-ok{border-color:var(--amber-dark);background:rgba(232,160,32,0.09);animation:correctPop 0.4s ease}
+.tool-btn.sel-harmful{border-color:var(--red-dark);background:rgba(216,48,48,0.07);animation:wrongShake 0.4s ease}
+
+/* LAYLA SCENARIO */
+.layla-trigger-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 20px}
+.layla-trigger{background:var(--bg);border:2px solid rgba(74,130,212,0.18);border-radius:var(--radius-sm);padding:15px 14px;cursor:pointer;transition:var(--t);text-align:center}
+.layla-trigger:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.layla-trigger .lt-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.layla-trigger:hover .lt-icon,.layla-trigger.lt-sel .lt-icon{transform:scale(1.13)}
+.layla-trigger .lt-text{font-size:13px;font-weight:800;color:var(--text);line-height:1.3}
+.layla-trigger.lt-sel{border-color:var(--blue-dark);background:rgba(74,130,212,0.10);animation:correctPop 0.35s ease}
+.layla-trigger.lt-wrong{border-color:var(--red-dark);background:rgba(216,48,48,0.07);animation:wrongShake 0.4s ease}
+
+/* CHECK-IN CHIPS */
+.checkin-chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.checkin-chip{background:var(--bg);border:2px solid rgba(74,130,212,0.20);border-radius:999px;padding:9px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.checkin-chip:hover{border-color:var(--blue-dark);color:var(--text);background:rgba(74,130,212,0.08)}
+.checkin-chip.chip-selected{background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(42,82,160,0.28)}
+.checkin-chip.chip-bad{border-color:var(--red-dark);background:rgba(216,48,48,0.07);color:var(--red-dark)}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(56,184,112,0.14);color:#156040;border:1.5px solid rgba(26,128,72,0.26)}
+.feedback-msg.incorrect-msg{background:rgba(216,48,48,0.10);color:#880808;border:1.5px solid rgba(160,8,8,0.22)}
+.feedback-msg.info-msg{background:rgba(72,56,160,0.08);color:var(--violet-dark);border:1.5px solid rgba(72,56,160,0.20)}
+.feedback-msg.blue-msg{background:rgba(42,82,160,0.08);color:var(--blue-dark);border:1.5px solid rgba(42,82,160,0.22)}
+.feedback-msg.teal-msg{background:rgba(26,144,128,0.09);color:var(--calm-dark);border:1.5px solid rgba(26,144,128,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(74,130,212,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(72,88,160,0.40)}
+.reflection-input:focus{border-color:var(--blue-dark);box-shadow:0 0 0 3px rgba(42,82,160,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--calm-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(42,82,160,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(42,82,160,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(74,130,212,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(74,130,212,0.08);border-color:var(--blue-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(74,130,212,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--blue-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(74,130,212,0.18);border-radius:999px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(74,130,212,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--blue);background:rgba(74,130,212,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--calm-dark);background:rgba(42,184,176,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--red-dark);background:rgba(216,48,48,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--calm-dark);background:rgba(42,184,176,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(56,184,112,0.16);color:#156040}
+.quiz-feedback.q-fb-incorrect{background:rgba(216,48,48,0.10);color:#880808}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(74,130,212,0.13),rgba(42,184,176,0.10));border:1.5px solid rgba(74,130,212,0.28);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+/* SKILLS */
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(74,130,212,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+/* CELEBRATION */
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,245,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(74,130,212,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,130,212,0.06),rgba(42,184,176,0.05),rgba(56,184,112,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* ANIMATIONS */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .sign-grid{grid-template-columns:repeat(2,1fr)}
+  .sort-zones{grid-template-columns:1fr}
+  .trigger-grid,.layla-trigger-grid{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+  .badge-item{padding:14px 8px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🌡️ Stress Lab</div>
+    <h1>The <span>Stress Thermometer</span> Lab</h1>
+    <p>Recognize stress - Detect early warning signs - Build a calm response plan</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌡️</div>
+    <h2>Lab Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now have real tools to read your stress levels and respond with calm and skill.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Stress Detective</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🧊</span><div class="b-title">Calm Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">⚡</span><div class="b-title">Regulation Expert</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+/* ============ CONSTANTS & STATE ============ */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+// Act 1
+let selectedSigns     = new Set();
+let signsConfirmed    = false;
+let sortPlacements    = {};
+let sortSelected      = null;
+let triggerTagged     = {};
+let stressLevel       = 65;
+let cycleConfirmed    = false;
+
+// Act 2
+let tool1Id           = null;
+let tool1Locked       = false;
+let tool2Id           = null;
+let calmPlanText      = '';
+let calmPlanValid     = false;
+let reflectText       = '';
+let reflectValid      = false;
+
+// Act 3
+let laylaTriggersDone = false;
+let laylaLevelDone    = false;
+let laylaToolDone     = false;
+let laylaLevel        = 60;
+let checkinSelected   = new Set();
+let quizAnswers       = {};
+
+/* ============ DATA ============ */
+const bodySigns = [
+  {id:'sweat',   icon:'💧', text:'Sweaty hands',         isStress:true},
+  {id:'heart',   icon:'💓', text:'Fast heartbeat',       isStress:true},
+  {id:'stomach', icon:'😣', text:'Stomach ache',         isStress:true},
+  {id:'sleep',   icon:'😴', text:'Trouble sleeping',     isStress:true},
+  {id:'throw',   icon:'💥', text:'Throwing things',      isStress:false},
+  {id:'calm',    icon:'😌', text:'Calm breathing',       isStress:false}
+];
+
+const stressLevels = [
+  {range:[0,12],   emoji:'😌', label:'Calm', desc:'No significant stress. Body and mind are at ease. Thinking is clear and energy is balanced.', bar:'rgba(56,200,168,0.7)', bg:'rgba(56,184,112,0.08)', border:'rgba(26,128,72,0.24)', col:'var(--green-dark)'},
+  {range:[13,35],  emoji:'🙂', label:'Alert', desc:'Mild arousal - helpful attention and readiness. The body is gently preparing. This level can sharpen focus.', bar:'rgba(74,160,212,0.75)', bg:'rgba(74,130,212,0.08)', border:'rgba(42,82,160,0.24)', col:'var(--blue-dark)'},
+  {range:[36,57],  emoji:'😕', label:'Tense', desc:'Noticeable pressure. Muscles tighten. Thoughts may start racing. This is the level to act on before it rises further.', bar:'rgba(232,168,32,0.8)', bg:'rgba(232,160,32,0.09)', border:'rgba(168,104,0,0.26)', col:'var(--amber-dark)'},
+  {range:[58,80],  emoji:'😰', label:'Very Stressed', desc:'Strong stress response active. Hard to concentrate fully. The body is using significant energy to manage the pressure.', bar:'rgba(232,104,32,0.85)', bg:'rgba(232,104,32,0.09)', border:'rgba(176,48,0,0.28)', col:'var(--orange-dark)'},
+  {range:[81,100], emoji:'🤯', label:'Overwhelmed', desc:'Stress is at maximum. The brain\'s rational thinking is impaired. Immediate regulation is urgently needed.', bar:'rgba(216,48,48,0.90)', bg:'rgba(216,48,48,0.09)', border:'rgba(160,8,8,0.28)', col:'var(--red-dark)'}
+];
+
+const sortStressCards = [
+  {id:'excited', text:'Feeling excited before a game',         zone:'helpful'},
+  {id:'study',   text:'Studying harder because of a test',     zone:'helpful'},
+  {id:'sleep',   text:'Cannot sleep because of worry',         zone:'harmful'},
+  {id:'headache',text:'Constant headaches every day',         zone:'harmful'},
+  {id:'motivated',text:'Motivated to finish homework on time', zone:'helpful'}
+];
+
+const triggerCards = [
+  {id:'test',    icon:'📝', label:'Math test tomorrow',            type:'external'},
+  {id:'conflict',icon:'💬', label:'Disagreement with a friend',   type:'external'},
+  {id:'practice',icon:'⚽', label:'Football practice this evening',type:'external'},
+  {id:'thought', icon:'💭', label:'"I will fail everything."',     type:'thought'}
+];
+
+const calmTools = [
+  {
+    id:'breathe', icon:'🌬️', text:'Deep breathing', sub:'Slow exhales activate the body\'s built-in calm response',
+    quality:'best', stressLevel:24, calmLevel:82,
+    outcome:{title:'Deep Breathing Works', body:'Slow, deliberate breathing directly signals the parasympathetic nervous system to reduce stress hormones. As Zayd breathes out slowly and fully, his heart rate drops, his muscles begin to relax, and the tight feeling in his chest eases. The thermometer reading falls significantly within just a few minutes.', tip:'Science: A prolonged exhale (breathing out longer than breathing in) is one of the fastest evidence-based methods for lowering physiological stress. It works even when stress feels overwhelming.'}
+  },
+  {
+    id:'talk', icon:'💬', text:'Talk to someone trusted', sub:'Sharing the pressure reduces its intensity immediately',
+    quality:'best', stressLevel:30, calmLevel:75,
+    outcome:{title:'Social Support Regulation', body:'Talking to a trusted person externalises the stress - it moves it from entirely inside Zayd\'s mind and body to a shared space. Being heard without judgement activates oxytocin, which reduces cortisol. The problem often seems less impossible when another perspective enters the picture.', tip:'Research: Social connection is one of the most powerful stress regulators available to human beings. Simply being heard by someone who cares reduces physiological stress markers.'}
+  },
+  {
+    id:'break', icon:'📋', text:'Break the task into small steps', sub:'Overwhelm shrinks when the load becomes manageable',
+    quality:'best', stressLevel:28, calmLevel:78,
+    outcome:{title:'Task Decomposition Works', body:'Zayd\'s stress partly comes from looking at everything at once - the test, practice, the conflict - as one enormous undifferentiated pile. Breaking each task into the next single small step transforms overwhelming into manageable. The thermometer reading drops as control is restored.', tip:'Principle: Overwhelm is often caused by cognitive overload, not actual impossibility. When tasks are broken into small next steps, the brain\'s threat response quiets because each individual step is clearly achievable.'}
+  },
+  {
+    id:'ignore', icon:'🙈', text:'Ignore everything and hope it goes away', sub:'Avoidance leaves the pressure building silently',
+    quality:'harmful', stressLevel:90, calmLevel:8,
+    outcome:{title:'Ignoring Escalates Stress', body:'When Zayd ignores the stressors, none of them disappear. The test still approaches. The friendship conflict still waits. The unaddressed pressure continues building beneath the surface. The thermometer keeps rising. Avoidance provides momentary relief but leaves the root causes completely intact - and usually worsening.', tip:'Important: Avoidance is one of the strongest predictors of chronic stress escalation. The temporary relief it provides comes at the cost of the long-term accumulation of unresolved pressure.'}
+  },
+  {
+    id:'worry', icon:'🌀', text:'Stay up all night worrying about it', sub:'Rumination amplifies stress rather than solving it',
+    quality:'harmful', stressLevel:95, calmLevel:5,
+    outcome:{title:'Rumination Makes It Worse', body:'Staying awake and replaying worries does not solve any of the problems Zayd faces - it takes away his sleep (which is essential for stress recovery) and adds exhaustion on top of the existing pressure. Worrying feels like doing something, but it is thinking in circles rather than moving forward. The thermometer reaches its highest point.', tip:'Research: Sleep deprivation increases cortisol levels and significantly reduces the brain\'s capacity for emotional regulation, problem-solving, and coping. Worrying without action is among the least effective stress responses.'}
+  }
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is the primary biological purpose of stress in the human body?',
+    options:[
+      {icon:'🔔', text:'An alarm system that prepares the body to respond to challenges or threats - useful in the right amount', correct:true},
+      {icon:'❌', text:'A purely negative malfunction that serves no useful purpose and should be eliminated', correct:false},
+      {icon:'😴', text:'A signal that the body needs more sleep and rest immediately', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right! Stress is the body\'s alarm system - evolutionarily designed to prepare us to face challenges, improve focus, and increase energy. In the right amount, it is genuinely helpful. The problem arises when the alarm stays on for too long or activates too strongly for the situation.',
+      incorrect:'Not quite. Stress is actually a biological alarm system with a genuine purpose - it prepares the body and mind to respond to challenges. Short-term, moderate stress can improve focus and performance. The problem is chronic, unmanaged stress that stays activated too long without relief.'
+    }
+  },
+  {
+    q:'Question 2: Which of the following is typically an EARLY physical warning sign that stress is rising?',
+    options:[
+      {icon:'💧', text:'Sweaty hands, fast heartbeat, or a tight chest appearing before stress becomes overwhelming', correct:true},
+      {icon:'🤯', text:'Complete inability to think clearly - full cognitive shutdown', correct:false},
+      {icon:'😴', text:'Feeling completely relaxed and at ease', correct:false}
+    ],
+    feedback:{
+      correct:'Correct! Early warning signs are subtle physical signals - sweaty hands, a slightly faster heartbeat, mild tension - that appear before stress becomes overwhelming. Learning to notice these early signals is crucial because regulation tools work most effectively at the Tense stage, before the thermometer reaches Very Stressed or Overwhelmed.',
+      incorrect:'Not quite. Early warning signs are subtle physical signals that appear before stress becomes severe - things like slightly sweaty palms, a mildly faster heartbeat, or a light tightness in the chest. Recognising these early signals is the key skill, because the most effective time to regulate stress is before it reaches maximum intensity.'
+    }
+  },
+  {
+    q:'Question 3: Which approach MOST effectively reduces stress in the long term?',
+    options:[
+      {icon:'🙈', text:'Ignoring the stressors and hoping they resolve on their own over time', correct:false},
+      {icon:'🌬️', text:'Combining physical regulation tools (like breathing) with addressing the underlying cause', correct:true},
+      {icon:'🌀', text:'Spending more time thinking about and analysing the stressors in detail', correct:false}
+    ],
+    feedback:{
+      correct:'Spot on! The most effective long-term stress management combines two approaches: physical regulation tools (breathing, movement, rest) that lower the body\'s arousal level directly, and addressing the actual source of the stress through planning, problem-solving, or seeking support. Either alone is less effective than both together.',
+      incorrect:'Not quite. Long-term effective stress management combines physiological regulation (breathing, rest, movement to lower arousal) with directly addressing the stressor through action - planning, problem-solving, or getting support. Avoidance leaves root causes intact. Rumination increases arousal without generating solutions.'
+    }
+  }
+];
+
+/* ============ UTILITIES ============ */
+function backBtn(stage, label) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + stage + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + label + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟣', 3:'🟢'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getStressLevel(v) {
+  return stressLevels.find(function(l){ return v >= l.range[0] && v <= l.range[1]; });
+}
+
+/* ============ PROGRESS ============ */
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ============ RENDER ROUTER ============ */
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ============ STAGE BUILDERS ============ */
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #005</div>' +
+    '<h2>Your Body\'s Alarm System</h2>' +
+    '<p>Welcome to the Stress Thermometer Lab. Stress is one of the most common and least understood emotional experiences. Almost every child - and every adult - feels it regularly. But very few people have been taught what it actually is, what it does to the body, and most importantly, how to manage it before it becomes overwhelming. That changes today.</p>' +
+    '<p>Your first case has just arrived.</p>' +
+    '<div class="story-box" data-icon="⏰">' +
+      '<p><span>Zayd</span> is ten years old. He has a maths test tomorrow that he feels unprepared for. Football practice is at 5pm. And this morning, he and his best friend had an argument that was not resolved. By the afternoon, Zayd notices his chest feeling tight - like something is pressing on it from the inside. His head aches softly but persistently. He cannot sit still for more than a few minutes before his legs start moving. And when he sits down to study, the words seem to blur and his attention keeps drifting.</p>' +
+    '</div>' +
+    '<div class="thought-highlight"><p>"I cannot do all of this. There is too much. Everything is going wrong at once."</p></div>' +
+    '<p>What Zayd is experiencing is not unusual, not dangerous, and not permanent. But without understanding it, it can escalate. Your mission: help Zayd understand his stress, identify its sources, and build a real response plan.</p>' +
+    '<div class="feedback-msg info-msg">🌡️ <strong>Core concept:</strong> Stress is your body\'s alarm system - a biological response designed to prepare you for challenges. In the right amount, it sharpens focus and increases energy. The problem arises when the alarm keeps ringing even when the immediate threat has passed, or when multiple stressors pile up without relief.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Investigation</button>' +
+  '</div>';
+}
+
+function s2() {
+  var cards = bodySigns.map(function(s) {
+    return '<div class="sign-card" id="sc-' + s.id + '" onclick="toggleSign(\'' + s.id + '\',' + s.isStress + ')">' +
+      '<div class="si-check">✓</div>' +
+      '<span class="si-icon">' + s.icon + '</span>' +
+      '<div class="si-text">' + s.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Body Warning Signs</div>' +
+    '<h2>Which Are Stress Body Signals?</h2>' +
+    '<p>The body communicates stress through specific physical signals - sensations that appear as the stress response activates. Learning to recognise these early is one of the most valuable skills in stress management, because the earlier you catch the signal, the more options you have to respond effectively.</p>' +
+    '<p>Select all the cards that represent genuine stress body signals. Think carefully - not every option listed is a stress signal.</p>' +
+    '<div class="sign-grid">' + cards + '</div>' +
+    '<div id="signsFeedback"></div>' +
+    '<button class="btn-primary" id="signsNextBtn" onclick="renderStage(3)" disabled>Next: Helpful vs Harmful Stress -></button>' +
+  '</div>';
+}
+
+function s3() {
+  var bank = sortStressCards.map(function(c) {
+    var placed = sortPlacements[c.id];
+    return '<div class="sort-card-item' + (placed ? ' placed' : '') + '" id="ssc-' + c.id + '" onclick="handleSortClick(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress') +
+    backBtn(2,'Back to Body Signs') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Helpful vs Harmful</div>' +
+    '<h2>Not All Stress Is Equal</h2>' +
+    '<p>Here is something most people do not realise: stress is not always harmful. A moderate amount of stress - often called <strong>eustress</strong> - is actually useful. It motivates, sharpens focus, and helps us rise to challenges. The stress that causes damage is the kind that is chronic, overwhelming, or persistent without relief.</p>' +
+    '<p>Sort each card into the correct category by clicking it, then clicking the zone where it belongs.</p>' +
+    '<div class="sort-bank" id="sortBankS3">' + bank + '</div>' +
+    '<div id="sortHintS3" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a card above, then click a zone below to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-helpful" onclick="placeInZone(\'helpful\')">' +
+        '<div class="sz-title">Helpful Stress</div>' +
+        '<div class="sz-items" id="zone-helpful"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-harmful" onclick="placeInZone(\'harmful\')">' +
+        '<div class="sz-title">Harmful Stress</div>' +
+        '<div class="sz-items" id="zone-harmful"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sortS3Feedback"></div>' +
+    '<button class="btn-primary" id="sortS3NextBtn" onclick="renderStage(4)" disabled>Next: Identify Stress Triggers -></button>' +
+  '</div>';
+}
+
+function s4() {
+  triggerTagged = {};
+  var cards = triggerCards.map(function(t) {
+    return '<div class="trigger-card" id="tc-' + t.id + '" onclick="tagTrigger(\'' + t.id + '\',\'' + t.type + '\')">' +
+      '<span class="tr-icon">' + t.icon + '</span>' +
+      '<div class="tr-label">' + t.label + '</div>' +
+      '<div class="tr-type">Click to classify</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress') +
+    backBtn(3,'Back to Sorting') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Trigger Identification</div>' +
+    '<h2>What Is Actually Causing the Stress?</h2>' +
+    '<p>Stress always has a source - a trigger. But triggers come in two different forms, and understanding the difference is crucial. <strong>External triggers</strong> are real situations in the world outside of us. <strong>Thought-based triggers</strong> are interpretations, predictions, or judgements that our own mind creates - often making the situation feel far worse than the external facts alone would.</p>' +
+    '<p>Click each card to identify what type of trigger it is for Zayd.</p>' +
+    '<div class="trigger-grid">' + cards + '</div>' +
+    '<div id="triggerFeedback"></div>' +
+    '<button class="btn-primary" id="triggerNextBtn" onclick="renderStage(5)" disabled>Next: Stress Thermometer -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress') +
+    backBtn(4,'Back to Triggers') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Stress Thermometer</div>' +
+    '<h2>Read the Thermometer</h2>' +
+    '<p>Stress is not on or off - it exists on a spectrum from completely calm to completely overwhelmed. Being able to accurately read where you are on that spectrum is a foundational skill, because different levels of stress require different responses. Move the thermometer slider to estimate Zayd\'s current stress level based on everything you have read about his situation.</p>' +
+    '<div class="thermo-wrap">' +
+      '<div class="thermo-labels"><span>😌 Calm</span><span>🙂 Alert</span><span>😕 Tense</span><span>😰 Very Stressed</span><span>🤯 Overwhelmed</span></div>' +
+      '<input type="range" class="thermo-slider" id="thermoSlider" min="0" max="100" value="65" oninput="updateThermo(this.value)"/>' +
+    '</div>' +
+    '<div class="thermo-display" id="thermoDisplay">' +
+      '<div class="td-bar-wrap"><div class="td-bar" id="tdBar" style="width:65%"></div></div>' +
+      '<span class="td-emoji" id="tdEmoji">😰</span>' +
+      '<div class="td-label" id="tdLabel">Very Stressed</div>' +
+      '<div class="td-desc" id="tdDesc">Strong stress response active. Hard to concentrate fully.</div>' +
+    '</div>' +
+    '<br/>' +
+    '<div class="feedback-msg blue-msg">🌡️ <strong>Zayd\'s situation:</strong> Multiple simultaneous stressors (test + conflict + practice) combined with a thought trigger ("I will fail everything") typically push stress into the Very Stressed to Overwhelmed range. This is a critical point - still manageable with the right tools, but urgently requiring attention.</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Stress Cycle -></button>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {num:'1', title:'Trigger', match:'The event or situation that starts the stress response', zayd:'Maths test tomorrow + football practice + unresolved conflict with friend'},
+    {num:'2', title:'Thought', match:'The mind\'s interpretation of the trigger - often amplifying it', zayd:'"I cannot do all of this. Everything is going wrong at once."'},
+    {num:'3', title:'Body Reaction', match:'Physical stress signals the body produces in response', zayd:'Tight chest, headache, restlessness, difficulty focusing'},
+    {num:'4', title:'Emotion', match:'The felt emotional experience produced by the body\'s response', zayd:'Overwhelmed, anxious, frustrated, helpless'},
+    {num:'5', title:'Behaviour', match:'What the person does in response to the emotion', zayd:'Avoidance, inability to study, inability to sit still, possible conflict escalation'}
+  ];
+  var html = steps.map(function(s, i) {
+    return '<div class="cycle-step cs-active" style="animation-delay:' + (i * 0.08) + 's">' +
+      '<div class="cs-num">' + s.num + '</div>' +
+      '<div>' +
+        '<div class="cs-title">' + s.title + '</div>' +
+        '<div class="cs-match">' + s.match + '</div>' +
+        '<div class="cs-zayd">Zayd: ' + s.zayd + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress') +
+    backBtn(5,'Back to Thermometer') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Stress Cycle</div>' +
+    '<h2>How Stress Travels Through Us</h2>' +
+    '<p>Stress is not a single event - it is a chain reaction. Understanding the five links in that chain gives you multiple places to intervene and interrupt it. The earlier in the chain you intervene, the easier the interruption becomes. Read through how Zayd\'s experience maps perfectly onto this universal stress cycle.</p>' +
+    '<div class="cycle-steps">' + html + '</div>' +
+    '<div class="feedback-msg info-msg">💡 <strong>The key insight:</strong> You can interrupt the stress cycle at almost any link in the chain. The most powerful intervention point is between the Trigger and the Thought - challenging the interpretation before the body reaction fully activates. But even at the Body Reaction stage, regulation tools can break the cycle.</div>' +
+    '<div class="feedback-msg teal-msg" style="margin-bottom:20px">🧊 <strong>Badge Progress:</strong> Stress Detective Level 1 - almost earned! Continue to Act 2 to learn the regulation tools...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Regulating Stress -></button>' +
+  '</div>';
+}
+
+function s7() {
+  tool1Locked = false; tool1Id = null;
+  var cards = calmTools.map(function(t) {
+    return '<button class="tool-btn" id="t1-' + t.id + '" onclick="chooseTool1(\'' + t.id + '\')">' +
+      '<span class="tb-icon">' + t.icon + '</span>' +
+      '<div><div class="tb-text">' + t.text + '</div><div class="tb-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Regulating Stress') +
+    backBtn(6,'Back to Stress Cycle') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Choose a Calm Tool</div>' +
+    '<h2>What Should Zayd Do Right Now?</h2>' +
+    '<p>Zayd is at the Very Stressed stage. His thermometer is high and he needs to intervene before it escalates further. Five options are available to him. Each one will have a measurable effect on his stress and calm levels - some positive, some dramatically negative. Choose the one you think will help him most right now and see what happens.</p>' +
+    '<div class="tool-grid" id="toolGrid1">' + cards + '</div>' +
+    '<div id="tool1Outcome"></div>' +
+    '<div id="tool1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Try Another Tool and Compare -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  tool2Id = null;
+  var first = calmTools.find(function(t){ return t.id === tool1Id; });
+  var remaining = calmTools.filter(function(t){ return t.id !== tool1Id; });
+  var cards = remaining.map(function(t) {
+    return '<button class="tool-btn" id="t2-' + t.id + '" onclick="chooseTool2(\'' + t.id + '\')">' +
+      '<span class="tb-icon">' + t.icon + '</span>' +
+      '<div><div class="tb-text">' + t.text + '</div><div class="tb-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Regulating Stress') +
+    backBtn(7,'Back to Tool Selection') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Compare Two Tools</div>' +
+    '<h2>See the Difference Side by Side</h2>' +
+    '<p>You chose <strong>' + first.icon + ' ' + first.text + '</strong> for Zayd. Now try one of the remaining options and compare both outcomes on the stress and calm meters. Seeing the difference visually makes the impact of each choice far more concrete and memorable.</p>' +
+    '<div class="tool-grid" id="toolGrid2">' + cards + '</div>' +
+    '<div id="tool2Outcome"></div>' +
+    '<div id="tool2NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(9)">Build Your Calm Plan -></button></div>' +
+  '</div>';
+}
+
+function s9() {
+  calmPlanValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Regulating Stress') +
+    backBtn(8,'Back to Comparison') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Personal Calm Plan</div>' +
+    '<h2>Build Your Personal Calm Plan</h2>' +
+    '<p>The most effective stress management is personalised. A calm plan written in your own words - based on your own body\'s signals and your own preferred tools - is far more likely to be used in a real moment than a generic list of advice. Write yours below.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your plan should include three elements:<br/>' +
+      '<strong>Body signal:</strong> What physical feeling tells me stress is rising?<br/>' +
+      '<strong>Action:</strong> What specific tool will I use at that moment?<br/>' +
+      '<strong>Thought shift:</strong> What can I remind myself to lower the intensity?' +
+    '</div>' +
+    '<label class="input-label">When I notice my stress rising, I can...</label>' +
+    '<textarea class="reflection-input" id="calmPlanInput" oninput="checkCalmPlan(this.value)" placeholder="For example: When I notice my chest getting tight and my thoughts speeding up, I know stress is building. I will stop, breathe out slowly for a count of six, and remind myself that I can only do one thing at a time. I will write down the next single step for each task..." rows="5"></textarea>' +
+    '<div class="char-counter" id="calmPlanCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why writing matters:</strong> Research shows that stress management plans written in advance are significantly more likely to be executed in the moment of stress than unwritten intentions. The act of writing creates a retrievable mental script.</div>' +
+    '<button class="btn-primary" id="calmPlanNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Stress -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Regulating Stress') +
+    backBtn(9,'Back to Calm Plan') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Stress Is Not the Enemy</h2>' +
+    '<p>Before we move to the final act, there is an important idea to sit with. We have been talking about managing and reducing stress - but stress itself is not inherently bad. It is a feature of our biology, not a flaw. The problem is not having stress. The problem is stress that is unrecognised, unaddressed, and unmanaged.</p>' +
+    '<p>Answer all three questions thoughtfully in your response below:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. How can a moderate amount of stress actually help us perform better or stay motivated?<br/>' +
+      '2. What specifically makes stress harmful when it goes unmanaged for too long?<br/>' +
+      '3. What is one specific situation in your own life where learning to manage stress early would make a real difference?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about the difference between feeling nervous before something important (useful) versus feeling constantly overwhelmed for weeks (harmful), and what the difference is between them..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg teal-msg" style="margin-bottom:16px">🧊 <strong>Badge Progress:</strong> Calm Builder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Transfer and Apply -></button>' +
+  '</div>';
+}
+
+function s11() {
+  laylaTriggersDone = false; laylaLevelDone = false; laylaToolDone = false;
+  var triggers = [
+    {id:'presentation', icon:'🎤', text:'Big school presentation due Friday', correct:true},
+    {id:'family',       icon:'👨‍👩‍👦', text:'Family expectations to perform perfectly', correct:true},
+    {id:'comparison',   icon:'🔍', text:'"Everyone else is better than me."', correct:true},
+    {id:'tired',        icon:'🛌', text:'She is simply tired today', correct:false}
+  ];
+  var tCards = triggers.map(function(t) {
+    return '<div class="layla-trigger" id="lt-' + t.id + '" onclick="toggleLaylaT(\'' + t.id + '\',' + t.correct + ')">' +
+      '<span class="lt-icon">' + t.icon + '</span>' +
+      '<div class="lt-text">' + t.text + '</div>' +
+    '</div>';
+  }).join('');
+  var tools = calmTools.filter(function(t){ return t.quality !== 'harmful'; }).map(function(t) {
+    return '<button class="tool-btn" id="lt-tool-' + t.id + '" onclick="selectLaylaT(\'' + t.id + '\',\'' + t.quality + '\')">' +
+      '<span class="tb-icon">' + t.icon + '</span>' +
+      '<div><div class="tb-text">' + t.text + '</div><div class="tb-sub">' + t.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Apply') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Layla\'s Pressure Situation</h2>' +
+    '<p>Everything you have learned about stress is now going to be applied in a brand new situation with a completely different character. This is where knowledge becomes a real skill.</p>' +
+    '<div class="story-box" data-icon="📚">' +
+      '<p><span class="teal">Layla</span> is twelve years old. She has a major school presentation on Friday - worth a significant part of her grade. Her parents have high expectations for her academic performance and check her grades carefully. This morning she found herself staring at her notes unable to absorb any of the words. Her shoulders are tight, she keeps checking the clock, and a persistent thought circles her mind: "Everyone else is better at this than me. I am going to let everyone down."</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify Layla\'s stress triggers</div>' +
+    '<p>Select all the genuine stress triggers present in Layla\'s situation.</p>' +
+    '<div class="layla-trigger-grid">' + tCards + '</div>' +
+    '<div id="laylaTFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Estimate Layla\'s stress level</div>' +
+    '<div id="laylaLevelWrap" style="opacity:0.4;pointer-events:none">' +
+      '<div class="thermo-wrap">' +
+        '<div class="thermo-labels"><span>😌 Calm</span><span>😕 Tense</span><span>🤯 Overwhelmed</span></div>' +
+        '<input type="range" class="thermo-slider" id="laylaSlider" min="0" max="100" value="60" oninput="updateLaylaThermo(this.value)"/>' +
+      '</div>' +
+      '<div class="thermo-display" id="laylaDisplay">' +
+        '<div class="td-bar-wrap"><div class="td-bar" id="laylaBar" style="width:60%"></div></div>' +
+        '<span class="td-emoji" id="laylaEmoji">😰</span>' +
+        '<div class="td-label" id="laylaLabel">Very Stressed</div>' +
+      '</div>' +
+      '<button class="btn-primary" id="laylaConfirmBtn" onclick="confirmLaylaLevel()" style="margin-top:14px;background:linear-gradient(135deg,var(--blue-dark),var(--calm-dark))">Confirm Stress Level</button>' +
+    '</div>' +
+    '<div id="laylaLevelFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose Layla\'s regulation tool</div>' +
+    '<div id="laylaToolWrap" style="opacity:0.4;pointer-events:none"><div class="tool-grid">' + tools + '</div></div>' +
+    '<div id="laylaToolFeedback"></div>' +
+    '<button class="btn-primary" id="laylaNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Daily Check-In Builder -></button>' +
+  '</div>';
+}
+
+function s12() {
+  var checkOptions = [
+    {id:'breathe', text:'Morning breathing exercise (3 minutes)', good:true},
+    {id:'plan',    text:'Break down today\'s homework into steps', good:true},
+    {id:'phone',   text:'Take a genuine phone break before study', good:true},
+    {id:'parent',  text:'Talk to a parent or trusted adult when needed', good:true},
+    {id:'ignore',  text:'Ignore all stressors and hope they disappear', good:false},
+    {id:'panic',   text:'Spend the morning thinking about everything that could go wrong', good:false}
+  ];
+  var chips = checkOptions.map(function(o) {
+    return '<div class="checkin-chip' + (!o.good ? '' : '') + '" id="chip-' + o.id + '" onclick="toggleCheckin(\'' + o.id + '\',' + o.good + ')">' + o.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Apply') +
+    backBtn(11,'Back to Layla\'s Story') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 12 - Daily Check-In</div>' +
+    '<h2>Build a Daily Stress Check Routine</h2>' +
+    '<p>One of the most powerful things any person can do for their mental health is build a simple daily check-in routine - a set of small, consistent habits that keep stress from accumulating silently. Below are six possible elements. Select the healthy ones that would make a genuinely useful daily stress management routine. Avoid the ones that would make things worse.</p>' +
+    '<div class="checkin-chips" id="checkinChips">' + chips + '</div>' +
+    '<div id="checkinFeedback"></div>' +
+    '<button class="btn-primary" id="checkinNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" id="qq-' + i + '" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Apply') +
+    backBtn(12,'Back to Check-In') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Stress Thermometer Lab with real depth and focus. Let\'s see how well the core concepts have settled in. Answer all three questions - take your time, read carefully, and think about what you have learned today.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Stress Scientist!</h2>' +
+    '<p>You completed the full Stress Thermometer Lab - all 3 Acts, 14 stages, and a genuine journey into one of the most important and least taught emotional experiences of childhood. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Stress Detective</div><div class="b-sub">Read the thermometer</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🧊</span><div class="b-title">Calm Builder</div><div class="b-sub">Mastered regulation tools</div></div>' +
+      '<div class="badge-item"><span class="b-icon">⚡</span><div class="b-title">Regulation Expert</div><div class="b-sub">Applied skills to real life</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🌡️</span><div><div class="sk-title">Reading the Stress Thermometer</div><div class="sk-desc">Stress exists on a measurable spectrum from Calm to Overwhelmed, with five distinct levels each carrying different physical signals. The critical skill is catching stress at the Tense or Alert stage - before the thermometer reaches Very Stressed or Overwhelmed, when regulation becomes significantly harder.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">⚡</span><div><div class="sk-title">Interrupting the Stress Cycle</div><div class="sk-desc">Stress travels through a five-stage chain: Trigger - Thought - Body Reaction - Emotion - Behaviour. You can interrupt this chain at multiple points, and the earlier the intervention, the more effective it is. The thought stage is particularly powerful because challenging an unhelpful interpretation can prevent the full body stress response from activating.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🧊</span><div><div class="sk-title">Evidence-Based Regulation Tools</div><div class="sk-desc">Deep breathing, talking to someone trusted, and breaking tasks into manageable steps are all evidence-based tools that lower physiological stress. Avoidance and rumination make stress significantly worse. A personalised written calm plan - including a body signal, an action, and a thought shift - is the most effective preparation for real moments of stress.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="⭐" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Every person who navigates stress well has not somehow eliminated it from their life. They have learned to read it early, respond to it skillfully, and return to calm more quickly after it peaks. You now have those skills. The next time you feel your chest tighten, your thoughts race, or your body go tense - you will know exactly what is happening and exactly what to do. That knowledge changes everything. Use it. 🌡️' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--calm-dark),var(--blue-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ============ POST-RENDER RESTORE ============ */
+function postRender(n) {
+  if (n === 2) {
+    selectedSigns.forEach(function(id) {
+      var el = document.getElementById('sc-' + id);
+      if (el) el.classList.add('sc-selected');
+    });
+    checkSignsCount();
+  }
+  if (n === 3) restoreSortUI();
+  if (n === 4) {
+    Object.keys(triggerTagged).forEach(function(id) {
+      var el = document.getElementById('tc-' + id);
+      if (el) el.classList.add('tr-' + triggerTagged[id]);
+    });
+    checkTriggersDone();
+  }
+  if (n === 5) updateThermo(stressLevel);
+  if (n === 9 && calmPlanText) {
+    var ta = document.getElementById('calmPlanInput');
+    if (ta) ta.value = calmPlanText;
+    checkCalmPlan(calmPlanText);
+  }
+  if (n === 10 && reflectText) {
+    var ta2 = document.getElementById('reflectInput');
+    if (ta2) ta2.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    updateLaylaThermo(laylaLevel);
+    setTimeout(function() {
+      if (laylaTriggersDone) {
+        var lw = document.getElementById('laylaLevelWrap');
+        if (lw) { lw.style.opacity = '1'; lw.style.pointerEvents = 'auto'; }
+      }
+      if (laylaLevelDone) {
+        var lf = document.getElementById('laylaLevelFeedback');
+        if (lf) lf.innerHTML = '<div class="feedback-msg correct-msg">Stress level confirmed.</div>';
+        var lb = document.getElementById('laylaConfirmBtn');
+        if (lb) lb.disabled = true;
+        var ltw = document.getElementById('laylaToolWrap');
+        if (ltw) { ltw.style.opacity = '1'; ltw.style.pointerEvents = 'auto'; }
+      }
+      checkLaylaComplete();
+    }, 60);
+  }
+  if (n === 12) {
+    checkinSelected.forEach(function(id) {
+      var el = document.getElementById('chip-' + id);
+      if (el) el.classList.add('chip-selected');
+    });
+    checkCheckinDone();
+  }
+}
+
+/* ============ ACT 1 INTERACTIONS ============ */
+function toggleSign(id, isStress) {
+  var el = document.getElementById('sc-' + id);
+  if (selectedSigns.has(id)) {
+    selectedSigns.delete(id);
+    el.classList.remove('sc-selected');
+    el.classList.remove('sc-wrong');
+  } else {
+    selectedSigns.add(id);
+    if (isStress) el.classList.add('sc-selected');
+    else el.classList.add('sc-wrong');
+  }
+  checkSignsCount();
+}
+
+function checkSignsCount() {
+  var correct = Array.from(selectedSigns).filter(function(id) {
+    return bodySigns.find(function(s){ return s.id === id; }).isStress;
+  }).length;
+  var wrong = Array.from(selectedSigns).filter(function(id) {
+    return !bodySigns.find(function(s){ return s.id === id; }).isStress;
+  }).length;
+  var fb = document.getElementById('signsFeedback');
+  var nb = document.getElementById('signsNextBtn');
+  if (correct >= 4 && wrong === 0) {
+    signsConfirmed = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All four stress body signals identified correctly. Sweaty hands, fast heartbeat, stomach ache, and trouble sleeping are all genuine physiological stress responses - the body activating its alarm system. "Throwing things" is a behavioural response to stress, not a body signal. "Calm breathing" is the opposite of a stress signal.</div>';
+    if (nb) nb.disabled = false;
+  } else if (correct >= 3 && wrong === 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg blue-msg">' + correct + ' of 4 stress signals found. There is one more - look carefully at all the physical body sensations listed.</div>';
+    if (nb) nb.disabled = true;
+    signsConfirmed = false;
+  } else if (wrong > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">One or more selections are not stress body signals. Remember: body signals are physical sensations that happen inside the body automatically. Throwing things is a behaviour, and calm breathing is the opposite of a stress signal.</div>';
+    if (nb) nb.disabled = true;
+    signsConfirmed = false;
+  } else {
+    if (fb) fb.innerHTML = selectedSigns.size > 0 ? '<div class="feedback-msg blue-msg">Keep selecting - look for all four physical stress signals.</div>' : '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function handleSortClick(id) {
+  if (sortPlacements[id]) return;
+  sortSelected = id;
+  document.querySelectorAll('.sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('ssc-' + id);
+  if (el) el.style.outline = '3px solid var(--blue-dark)';
+  var hint = document.getElementById('sortHintS3');
+  if (hint) hint.textContent = 'Now click a zone to place: "' + sortStressCards.find(function(c){ return c.id === id; }).text + '"';
+}
+
+function placeInZone(zone) {
+  if (!sortSelected) return;
+  var item = sortStressCards.find(function(c){ return c.id === sortSelected; });
+  if (!item) return;
+  sortPlacements[sortSelected] = zone;
+  var el = document.getElementById('ssc-' + sortSelected);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeFromZone(\'' + sortSelected + '\',\'' + zone + '\')">x</span></div>';
+  }
+  var hint = document.getElementById('sortHintS3');
+  if (hint) hint.textContent = 'Click another card to continue';
+  sortSelected = null;
+  checkSortS3();
+}
+
+function removeFromZone(id, zone) {
+  delete sortPlacements[id];
+  var el = document.getElementById('ssc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = sortStressCards.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSortS3();
+}
+
+function restoreSortUI() {
+  Object.keys(sortPlacements).forEach(function(id) {
+    var zone = sortPlacements[id];
+    var item = sortStressCards.find(function(c){ return c.id === id; });
+    var el = document.getElementById('ssc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeFromZone(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSortS3();
+}
+
+function checkSortS3() {
+  var total = Object.keys(sortPlacements).length;
+  var correct = sortStressCards.filter(function(c){ return sortPlacements[c.id] === c.zone; }).length;
+  var fb = document.getElementById('sortS3Feedback');
+  var nb = document.getElementById('sortS3NextBtn');
+  if (total < sortStressCards.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg blue-msg">' + total + ' of 5 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === sortStressCards.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted! Helpful stress (eustress) includes excitement before a game, studying harder, and feeling motivated - these involve pressure but move you toward a goal. Harmful stress includes inability to sleep and constant headaches - these are signs the alarm system is staying on too long without recovery.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all placements are correct (' + correct + ' of 5). Remove the incorrect items (click x) and try again. Ask yourself: does this type of stress help me move forward, or does it cause ongoing physical or mental damage?</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function tagTrigger(id, type) {
+  if (triggerTagged[id]) return;
+  triggerTagged[id] = type;
+  var el = document.getElementById('tc-' + id);
+  if (el) { el.classList.add('tr-' + type); var td = el.querySelector('.tr-type'); if (td) td.textContent = type === 'external' ? 'External Trigger' : 'Thought-Based Trigger'; }
+  checkTriggersDone();
+}
+
+function checkTriggersDone() {
+  var tagged = Object.keys(triggerTagged).length;
+  var nb = document.getElementById('triggerNextBtn');
+  var fb = document.getElementById('triggerFeedback');
+  if (tagged < triggerCards.length) {
+    if (fb && tagged > 0) fb.innerHTML = '<div class="feedback-msg blue-msg">Classify all four triggers - ' + (triggerCards.length - tagged) + ' remaining.</div>';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All classified. The test, conflict, and practice are external triggers - real events in the world. "I will fail everything" is a thought-based trigger - Zayd\'s mind created this prediction, and it is this thought that amplifies the stress most dramatically. Thought-based triggers are often the most powerful stressors, and they are also the most directly changeable.</div>';
+  if (nb) nb.disabled = false;
+}
+
+function updateThermo(val) {
+  stressLevel = parseInt(val);
+  var level = getStressLevel(stressLevel);
+  if (!level) return;
+  var bar = document.getElementById('tdBar');
+  var emoji = document.getElementById('tdEmoji');
+  var label = document.getElementById('tdLabel');
+  var desc = document.getElementById('tdDesc');
+  var disp = document.getElementById('thermoDisplay');
+  if (bar) { bar.style.width = stressLevel + '%'; bar.style.background = level.bar; }
+  if (emoji) emoji.textContent = level.emoji;
+  if (label) { label.textContent = level.label; label.style.color = level.col; }
+  if (desc) desc.textContent = level.desc;
+  if (disp) { disp.style.background = level.bg; disp.style.borderColor = level.border; }
+}
+
+/* ============ ACT 2 INTERACTIONS ============ */
+function buildMeterHTML(tool, pfx) {
+  return '<div class="meters-wrap">' +
+    '<div class="meter-row"><div class="meter-label-row"><span>⚡ Stress Level</span><span id="' + pfx + 'SLvl">0%</span></div><div class="meter-track"><div class="meter-fill stress" id="' + pfx + 'SFill"></div></div></div>' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🧊 Calm Level</span><span id="' + pfx + 'CLvl">0%</span></div><div class="meter-track"><div class="meter-fill calm" id="' + pfx + 'CFill"></div></div></div>' +
+  '</div>' +
+  '<div class="outcome-box ' + tool.quality + '"><div class="outcome-title">' + tool.outcome.title + '</div>' + tool.outcome.body + '<div class="outcome-tip">' + tool.outcome.tip + '</div></div>';
+}
+
+function animateMeters(sId, cId, sLId, cLId, sV, cV) {
+  setTimeout(function() {
+    var sf = document.getElementById(sId), cf = document.getElementById(cId);
+    var sl = document.getElementById(sLId), cl = document.getElementById(cLId);
+    if (sf) sf.style.width = sV + '%';
+    if (cf) cf.style.width = cV + '%';
+    if (sl) sl.textContent = sV + '%';
+    if (cl) cl.textContent = cV + '%';
+  }, 150);
+}
+
+function chooseTool1(id) {
+  if (tool1Locked) return;
+  tool1Locked = true; tool1Id = id;
+  var chosen = calmTools.find(function(t){ return t.id === id; });
+  calmTools.forEach(function(t) {
+    var el = document.getElementById('t1-' + t.id);
+    if (el) { if (t.id === id) el.classList.add('sel-' + t.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('tool1Outcome');
+  if (out) out.innerHTML = buildMeterHTML(chosen, 'm1');
+  animateMeters('m1SFill','m1CFill','m1SLvl','m1CLvl', chosen.stressLevel, chosen.calmLevel);
+  var nw = document.getElementById('tool1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function chooseTool2(id) {
+  if (tool2Id) return;
+  tool2Id = id;
+  var chosen = calmTools.find(function(t){ return t.id === id; });
+  var first = calmTools.find(function(t){ return t.id === tool1Id; });
+  var el = document.getElementById('t2-' + id);
+  if (el) el.classList.add('sel-' + chosen.quality);
+  calmTools.filter(function(t){ return t.id !== tool1Id; }).forEach(function(t) {
+    var e = document.getElementById('t2-' + t.id);
+    if (e) e.style.cursor = 'default';
+  });
+  var out = document.getElementById('tool2Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="section-divider">Your first choice: ' + first.icon + '</div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Stress</span><span>' + first.stressLevel + '%</span></div><div class="meter-track"><div class="meter-fill stress" style="width:' + first.stressLevel + '%"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Calm</span><span>' + first.calmLevel + '%</span></div><div class="meter-track"><div class="meter-fill calm" style="width:' + first.calmLevel + '%"></div></div></div>' +
+      '<div class="section-divider">This choice: ' + chosen.icon + '</div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Stress</span><span>' + chosen.stressLevel + '%</span></div><div class="meter-track"><div class="meter-fill stress" id="m2SFill"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Calm</span><span>' + chosen.calmLevel + '%</span></div><div class="meter-track"><div class="meter-fill calm" id="m2CFill"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var sf = document.getElementById('m2SFill'), cf = document.getElementById('m2CFill');
+    if (sf) sf.style.width = chosen.stressLevel + '%';
+    if (cf) cf.style.width = chosen.calmLevel + '%';
+  }, 150);
+  var nw = document.getElementById('tool2NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkCalmPlan(val) {
+  calmPlanText = val;
+  var len = val.trim().length;
+  calmPlanValid = len >= 40;
+  var c = document.getElementById('calmPlanCounter');
+  var b = document.getElementById('calmPlanNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (calmPlanValid ? ' met' : ''); }
+  if (b) b.disabled = !calmPlanValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ============ ACT 3 INTERACTIONS ============ */
+var laylaTriggersCount = 0;
+var laylaCorrectTriggers = 0;
+function toggleLaylaT(id, correct) {
+  var el = document.getElementById('lt-' + id);
+  if (el && (el.classList.contains('lt-sel') || el.classList.contains('lt-wrong'))) return;
+  if (el) el.classList.add(correct ? 'lt-sel' : 'lt-wrong');
+  if (correct) laylaCorrectTriggers++;
+  laylaTriggersCount++;
+  if (laylaTriggersCount >= 4) {
+    laylaTriggersDone = true;
+    var fb = document.getElementById('laylaTFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Triggers identified. Layla faces three genuine stressors: the presentation (external), family expectations (external), and the self-comparing thought "everyone else is better than me" (thought-based). Being tired today is a state, not a stress trigger - though it can make existing stress feel more intense.</div>';
+    var lw = document.getElementById('laylaLevelWrap');
+    if (lw) { lw.style.opacity = '1'; lw.style.pointerEvents = 'auto'; }
+    checkLaylaComplete();
+  }
+}
+
+function updateLaylaThermo(val) {
+  laylaLevel = parseInt(val);
+  var level = getStressLevel(laylaLevel);
+  if (!level) return;
+  var bar = document.getElementById('laylaBar');
+  var em = document.getElementById('laylaEmoji');
+  var lb = document.getElementById('laylaLabel');
+  var disp = document.getElementById('laylaDisplay');
+  if (bar) { bar.style.width = laylaLevel + '%'; bar.style.background = level.bar; }
+  if (em) em.textContent = level.emoji;
+  if (lb) { lb.textContent = level.label; lb.style.color = level.col; }
+  if (disp) { disp.style.background = level.bg; disp.style.borderColor = level.border; }
+}
+
+function confirmLaylaLevel() {
+  laylaLevelDone = true;
+  var level = getStressLevel(laylaLevel);
+  var fb = document.getElementById('laylaLevelFeedback');
+  if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Stress level confirmed at <strong>' + level.label + '</strong> (' + laylaLevel + '%). Given the presentation pressure, family expectations, and thought-based trigger combined, Layla is likely in the Very Stressed range - high enough to significantly impair concentration and emotional regulation.</div>';
+  var btn = document.getElementById('laylaConfirmBtn');
+  if (btn) btn.disabled = true;
+  var ltw = document.getElementById('laylaToolWrap');
+  if (ltw) { ltw.style.opacity = '1'; ltw.style.pointerEvents = 'auto'; }
+  checkLaylaComplete();
+}
+
+function selectLaylaT(id, quality) {
+  if (laylaToolDone) return;
+  laylaToolDone = true;
+  calmTools.filter(function(t){ return t.quality !== 'harmful'; }).forEach(function(t) {
+    var el = document.getElementById('lt-tool-' + t.id);
+    if (el) el.style.cursor = 'default';
+  });
+  var tool = calmTools.find(function(t){ return t.id === id; });
+  var el = document.getElementById('lt-tool-' + id);
+  if (el) el.classList.add('sel-' + quality);
+  var fb = document.getElementById('laylaToolFeedback');
+  if (fb) {
+    var msg = quality === 'best'
+      ? '<div class="feedback-msg correct-msg">Excellent choice. ' + tool.icon + ' ' + tool.text + ' will directly address Layla\'s stress at the physiological level or the cognitive/social level. This is exactly the right moment to deploy this tool - she is stressed enough to need it urgently, but not yet at the point where all regulation capacity is gone.</div>'
+      : '<div class="feedback-msg blue-msg">A reasonable choice. ' + tool.icon + ' ' + tool.text + ' can help - any of the three positive tools are genuinely useful here. All of them are significantly better than ignoring the stress or ruminating on it.</div>';
+    fb.innerHTML = msg;
+  }
+  checkLaylaComplete();
+}
+
+function checkLaylaComplete() {
+  if (laylaTriggersDone && laylaLevelDone && laylaToolDone) {
+    var b = document.getElementById('laylaNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+var checkinGoodSelected = 0;
+function toggleCheckin(id, good) {
+  var el = document.getElementById('chip-' + id);
+  if (checkinSelected.has(id)) {
+    checkinSelected.delete(id);
+    if (el) { el.classList.remove('chip-selected'); el.classList.remove('chip-bad'); }
+    if (good) checkinGoodSelected = Math.max(0, checkinGoodSelected - 1);
+  } else {
+    checkinSelected.add(id);
+    if (good) {
+      if (el) el.classList.add('chip-selected');
+      checkinGoodSelected++;
+    } else {
+      if (el) el.classList.add('chip-bad');
+    }
+  }
+  checkCheckinDone();
+}
+
+function checkCheckinDone() {
+  var hasBad = Array.from(checkinSelected).some(function(id) {
+    return id === 'ignore' || id === 'panic';
+  });
+  var fb = document.getElementById('checkinFeedback');
+  var nb = document.getElementById('checkinNextBtn');
+  if (hasBad) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Your routine includes one or more options that would increase stress rather than reduce it. Ignoring stressors and spending time panicking about what could go wrong both make stress worse. Remove those and keep only the genuinely helpful habits.</div>';
+    if (nb) nb.disabled = true;
+  } else if (checkinGoodSelected >= 2) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">A strong daily check-in routine. Morning breathing, homework planning, phone breaks, and talking to a trusted adult are all evidence-based stress management habits. Practised consistently, these habits keep stress from accumulating silently and create resilience over time.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = checkinSelected.size > 0 ? '<div class="feedback-msg blue-msg">Select at least 2 genuinely healthy habits for your daily routine.</div>' : '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+/* ============ QUIZ ============ */
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+/* ============ RESTART ============ */
+function restartLab() {
+  selectedSigns = new Set(); signsConfirmed = false;
+  sortPlacements = {}; sortSelected = null;
+  triggerTagged = {}; stressLevel = 65; cycleConfirmed = false;
+  tool1Id = null; tool1Locked = false; tool2Id = null;
+  calmPlanText = ''; calmPlanValid = false; reflectText = ''; reflectValid = false;
+  laylaTriggersDone = false; laylaLevelDone = false; laylaToolDone = false;
+  laylaLevel = 60; laylaTriggersCount = 0; laylaCorrectTriggers = 0;
+  checkinSelected = new Set(); checkinGoodSelected = 0;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+/* ============ CONFETTI ============ */
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#4a82d4','#2ab8b0','#7060c0','#38b870','#e8a020','#2a52a0','#1a7870','#a8e0dc'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+/* ============ INIT ============ */
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

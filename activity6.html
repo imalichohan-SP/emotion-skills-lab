@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Empathy Explorer Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fffbf0;
+  --card:#ffffff;
+  --gold:#e8a820;--gold-dark:#a06808;--gold-light:#fde8a0;
+  --teal:#2ab8b0;--teal-dark:#1a7870;--teal-light:#a0e0dc;
+  --lav:#9078c8;--lav-dark:#5840a0;--lav-light:#d0c0f0;
+  --rose:#e07080;--rose-dark:#a03850;
+  --mint:#38c880;--mint-dark:#1a8050;--mint-light:#a0e8c0;
+  --sky:#4898d8;--sky-dark:#1a60a8;
+  --text:#1a2038;--text-soft:#484870;
+  --shadow-sm:0 4px 16px rgba(160,104,8,0.12);
+  --shadow-md:0 8px 32px rgba(160,104,8,0.16);
+  --shadow-lg:0 16px 48px rgba(160,104,8,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 8% 12%,rgba(232,168,32,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 92% 80%,rgba(42,184,176,0.17) 0%,transparent 46%),
+    radial-gradient(circle at 50% 48%,rgba(144,120,200,0.11) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--gold-dark),var(--teal-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--gold-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+/* ACT BANNER */
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(160,104,8,0.09);color:var(--gold-dark);border:1.5px solid rgba(160,104,8,0.24)}
+.act-banner.act2{background:rgba(88,64,160,0.09);color:var(--lav-dark);border:1.5px solid rgba(88,64,160,0.24)}
+.act-banner.act3{background:rgba(26,120,80,0.09);color:var(--mint-dark);border:1.5px solid rgba(26,120,80,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(232,168,32,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold-dark),var(--teal-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(160,104,8,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(232,168,32,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--gold-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--teal-dark)}
+
+/* STAGE CARD */
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(232,168,32,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(232,168,32,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold-dark);background:rgba(232,168,32,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--lav-dark);background:rgba(88,64,160,0.09)}
+.stage-label.mint{color:var(--mint-dark);background:rgba(26,120,80,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+/* STORY + THOUGHT */
+.story-box{background:linear-gradient(135deg,rgba(232,168,32,0.09),rgba(42,184,176,0.08));border:1.5px solid rgba(232,168,32,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--gold-dark);font-style:normal}
+.story-box p span.teal{color:var(--teal-dark)}
+.story-box p span.mint{color:var(--mint-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(160,56,80,0.09),rgba(144,120,200,0.09));border:2px solid rgba(160,56,80,0.24);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--rose-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* CLUE SELECTION */
+.clue-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 26px}
+.clue-card{background:var(--bg);border:2px solid rgba(232,168,32,0.20);border-radius:var(--radius-sm);padding:16px 14px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.clue-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--gold)}
+.clue-card.cc-sad{border-color:var(--teal-dark);background:rgba(42,184,176,0.10);animation:correctPop 0.4s ease}
+.clue-card.cc-angry{border-color:var(--rose-dark);background:rgba(224,112,128,0.10);animation:correctPop 0.4s ease}
+.clue-card.cc-neutral{border-color:var(--lav-dark);background:rgba(144,120,200,0.09);animation:fadeUp 0.3s ease both}
+.clue-card .cc-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.clue-card:hover .cc-icon{transform:scale(1.14)}
+.clue-card .cc-text{font-size:13px;font-weight:800;color:var(--text);line-height:1.35;margin-bottom:4px}
+.clue-card .cc-tag{font-size:11.5px;font-weight:700;color:var(--text-soft)}
+.clue-badge{position:absolute;top:7px;right:7px;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;color:#fff;opacity:0;transform:scale(0);transition:var(--t)}
+.clue-card.cc-sad .clue-badge{background:var(--teal-dark);opacity:1;transform:scale(1)}
+.clue-card.cc-angry .clue-badge{background:var(--rose-dark);opacity:1;transform:scale(1)}
+
+/* PERSPECTIVE CHOICE */
+.persp-options{display:flex;flex-direction:column;gap:14px;margin:18px 0 24px}
+.persp-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(232,168,32,0.20);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.persp-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--gold)}
+.persp-btn .pb-icon{font-size:28px;flex-shrink:0;margin-top:2px;transition:transform 0.3s ease}
+.persp-btn:hover .pb-icon{transform:scale(1.10)}
+.persp-btn .pb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.persp-btn .pb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.persp-btn.pb-empathy{border-color:var(--teal-dark);background:rgba(42,184,176,0.10);animation:correctPop 0.4s ease}
+.persp-btn.pb-assumption{border-color:var(--rose-dark);background:rgba(224,112,128,0.09);animation:wrongShake 0.4s ease}
+
+/* RESPONSE BUTTONS */
+.response-grid{display:flex;flex-direction:column;gap:13px;margin:18px 0 22px}
+.resp-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(232,168,32,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.resp-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--gold)}
+.resp-btn .rb-icon{font-size:26px;flex-shrink:0;margin-top:2px;transition:transform 0.3s ease}
+.resp-btn:hover .rb-icon{transform:scale(1.10)}
+.resp-btn .rb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.resp-btn .rb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.resp-btn.sel-best{border-color:var(--mint-dark);background:rgba(56,200,128,0.10);animation:correctPop 0.4s ease}
+.resp-btn.sel-ok{border-color:var(--gold-dark);background:rgba(232,168,32,0.10);animation:correctPop 0.4s ease}
+.resp-btn.sel-harmful{border-color:var(--rose-dark);background:rgba(224,112,128,0.09);animation:wrongShake 0.4s ease}
+
+/* CONNECTION + TRUST METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(232,168,32,0.12);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.connection{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark));box-shadow:0 2px 8px rgba(26,120,112,0.30)}
+.meter-fill.trust{background:linear-gradient(90deg,var(--lav-light),var(--lav-dark));box-shadow:0 2px 8px rgba(88,64,160,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,112,128,0.09);border:1.5px solid rgba(160,56,80,0.22)}
+.outcome-box.ok{background:rgba(232,168,32,0.10);border:1.5px solid rgba(160,104,8,0.22)}
+.outcome-box.best{background:rgba(42,184,176,0.09);border:1.5px solid rgba(26,120,112,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* EMOTION INTENSITY METER */
+.intensity-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(42,184,176,0.08),rgba(144,120,200,0.07));border:1.5px solid rgba(42,184,176,0.22);border-radius:var(--radius-sm);padding:22px 24px}
+.intensity-labels{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.intensity-slider{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:999px;outline:none;cursor:pointer;background:linear-gradient(90deg,rgba(42,184,176,0.4) 0%,rgba(144,120,200,0.55) 50%,rgba(88,64,160,0.75) 100%)}
+.intensity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--teal-dark);box-shadow:0 3px 14px rgba(26,120,112,0.36);cursor:pointer;transition:transform 0.2s ease}
+.intensity-slider::-webkit-slider-thumb:hover,.intensity-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.intensity-slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--teal-dark);cursor:pointer}
+.intensity-display{margin-top:18px;text-align:center;padding:16px 20px;border-radius:var(--radius-sm);transition:background 0.5s ease,border-color 0.5s ease;border:2px solid rgba(42,184,176,0.25)}
+.intensity-display .id-emoji{font-size:40px;display:block;margin-bottom:8px;transition:all 0.4s ease}
+.intensity-display .id-label{font-size:17px;font-weight:900;transition:color 0.4s ease}
+.intensity-display .id-desc{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:6px;line-height:1.55}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(232,168,32,0.08),rgba(42,184,176,0.07),rgba(144,120,200,0.06));border:2px solid rgba(232,168,32,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(232,168,32,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(42,184,176,0.10),rgba(232,168,32,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-plus{text-align:center;font-size:22px;font-weight:900;color:var(--gold-dark);padding:2px 0}
+.formula-equals{text-align:center;font-size:16px;font-weight:900;color:var(--teal-dark);margin:8px 0 4px;letter-spacing:1px}
+
+/* DETECTIVE CARDS (Stage 12) */
+.detective-grid{display:flex;flex-direction:column;gap:16px;margin:18px 0 24px}
+.detective-item{background:var(--bg);border:2px solid rgba(232,168,32,0.18);border-radius:var(--radius-sm);padding:18px 20px;transition:var(--t)}
+.detective-item.di-solved{border-color:var(--mint-dark);background:rgba(56,200,128,0.07)}
+.detective-item .di-scenario{font-size:14px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.5}
+.detective-item .di-clue{font-size:13px;font-weight:700;color:var(--text-soft);margin-bottom:10px;font-style:italic}
+.det-options{display:flex;flex-wrap:wrap;gap:8px}
+.det-opt{background:#fff;border:2px solid rgba(232,168,32,0.22);border-radius:999px;padding:7px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.det-opt:hover{border-color:var(--gold-dark);color:var(--text);transform:translateY(-1px)}
+.det-opt.det-correct{background:linear-gradient(135deg,var(--mint-dark),var(--teal-dark));color:#fff;border-color:transparent;animation:correctPop 0.35s ease}
+.det-opt.det-incorrect{border-color:var(--rose-dark);background:rgba(224,112,128,0.09);animation:wrongShake 0.35s ease;color:var(--rose-dark)}
+.det-opt.det-disabled{pointer-events:none;opacity:0.45}
+.di-feedback{font-size:13px;font-weight:700;margin-top:10px;padding:9px 13px;border-radius:9px;animation:fadeUp 0.3s ease both;display:none}
+.di-feedback.di-ok{background:rgba(56,200,128,0.14);color:#1a6040}
+.di-feedback.di-wrong{background:rgba(224,112,128,0.12);color:#8a2040}
+
+/* AISHA SCENARIO */
+.aisha-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.aisha-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(232,168,32,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.aisha-btn:hover{border-color:var(--gold);transform:translateX(3px)}
+.aisha-btn .ab-icon{font-size:24px;flex-shrink:0}
+.aisha-btn .ab-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.aisha-btn .ab-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.aisha-btn.ab-correct{border-color:var(--mint-dark);background:rgba(56,200,128,0.10);animation:correctPop 0.4s ease}
+.aisha-btn.ab-incorrect{border-color:var(--rose-dark);background:rgba(224,112,128,0.08);animation:wrongShake 0.4s ease}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(56,200,128,0.13);color:#1a6040;border:1.5px solid rgba(26,120,80,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(224,112,128,0.11);color:#8a2040;border:1.5px solid rgba(160,56,80,0.22)}
+.feedback-msg.info-msg{background:rgba(88,64,160,0.08);color:var(--lav-dark);border:1.5px solid rgba(88,64,160,0.20)}
+.feedback-msg.gold-msg{background:rgba(232,168,32,0.11);color:var(--gold-dark);border:1.5px solid rgba(160,104,8,0.22)}
+.feedback-msg.teal-msg{background:rgba(26,120,112,0.09);color:var(--teal-dark);border:1.5px solid rgba(26,120,112,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(232,168,32,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(72,72,112,0.40)}
+.reflection-input:focus{border-color:var(--gold-dark);box-shadow:0 0 0 3px rgba(160,104,8,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--teal-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--gold-dark),var(--teal-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(160,104,8,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(160,104,8,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(232,168,32,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(232,168,32,0.08);border-color:var(--gold-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(232,168,32,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--gold-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(232,168,32,0.20);border-radius:999px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(232,168,32,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--gold);background:rgba(232,168,32,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--teal-dark);background:rgba(42,184,176,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--rose-dark);background:rgba(224,112,128,0.09);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--teal-dark);background:rgba(42,184,176,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(56,200,128,0.16);color:#1a6040}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,112,128,0.12);color:#8a2040}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(232,168,32,0.14),rgba(42,184,176,0.11));border:1.5px solid rgba(232,168,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+/* SKILLS */
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(232,168,32,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+/* CELEBRATION */
+.celebration-overlay{position:fixed;inset:0;background:rgba(255,251,240,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(232,168,32,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,168,32,0.07),rgba(42,184,176,0.05),rgba(144,120,200,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* ANIMATIONS */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .clue-grid{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+  .badge-item{padding:14px 8px;.b-icon{font-size:28px}}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">💛 Empathy Lab</div>
+    <h1>The <span>Empathy Explorer</span> Lab</h1>
+    <p>Understand others - Read emotional clues - Respond with kindness and insight</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">💛</div>
+    <h2>Lab Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now have the tools to truly see and hear the people around you.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔭</span><div class="b-title">Perspective Switcher</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💬</span><div class="b-title">Kind Communicator</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💛</span><div class="b-title">Empathy Explorer</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+/* ======= CONSTANTS & STATE ======= */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+// Act 1
+let clueTagged       = {};
+let perspChosen      = false;
+let perspCorrect     = false;
+let perspText        = '';
+let perspValid       = false;
+let intensityLevel   = 50;
+
+// Act 2
+let resp1Id          = null;
+let resp1Locked      = false;
+let resp2Id          = null;
+let supportText      = '';
+let supportValid     = false;
+let reflectText      = '';
+let reflectValid     = false;
+
+// Act 3
+let aishaEmotionDone = false;
+let aishaAssumpDone  = false;
+let aishaRespDone    = false;
+let detAnswers       = {};
+let quizAnswers      = {};
+
+/* ======= DATA ======= */
+const clues = [
+  {id:'eyecontact', icon:'👀', text:'Avoiding eye contact', tag:'sad'},
+  {id:'posture',    icon:'🪑', text:'Slouched posture',     tag:'sad'},
+  {id:'voice',      icon:'🔇', text:'Unusually quiet voice',tag:'sad'},
+  {id:'alone',      icon:'🧍', text:'Sitting alone',        tag:'sad'},
+  {id:'eyes',       icon:'🙄', text:'Rolling eyes at others',tag:'angry'},
+  {id:'arms',       icon:'💪', text:'Arms crossed tightly', tag:'angry'}
+];
+
+const intensityLevels = [
+  {range:[0,20],   emoji:'😐', label:'Mildly Affected', desc:'A slight emotional shift. Something is off but it is subtle and easy to miss if you are not looking closely.', bg:'rgba(42,184,176,0.08)', border:'rgba(26,120,112,0.22)', col:'var(--teal-dark)'},
+  {range:[21,45],  emoji:'😔', label:'Noticeably Sad', desc:'The emotion is clearly present. Body language communicates it. This person likely needs gentle acknowledgement.', bg:'rgba(144,120,200,0.09)', border:'rgba(88,64,160,0.22)', col:'var(--lav-dark)'},
+  {range:[46,70],  emoji:'😢', label:'Moderately Distressed', desc:'Significant emotional distress. The person is struggling to engage normally. They need support, not just acknowledgement.', bg:'rgba(232,168,32,0.10)', border:'rgba(160,104,8,0.24)', col:'var(--gold-dark)'},
+  {range:[71,90],  emoji:'😭', label:'Deeply Upset', desc:'Strong emotional pain is present. This person needs a compassionate, patient response - and possibly adult support.', bg:'rgba(224,112,128,0.09)', border:'rgba(160,56,80,0.22)', col:'var(--rose-dark)'},
+  {range:[91,100], emoji:'💔', label:'Overwhelmed', desc:'The emotion is at its peak intensity. The person may not be able to communicate well right now. Quiet, steady presence matters most.', bg:'rgba(160,56,80,0.10)', border:'rgba(160,56,80,0.30)', col:'var(--rose-dark)'}
+];
+
+const responses = [
+  {
+    id:'harsh', icon:'🔴', text:'"Why are you being weird today?"', sub:'Judgemental and dismissive of the other person\'s experience',
+    quality:'harmful', conn:8, trust:5,
+    outcome:{title:'This Closes the Door', body:'The word "weird" immediately labels Sami\'s behaviour as a problem rather than as a signal of something he is experiencing. This kind of response puts Sami on the defensive. Instead of feeling seen and safe, he feels judged and misunderstood. The emotional distance between them increases.', tip:'Research: Labelling someone\'s emotional behaviour as strange or wrong signals to them that their feelings are not safe to share. Trust decreases and the person is far less likely to open up.'}
+  },
+  {
+    id:'neutral', icon:'🟡', text:'"Hey, are you okay?"', sub:'A well-meaning check-in but vague and easily dismissed',
+    quality:'ok', conn:52, trust:58,
+    outcome:{title:'A Starting Point', body:'"Are you okay?" is a kind impulse and is significantly better than ignoring Sami or labelling his behaviour. However, it is easy to answer with a quick "Yeah, I\'m fine" and shut the conversation down. The question does not signal that Daniel has specifically noticed Sami, which makes it easier for Sami to deflect.', tip:'Tip: Vague check-ins create easy exits. Specific observations - "You seem quieter than usual" - signal that the other person has been truly seen, which makes opening up feel safer.'}
+  },
+  {
+    id:'empathic', icon:'🟢', text:'"You seem quieter than usual today. Do you want to talk about anything?"', sub:'Specific observation + gentle invitation - no pressure to respond',
+    quality:'best', conn:85, trust:88,
+    outcome:{title:'The Empathic Response', body:'This response does three things well: it names a specific observation ("quieter than usual") which signals to Sami that Daniel has truly noticed him, it offers an opening without pressure ("do you want to"), and it creates a safe space without demand. Sami does not have to answer yes. But he knows Daniel cares - and that changes everything.', tip:'Research: Responses that combine specific observation with gentle invitation activate feelings of being truly seen and understood. This is the neurological foundation of social trust and deep connection.'}
+  }
+];
+
+const detectiveCases = [
+  {
+    id:'d1',
+    scenario:'Lena walks into class and sits as far as possible from her usual friend group.',
+    clue:'Social withdrawal - deliberate physical distance from familiar people',
+    options:['Angry at the group', 'Feeling anxious', 'Bored with school', 'Tired and sleepy'],
+    correct:'Feeling anxious',
+    feedback:'Social withdrawal - choosing distance from familiar people - is a classic sign of anxiety or hurt. When someone is anxious about social dynamics, physical distance creates a sense of psychological safety. Tiredness or boredom typically do not produce deliberate avoidance.'
+  },
+  {
+    id:'d2',
+    scenario:'Marcus scored the winning goal but immediately looks down at the ground.',
+    clue:'Muted positive response - success without celebration',
+    options:['Disappointed', 'Proud', 'Embarrassed or overwhelmed', 'Angry at opponents'],
+    correct:'Embarrassed or overwhelmed',
+    feedback:'When someone achieves something positive but immediately withdraws - looking down, becoming quiet - it often signals that the attention feels overwhelming or embarrassing. True disappointment or anger typically produce more visible expressions. Muted positive moments usually indicate social discomfort or emotional overwhelm.'
+  },
+  {
+    id:'d3',
+    scenario:'Priya sighs loudly and slams her pencil case down during maths class.',
+    clue:'Physical expression of internal frustration - objects becoming outlets',
+    options:['Excited about something', 'Frustrated or overwhelmed', 'Feeling happy', 'Curious about the topic'],
+    correct:'Frustrated or overwhelmed',
+    feedback:'Using physical objects as emotional outlets - slamming, throwing, or roughly handling things - is a classic indicator of frustration that has built past comfortable levels. The loud sigh is an involuntary physiological stress release. Together these signals paint a clear picture of someone who is struggling and has reached a threshold.'
+  },
+  {
+    id:'d4',
+    scenario:'Jake offers to help tidy the classroom without being asked, humming to himself.',
+    clue:'Voluntary prosocial behaviour combined with positive vocalisation',
+    options:['Nervous', 'Happy and content', 'Sad about something', 'Trying to avoid trouble'],
+    correct:'Happy and content',
+    feedback:'Spontaneous helping behaviour combined with humming or quiet positive sounds typically indicates genuine happiness and contentment. When people feel good, they naturally tend to extend goodwill to others. This is prosocial overflow - good feelings spilling into behaviour. The lack of a trigger or request makes this authentic rather than strategic.'
+  }
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is empathy - and how is it different from sympathy?',
+    options:[
+      {icon:'💛', text:'Empathy means stepping into another person\'s perspective - genuinely trying to understand what they might be feeling from inside their experience', correct:true},
+      {icon:'😊', text:'Sympathy means feeling sorry for someone - acknowledging their difficulty from the outside without trying to feel it from the inside', correct:false},
+      {icon:'🤷', text:'Empathy and sympathy are the same thing - just different words for feeling bad when someone else feels bad', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. Empathy involves genuinely trying to enter another person\'s perspective - to see and feel from where they stand. Sympathy acknowledges their pain from the outside. Both matter, but empathy creates deeper understanding and stronger connection because it moves beyond observation into genuine imagination of another\'s inner world.',
+      incorrect:'Not quite. The key distinction is perspective. Sympathy acknowledges someone\'s difficulty from the outside ("I feel sorry that you\'re going through this"). Empathy steps into their perspective and tries to genuinely understand from the inside ("I\'m trying to imagine how this feels from where you stand"). Empathy is the more active and connecting of the two.'
+    }
+  },
+  {
+    q:'Question 2: What is the main risk of "mind reading" - assuming we know exactly why someone is behaving a certain way?',
+    options:[
+      {icon:'❌', text:'We replace curiosity with certainty - and our assumption is often wrong, creating misunderstanding and damaged relationships', correct:true},
+      {icon:'✅', text:'Mind reading is generally accurate and helps us respond faster without needing to ask questions', correct:false},
+      {icon:'🤔', text:'The only risk is that the other person might find it annoying - but the assumption itself is usually correct', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. Mind reading replaces the open, curious question ("I wonder what they might be experiencing?") with a false certainty ("I know exactly why they\'re acting this way - and it\'s about me"). This certainty is almost always incomplete, and often wrong. It creates misunderstandings, conflict, and damaged trust that could have been avoided by simply asking.',
+      incorrect:'Not quite. Mind reading - assuming we know exactly why someone is behaving a certain way - is one of the most common and damaging thinking errors in social situations. Our interpretations are shaped by our own feelings and history, not objective facts. Replacing assumptions with genuine curiosity ("I wonder what they might be going through?") dramatically reduces conflict and increases understanding.'
+    }
+  },
+  {
+    q:'Question 3: Why is it important to consider multiple possible explanations for someone\'s behaviour?',
+    options:[
+      {icon:'🔭', text:'Because human behaviour is complex - one action can have many causes, and assuming one explanation misses the full picture', correct:true},
+      {icon:'😑', text:'It is not important - the most obvious explanation is almost always correct and we do not need to look further', correct:false},
+      {icon:'🎲', text:'More explanations just create confusion - it is better to pick one quickly and move on', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. Human emotional experience is genuinely complex. When Sami is quiet, it could be because of something at home, something at school, something physical, or something in the friendship - and none of these might have anything to do with Daniel. Staying curious and open to multiple possibilities prevents us from projecting our own story onto someone else\'s experience.',
+      incorrect:'Not quite. One of the most important empathy skills is maintaining multiple hypotheses about what someone might be experiencing. Locking onto the first or most obvious explanation - especially when that explanation involves us ("he\'s upset with me") - is one of the most common sources of social misunderstanding and conflict. Curiosity outperforms certainty in almost every social situation.'
+    }
+  }
+];
+
+/* ======= UTILITIES ======= */
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'💛', 2:'🟣', 3:'🟢'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getIntLevel(v) {
+  return intensityLevels.find(function(l){ return v >= l.range[0] && v <= l.range[1]; });
+}
+
+/* ======= PROGRESS ======= */
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ======= ROUTER ======= */
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ======= STAGE BUILDERS ======= */
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Empathy') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #006</div>' +
+    '<h2>Stepping Into Someone Else\'s World</h2>' +
+    '<p>Welcome to the Empathy Explorer Lab. Of all the skills in emotional intelligence, empathy is perhaps the most powerful - and the most misunderstood. Empathy is not feeling sorry for someone. It is not agreeing with everything they do. It is the deliberate act of pausing your own perspective and genuinely trying to understand what another person might be experiencing from inside their world.</p>' +
+    '<p>Your first case file has just arrived.</p>' +
+    '<div class="story-box" data-icon="🏃">' +
+      '<p><span>Daniel</span> is nine years old. At recess, he notices his best friend <span>Sami</span> sitting alone on the bench beside the goal - which is unusual. Normally Sami is the first one on the pitch. Today he has not moved. He is staring at the ground, arms crossed, barely responding to people who walk past. Daniel stands at the edge of the pitch watching him. And then Daniel\'s own mind starts talking:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"Maybe he is mad at me. Did I do something? He is probably ignoring me on purpose."</p></div>' +
+    '<p>Daniel\'s first instinct is to make this about himself. This is incredibly human - and also one of the most common barriers to genuine empathy. Today you will help Daniel learn a different approach: pausing his own story, reading the actual clues, and asking the more generous question.</p>' +
+    '<div class="feedback-msg info-msg">💡 <strong>Core concept:</strong> Empathy starts with a single question: "What might THEY be feeling right now?" Not "what does this mean for me?" but "what might this be like from inside their world?" That shift - from self-focus to other-focus - is the foundation of every empathic interaction.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Exploration</button>' +
+  '</div>';
+}
+
+function s2() {
+  clueTagged = {};
+  var cards = clues.map(function(c) {
+    return '<div class="clue-card" id="cc-' + c.id + '" onclick="tagClue(\'' + c.id + '\',\'' + c.tag + '\')">' +
+      '<div class="clue-badge" id="ccb-' + c.id + '">' + (c.tag === 'sad' ? 'Sadness' : 'Anger') + '</div>' +
+      '<span class="cc-icon">' + c.icon + '</span>' +
+      '<div class="cc-text">' + c.text + '</div>' +
+      '<div class="cc-tag" id="cct-' + c.id + '">Click to classify</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Empathy') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Clue Detection</div>' +
+    '<h2>Read the Emotional Signals</h2>' +
+    '<p>Before we can respond with empathy, we need to read the available clues. Emotions do not announce themselves with words - they are communicated through posture, facial expression, voice, proximity, and behaviour. These clues are often subtle, but they are consistently present once you know how to look.</p>' +
+    '<p>Look at the six body language clues below. Classify each one: does it more strongly suggest <strong>sadness and withdrawal</strong>, or <strong>frustration and anger</strong>?</p>' +
+    '<div class="clue-grid">' + cards + '</div>' +
+    '<div id="clueFeedback"></div>' +
+    '<button class="btn-primary" id="clueNextBtn" onclick="renderStage(3)" disabled>Next: Mind Reading vs Empathy -></button>' +
+  '</div>';
+}
+
+function s3() {
+  perspChosen = false; perspCorrect = false;
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Empathy') +
+    backBtn(2,'Back to Clue Detection') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Assumption vs Curiosity</div>' +
+    '<h2>Which Thought Shows Empathy?</h2>' +
+    '<p>Daniel has two thoughts available to him as he watches Sami on the bench. They look similar on the surface - both are responses to the same observation. But they are fundamentally different in what they do to the relationship and to the accuracy of Daniel\'s understanding.</p>' +
+    '<p>Read both options carefully. Choose the one that demonstrates genuine empathy.</p>' +
+    '<div class="persp-options">' +
+      '<button class="persp-btn" id="pb-assumption" onclick="choosePersp(\'assumption\')">' +
+        '<span class="pb-icon">🔮</span>' +
+        '<div><div class="pb-text">Option A: "Sami is clearly ignoring me on purpose. He must be angry at me."</div><div class="pb-sub">A conclusion stated as a fact, with oneself at the centre</div></div>' +
+      '</button>' +
+      '<button class="persp-btn" id="pb-empathy" onclick="choosePersp(\'empathy\')">' +
+        '<span class="pb-icon">💛</span>' +
+        '<div><div class="pb-text">Option B: "Something might have happened to Sami. I wonder what he could be going through."</div><div class="pb-sub">An open question that makes space for Sami\'s experience</div></div>' +
+      '</button>' +
+    '</div>' +
+    '<div id="perspFeedback"></div>' +
+    '<button class="btn-primary" id="perspNextBtn" onclick="renderStage(4)" disabled>Next: Perspective Switch -></button>' +
+  '</div>';
+}
+
+function s4() {
+  perspValid = false;
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Empathy') +
+    backBtn(3,'Back to Assumption vs Curiosity') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Perspective Switch</div>' +
+    '<h2>Generate Multiple Possibilities</h2>' +
+    '<p>One of the most powerful empathy practices is refusing to lock onto a single explanation for someone\'s behaviour - especially when that explanation involves you. The reality is that another person\'s emotional state almost always has many possible causes, most of which have nothing to do with us.</p>' +
+    '<p>Think about Sami sitting alone, quiet, and withdrawn. Write at least <strong>3 possible reasons</strong> why Sami might be feeling this way - none of which involve Daniel at all.</p>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">💡 <strong>Try to think across different areas:</strong> something at home, something at school before this, something physical, something in another friendship, something he is worried about...</div>' +
+    '<label class="input-label">Three possible reasons Sami could be quiet today:</label>' +
+    '<textarea class="reflection-input" id="perspInput" oninput="checkPersp(this.value)" placeholder="For example: 1. He might have had an argument with someone at home this morning before school. 2. He could be feeling unwell - a headache or stomach ache he hasn\'t mentioned. 3. Maybe he received some disappointing news he has not been able to talk about yet..." rows="5"></textarea>' +
+    '<div class="char-counter" id="perspCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why this exercise matters:</strong> Generating multiple explanations trains the brain to stay in a state of genuine curiosity rather than jumping to the first - often self-referential - conclusion. It is one of the most concrete and effective empathy practices available.</div>' +
+    '<button class="btn-primary" id="perspNextBtn2" onclick="renderStage(5)" disabled>Next: Emotion Intensity Meter -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Empathy') +
+    backBtn(4,'Back to Perspective Switch') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Emotion Intensity</div>' +
+    '<h2>How Strongly Might Sami Be Feeling This?</h2>' +
+    '<p>Empathy requires not just identifying that someone has an emotion, but also attempting to understand its intensity. The appropriate empathic response for someone who is mildly bothered is different from the response for someone who is deeply distressed. Intensity matters enormously for calibrating our support.</p>' +
+    '<p>Based on the clues you observed - sitting alone, withdrawn, unusually quiet, not joining in - estimate how strongly Sami might be feeling his emotion right now. Move the slider to your estimate.</p>' +
+    '<div class="intensity-wrap">' +
+      '<div class="intensity-labels"><span>😐 Mild</span><span>😔 Noticeable</span><span>😢 Distressed</span><span>😭 Deep</span><span>💔 Overwhelmed</span></div>' +
+      '<input type="range" class="intensity-slider" id="intensitySlider" min="0" max="100" value="50" oninput="updateIntensity(this.value)"/>' +
+    '</div>' +
+    '<div class="intensity-display" id="intensityDisplay">' +
+      '<span class="id-emoji" id="idEmoji">😢</span>' +
+      '<div class="id-label" id="idLabel">Moderately Distressed</div>' +
+      '<div class="id-desc" id="idDesc">Significant emotional distress. This person is struggling to engage normally and needs genuine support.</div>' +
+    '</div>' +
+    '<br/>' +
+    '<div class="feedback-msg teal-msg">🌡️ <strong>Important calibration note:</strong> The clues Sami is showing - sustained withdrawal, not joining activities he normally loves, physical isolation - suggest he is at the Noticeably Sad to Moderately Distressed range. Mild distress typically does not produce this level of behavioural change. This is a signal that Sami genuinely needs connection, not just a passing acknowledgement.</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Empathy Formula -></button>' +
+  '</div>';
+}
+
+function s6() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Empathy') +
+    backBtn(5,'Back to Intensity Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Formula</div>' +
+    '<h2>The Empathy Formula</h2>' +
+    '<p>You have now explored all the essential ingredients of a genuinely empathic response. They do not need to be complex or perfectly worded - they need to be genuine. Read through the four steps and notice how they build on each other.</p>' +
+    '<div class="formula-box">' +
+      '<div class="formula-row"><span class="fr-icon">👀</span><div><div class="fr-title">Notice the Clues</div><div class="fr-desc">Slow down and observe. Body language, voice, proximity, behavioural change - these are the emotional signals available to you. Train yourself to see them consciously rather than letting them drift past unnoticed.</div></div></div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row"><span class="fr-icon">⏸️</span><div><div class="fr-title">Pause Your Assumptions</div><div class="fr-desc">Before concluding what is happening, pause. Notice if your first interpretation is about you rather than the other person. Replace "I know why" with "I wonder what." This pause is the entire difference between empathy and projection.</div></div></div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row"><span class="fr-icon">🔭</span><div><div class="fr-title">Imagine Possibilities</div><div class="fr-desc">Actively generate multiple explanations for what the other person might be experiencing. Think across different life areas. Stay curious. Resist the first, easiest answer - especially when it involves you.</div></div></div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row"><span class="fr-icon">💬</span><div><div class="fr-title">Respond Kindly</div><div class="fr-desc">Choose a response that signals you have noticed the person, makes space for them without pressure, and communicates care without demands. A good empathic response opens a door - it does not force entry.</div></div></div>' +
+      '<div class="formula-equals">= EMPATHY</div>' +
+      '<div class="formula-row formula-result"><span class="fr-icon">💛</span><div><div class="fr-title">Connection and Trust</div><div class="fr-desc">When people feel genuinely seen and heard - not fixed, not advised, not judged - they experience one of the most profound forms of human connection. This is what empathy builds. And it changes relationships at every level.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg gold-msg">🏅 <strong>Badge Progress:</strong> Perspective Switcher Level 1 - almost earned! Continue to Act 2 to put empathy into practice...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Practising Empathy -></button>' +
+  '</div>';
+}
+
+function s7() {
+  resp1Locked = false; resp1Id = null;
+  var cards = responses.map(function(r) {
+    return '<button class="resp-btn" id="r1-' + r.id + '" onclick="chooseResp1(\'' + r.id + '\')">' +
+      '<span class="rb-icon">' + r.icon + '</span>' +
+      '<div><div class="rb-text">' + r.text + '</div><div class="rb-sub">' + r.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Empathy') +
+    backBtn(6,'Back to Empathy Formula') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Choose the Best Response</div>' +
+    '<h2>What Does Daniel Say to Sami?</h2>' +
+    '<p>Daniel has observed the clues, paused his assumptions, and generated some possible explanations. Now comes the most visible part of empathy: what he actually says. Three options are available. Each will have a measurably different impact on connection and trust. Which one would you choose?</p>' +
+    '<div class="response-grid" id="respGrid1">' + cards + '</div>' +
+    '<div id="resp1Outcome"></div>' +
+    '<div id="resp1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Try a Second Option and Compare -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  resp2Id = null;
+  var first = responses.find(function(r){ return r.id === resp1Id; });
+  var remaining = responses.filter(function(r){ return r.id !== resp1Id; });
+  var cards = remaining.map(function(r) {
+    return '<button class="resp-btn" id="r2-' + r.id + '" onclick="chooseResp2(\'' + r.id + '\')">' +
+      '<span class="rb-icon">' + r.icon + '</span>' +
+      '<div><div class="rb-text">' + r.text + '</div><div class="rb-sub">' + r.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Empathy') +
+    backBtn(7,'Back to Response Selection') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Compare Two Responses</div>' +
+    '<h2>See the Difference Side by Side</h2>' +
+    '<p>You chose <strong>' + first.icon + ' ' + first.text + '</strong>. Now try a second option and see the side-by-side difference in connection and trust levels. The visual comparison makes the impact of words and tone concrete and memorable.</p>' +
+    '<div class="response-grid" id="respGrid2">' + cards + '</div>' +
+    '<div id="resp2Outcome"></div>' +
+    '<div id="resp2NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(9)">Build Your Supportive Response -></button></div>' +
+  '</div>';
+}
+
+function s9() {
+  supportValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Empathy') +
+    backBtn(8,'Back to Comparison') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Build a Supportive Response</div>' +
+    '<h2>Write Your Own Empathic Response</h2>' +
+    '<p>Now you will build your own supportive response from the ground up. The best empathic responses contain three components working together: a specific observation that shows you have genuinely noticed the person, a gentle question that opens a door without forcing entry, and a clear signal of support that does not demand anything from them.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your response should include:<br/>' +
+      '<strong>Observation:</strong> What specific thing have you noticed? ("I noticed you seem..." / "You have been quieter than usual...")<br/>' +
+      '<strong>Gentle question:</strong> An invitation, not a demand ("Do you want to talk?" / "Is everything okay?")<br/>' +
+      '<strong>Support signal:</strong> A quiet statement of availability ("I am here if you need anything" / "No pressure at all")' +
+    '</div>' +
+    '<label class="input-label">If I noticed my friend was unusually quiet, I could say...</label>' +
+    '<textarea class="reflection-input" id="supportInput" oninput="checkSupport(this.value)" placeholder="For example: Hey, I noticed you are a lot quieter than usual today and you did not join the game. I am not sure what is going on, but if you want to talk about anything at all, I am here. No pressure - I just wanted you to know I noticed..." rows="5"></textarea>' +
+    '<div class="char-counter" id="supportCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why this practice matters:</strong> The act of writing an empathic response in advance creates a retrievable mental script for real moments. People who have practised empathic language find it significantly easier to access in the moment when emotional pressure is high and words are hard to find.</div>' +
+    '<button class="btn-primary" id="supportNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Empathy -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Empathy') +
+    backBtn(9,'Back to Supportive Response') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Empathy Strengthens Friendships</h2>' +
+    '<p>Empathy is not just a nice social skill - it is the foundation on which genuine, lasting friendships are built. When we feel truly seen and understood by another person, something fundamental shifts in the relationship. The connection deepens. Trust increases. We feel safer being vulnerable, more willing to be honest, and more likely to reach out when we need support.</p>' +
+    '<p>Answer all three questions thoughtfully in your response:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Think of a time when someone truly understood how you were feeling. What did that feel like?<br/>' +
+      '2. Why does being genuinely seen by another person build trust in a relationship?<br/>' +
+      '3. How could practising empathy change the way you interact with your friends this week?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about the specific difference it makes when someone truly understands you versus when they dismiss your feelings or assume they know what you are experiencing..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg violet" style="background:rgba(88,64,160,0.08);color:var(--lav-dark);border:1.5px solid rgba(88,64,160,0.22);margin-bottom:16px">💬 <strong>Badge Progress:</strong> Kind Communicator Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Transfer and Social Intelligence -></button>' +
+  '</div>';
+}
+
+function s11() {
+  aishaEmotionDone = false; aishaAssumpDone = false; aishaRespDone = false;
+  var emotions = ['Embarrassed and overwhelmed', 'Happy and excited', 'Simply competitive', 'Bored with the game'];
+  var assumptions = ['She is a bad sport and does not care about others', 'She is probably just very hungry right now', 'She snapped because of the intensity of frustration in that moment', 'She is angry because her team deserved to win'];
+  var resps = [
+    {id:'dismiss', text:'"You need to calm down and control yourself."', sub:'Focuses on behaviour, not the person', correct:false},
+    {id:'empathic', text:'"That looked like a really frustrating moment. Are you okay?"', sub:'Names the emotion, offers connection without judgement', correct:true},
+    {id:'blame', text:'"You should not have done that to your teammate."', sub:'Assigns blame which increases shame and defensiveness', correct:false}
+  ];
+  var emotBtns = emotions.map(function(e) {
+    return '<button class="aisha-btn" id="ae-' + e.replace(/\s+/g,'-') + '" onclick="selectAishaEmotion(this,\'' + e + '\')">' +
+      '<span class="ab-icon">' + (e.includes('Embarrassed') ? '😔' : e.includes('Happy') ? '😊' : e.includes('competitive') ? '🏆' : '😑') + '</span>' +
+      '<div><div class="ab-text">' + e + '</div></div>' +
+    '</button>';
+  }).join('');
+  var assumpBtns = assumptions.map(function(a) {
+    var isCorrect = a.includes('intensity');
+    return '<button class="aisha-btn" id="aa-' + a.substring(0,12).replace(/\s+/g,'-') + '" onclick="selectAishaAssump(this,' + isCorrect + ')">' +
+      '<span class="ab-icon">' + (isCorrect ? '✅' : '❌') + '</span>' +
+      '<div><div class="ab-text">' + a + '</div></div>' +
+    '</button>';
+  }).join('');
+  var respBtns = resps.map(function(r) {
+    return '<button class="aisha-btn" id="ar-' + r.id + '" onclick="selectAishaResp(\'' + r.id + '\',' + r.correct + ')">' +
+      '<span class="ab-icon">' + (r.correct ? '🟢' : '🔴') + '</span>' +
+      '<div><div class="ab-text">' + r.text + '</div><div class="ab-sub">' + r.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Social Intelligence') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Aisha\'s Difficult Moment</h2>' +
+    '<p>Everything you have learned about empathy is now being applied in a completely new situation with a different character and a more complex emotional dynamic. The skill transfers - but the context requires fresh reading.</p>' +
+    '<div class="story-box" data-icon="🎮">' +
+      '<p><span class="mint">Aisha</span> is eleven years old. During a board game at lunch, Aisha\'s team loses by one point after a close and tense game. In the moment the loss is announced, Aisha pushes the game piece away sharply and snaps at her teammate: "You should have played that card differently!" Then she immediately looks away and goes very quiet.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - What emotion is Aisha most likely experiencing?</div>' +
+    '<div class="aisha-options">' + emotBtns + '</div>' +
+    '<div id="aishaEmotionFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Which interpretation is most accurate?</div>' +
+    '<div id="aishaAssumpWrap" style="opacity:0.4;pointer-events:none"><div class="aisha-options">' + assumpBtns + '</div></div>' +
+    '<div id="aishaAssumpFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose the most empathic response to Aisha</div>' +
+    '<div id="aishaRespWrap" style="opacity:0.4;pointer-events:none"><div class="aisha-options">' + respBtns + '</div></div>' +
+    '<div id="aishaRespFeedback"></div>' +
+    '<button class="btn-primary" id="aishaNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Emotion Detective Challenge -></button>' +
+  '</div>';
+}
+
+function s12() {
+  detAnswers = {};
+  var items = detectiveCases.map(function(c) {
+    var opts = c.options.map(function(o) {
+      return '<button class="det-opt" id="do-' + c.id + '-' + o.replace(/\s+/g,'_') + '" onclick="answerDetective(\'' + c.id + '\',\'' + o + '\',' + (o === c.correct) + ')">' + o + '</button>';
+    }).join('');
+    return '<div class="detective-item" id="di-' + c.id + '">' +
+      '<div class="di-scenario">Scenario: ' + c.scenario + '</div>' +
+      '<div class="di-clue">Clue: <em>' + c.clue + '</em></div>' +
+      '<div class="det-options">' + opts + '</div>' +
+      '<div id="df-' + c.id + '" class="di-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Social Intelligence') +
+    backBtn(11,'Back to Aisha\'s Scenario') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 12 - Emotion Detective</div>' +
+    '<h2>Read the Room: 4 Social Scenarios</h2>' +
+    '<p>Empathy requires the ability to read social and emotional clues quickly and accurately across many different situations. Below are four short social scenarios. Use the clue provided to identify the most likely emotion the person is experiencing. Respond based on what the behaviour signals - not on what you might assume is most common or obvious.</p>' +
+    '<div class="detective-grid">' + items + '</div>' +
+    '<div id="detFeedback"></div>' +
+    '<button class="btn-primary" id="detNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" id="qq-' + i + '" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Social Intelligence') +
+    backBtn(12,'Back to Detective') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Empathy Explorer Lab with genuine focus and depth. Let\'s see how clearly the core concepts have settled in. Answer all three questions - read carefully and draw on everything you have explored today.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label mint"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Empathy Explorer!</h2>' +
+    '<p>You completed the full Empathy Explorer Lab - all 3 Acts, 14 stages, and a genuine journey into one of the most profoundly human of all emotional skills. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔭</span><div class="b-title">Perspective Switcher</div><div class="b-sub">Stepped into other worlds</div></div>' +
+      '<div class="badge-item"><span class="b-icon">💬</span><div class="b-title">Kind Communicator</div><div class="b-sub">Responded with care</div></div>' +
+      '<div class="badge-item"><span class="b-icon">💛</span><div class="b-title">Empathy Explorer</div><div class="b-sub">Read the emotional map</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🔭</span><div><div class="sk-title">Perspective Taking</div><div class="sk-desc">Empathy begins with a deliberate shift: moving from "what does this mean for me?" to "what might they be experiencing?" This shift - practiced consciously - changes the quality of every relationship. Generating multiple possible explanations for someone\'s behaviour keeps you in a state of genuine curiosity rather than self-referential assumption.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">👀</span><div><div class="sk-title">Reading Emotional Clues</div><div class="sk-desc">Emotions communicate through body language, voice, proximity, and behavioural change long before words appear. Learning to notice and correctly interpret these signals - distinguishing sadness from anger, mild distress from deep upset - allows you to calibrate your response to what is actually needed rather than what is assumed.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">💬</span><div><div class="sk-title">Responding with Empathy</div><div class="sk-desc">The most effective empathic responses combine a specific observation (showing you have truly noticed the person), a gentle question (opening a door without forcing entry), and a clear support signal (communicating care without demand). This combination activates feelings of being truly seen - the neurological foundation of trust and lasting connection.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="💛" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'In a world where most people are absorbed in their own experience, choosing to genuinely see someone else is one of the most generous and powerful things a human being can do. You do not need perfect words. You do not need to fix anything. You just need to notice, pause your assumptions, stay curious, and let the person in front of you know that you see them. That is enough to change everything. Keep exploring. 💛' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--gold-dark),var(--teal-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ======= POST-RENDER RESTORE ======= */
+function postRender(n) {
+  if (n === 2) {
+    Object.keys(clueTagged).forEach(function(id) {
+      var el = document.getElementById('cc-' + id);
+      var tg = document.getElementById('cct-' + id);
+      if (el) el.classList.add('cc-' + clueTagged[id]);
+      if (tg) tg.textContent = clueTagged[id] === 'sad' ? 'Sadness signal' : clueTagged[id] === 'angry' ? 'Frustration signal' : '';
+    });
+    checkCluesDone();
+  }
+  if (n === 4 && perspText) {
+    var ta = document.getElementById('perspInput');
+    if (ta) ta.value = perspText;
+    checkPersp(perspText);
+  }
+  if (n === 5) updateIntensity(intensityLevel);
+  if (n === 9 && supportText) {
+    var ta2 = document.getElementById('supportInput');
+    if (ta2) ta2.value = supportText;
+    checkSupport(supportText);
+  }
+  if (n === 10 && reflectText) {
+    var ta3 = document.getElementById('reflectInput');
+    if (ta3) ta3.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (aishaEmotionDone) {
+        var aw = document.getElementById('aishaAssumpWrap');
+        if (aw) { aw.style.opacity = '1'; aw.style.pointerEvents = 'auto'; }
+      }
+      if (aishaAssumpDone) {
+        var rw = document.getElementById('aishaRespWrap');
+        if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+      }
+      checkAishaComplete();
+    }, 60);
+  }
+}
+
+/* ======= ACT 1 INTERACTIONS ======= */
+var clueCount = 0;
+function tagClue(id, tag) {
+  var el = document.getElementById('cc-' + id);
+  if (el && (el.classList.contains('cc-sad') || el.classList.contains('cc-angry') || el.classList.contains('cc-neutral'))) return;
+  clueTagged[id] = tag;
+  if (el) el.classList.add('cc-' + tag);
+  var tg = document.getElementById('cct-' + id);
+  if (tg) tg.textContent = tag === 'sad' ? 'Sadness signal' : 'Frustration signal';
+  clueCount++;
+  checkCluesDone();
+}
+
+function checkCluesDone() {
+  var total = Object.keys(clueTagged).length;
+  var correctSad = ['eyecontact','posture','voice','alone'].filter(function(id){ return clueTagged[id] === 'sad'; }).length;
+  var correctAngry = ['eyes','arms'].filter(function(id){ return clueTagged[id] === 'angry'; }).length;
+  var fb = document.getElementById('clueFeedback');
+  var nb = document.getElementById('clueNextBtn');
+  if (total < clues.length) {
+    if (fb && total > 0) fb.innerHTML = '<div class="feedback-msg gold-msg">Keep going - classify all 6 clues.</div>';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  var allCorrect = correctSad === 4 && correctAngry === 2;
+  if (allCorrect) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All clues correctly classified. The four sadness signals (avoiding eye contact, slouched posture, quiet voice, sitting alone) all indicate withdrawal and low energy - the body\'s way of creating distance from social interaction when in pain. The two frustration signals (eye-rolling, crossed arms) indicate defensive or dismissive energy. For Sami\'s case today, the sadness signals dominate.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Some classifications need adjusting. Sadness signals involve withdrawal and low energy (sitting alone, quiet, drooping). Frustration signals involve defensive or dismissive energy (eye-rolling, crossed arms). Re-read each clue and consider what emotion the body is expressing.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function choosePersp(type) {
+  if (perspChosen) return;
+  perspChosen = true; perspCorrect = type === 'empathy';
+  var el = document.getElementById('pb-' + type);
+  if (el) el.classList.add('pb-' + type);
+  var fb = document.getElementById('perspFeedback');
+  var nb = document.getElementById('perspNextBtn');
+  if (type === 'empathy') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correct. Option B is the empathic thought. "Something might have happened to Sami - I wonder what he could be going through" stays open, curious, and centred on Sami\'s experience. It does not assume it knows the cause. It does not make Daniel the centre of the story. This open question is the foundation of every empathic interaction.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (el) el.classList.add('pb-assumption');
+    var oc = document.getElementById('pb-empathy');
+    if (oc) oc.classList.add('pb-empathy');
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Option A is mind reading - not empathy. "He is clearly ignoring me on purpose" states an unverified assumption as fact, with Daniel at the centre of Sami\'s story. This is one of the most common empathy barriers: we interpret others\' behaviour through the lens of how it affects us, rather than wondering what they might be going through. Option B is highlighted as the empathic response.</div>';
+    if (nb) nb.disabled = false;
+  }
+}
+
+function checkPersp(val) {
+  perspText = val;
+  var len = val.trim().length;
+  perspValid = len >= 40;
+  var c = document.getElementById('perspCounter');
+  var b = document.getElementById('perspNextBtn2');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (perspValid ? ' met' : ''); }
+  if (b) b.disabled = !perspValid;
+}
+
+function updateIntensity(val) {
+  intensityLevel = parseInt(val);
+  var level = getIntLevel(intensityLevel);
+  if (!level) return;
+  var em = document.getElementById('idEmoji');
+  var lb = document.getElementById('idLabel');
+  var ds = document.getElementById('idDesc');
+  var disp = document.getElementById('intensityDisplay');
+  if (em) em.textContent = level.emoji;
+  if (lb) { lb.textContent = level.label; lb.style.color = level.col; }
+  if (ds) ds.textContent = level.desc;
+  if (disp) { disp.style.background = level.bg; disp.style.borderColor = level.border; }
+}
+
+/* ======= ACT 2 INTERACTIONS ======= */
+function buildRespMeter(resp, pfx) {
+  return '<div class="meters-wrap">' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🔗 Connection Level</span><span id="' + pfx + 'CL">0%</span></div><div class="meter-track"><div class="meter-fill connection" id="' + pfx + 'CF"></div></div></div>' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🤝 Trust Level</span><span id="' + pfx + 'TL">0%</span></div><div class="meter-track"><div class="meter-fill trust" id="' + pfx + 'TF"></div></div></div>' +
+  '</div>' +
+  '<div class="outcome-box ' + resp.quality + '"><div class="outcome-title">' + resp.outcome.title + '</div>' + resp.outcome.body + '<div class="outcome-tip">' + resp.outcome.tip + '</div></div>';
+}
+
+function animateMeter(cId, tId, cLId, tLId, cV, tV) {
+  setTimeout(function() {
+    var cf = document.getElementById(cId), tf = document.getElementById(tId);
+    var cl = document.getElementById(cLId), tl = document.getElementById(tLId);
+    if (cf) cf.style.width = cV + '%';
+    if (tf) tf.style.width = tV + '%';
+    if (cl) cl.textContent = cV + '%';
+    if (tl) tl.textContent = tV + '%';
+  }, 150);
+}
+
+function chooseResp1(id) {
+  if (resp1Locked) return;
+  resp1Locked = true; resp1Id = id;
+  var chosen = responses.find(function(r){ return r.id === id; });
+  responses.forEach(function(r) {
+    var el = document.getElementById('r1-' + r.id);
+    if (el) { if (r.id === id) el.classList.add('sel-' + r.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('resp1Outcome');
+  if (out) out.innerHTML = buildRespMeter(chosen, 'rm1');
+  animateMeter('rm1CF','rm1TF','rm1CL','rm1TL', chosen.conn, chosen.trust);
+  var nw = document.getElementById('resp1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function chooseResp2(id) {
+  if (resp2Id) return;
+  resp2Id = id;
+  var chosen = responses.find(function(r){ return r.id === id; });
+  var first = responses.find(function(r){ return r.id === resp1Id; });
+  var el = document.getElementById('r2-' + id);
+  if (el) el.classList.add('sel-' + chosen.quality);
+  responses.filter(function(r){ return r.id !== resp1Id; }).forEach(function(r) {
+    var e = document.getElementById('r2-' + r.id);
+    if (e) e.style.cursor = 'default';
+  });
+  var out = document.getElementById('resp2Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="section-divider">Your first choice: ' + first.icon + '</div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Connection</span><span>' + first.conn + '%</span></div><div class="meter-track"><div class="meter-fill connection" style="width:' + first.conn + '%"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Trust</span><span>' + first.trust + '%</span></div><div class="meter-track"><div class="meter-fill trust" style="width:' + first.trust + '%"></div></div></div>' +
+      '<div class="section-divider">This choice: ' + chosen.icon + '</div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Connection</span><span>' + chosen.conn + '%</span></div><div class="meter-track"><div class="meter-fill connection" id="rm2CF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>Trust</span><span>' + chosen.trust + '%</span></div><div class="meter-track"><div class="meter-fill trust" id="rm2TF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var cf = document.getElementById('rm2CF'), tf = document.getElementById('rm2TF');
+    if (cf) cf.style.width = chosen.conn + '%';
+    if (tf) tf.style.width = chosen.trust + '%';
+  }, 150);
+  var nw = document.getElementById('resp2NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkSupport(val) {
+  supportText = val;
+  var len = val.trim().length;
+  supportValid = len >= 40;
+  var c = document.getElementById('supportCounter');
+  var b = document.getElementById('supportNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (supportValid ? ' met' : ''); }
+  if (b) b.disabled = !supportValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ======= ACT 3 INTERACTIONS ======= */
+function selectAishaEmotion(el, emotion) {
+  if (aishaEmotionDone) return;
+  aishaEmotionDone = true;
+  var isCorrect = emotion.includes('Embarrassed');
+  el.classList.add(isCorrect ? 'ab-correct' : 'ab-incorrect');
+  document.querySelectorAll('.aisha-options .aisha-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var fb = document.getElementById('aishaEmotionFeedback');
+  if (isCorrect) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correct. Aisha is most likely experiencing embarrassment and emotional overwhelm - the sudden sharp loss combined with the desire to do well created an internal pressure that erupted outward. The immediate retreat into silence after snapping is a classic signal of shame following an impulsive reaction: she knows it was not appropriate, and that knowledge creates its own pain.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not the most accurate read. Aisha\'s immediate silence and withdrawal after snapping suggests embarrassment and overwhelm rather than simple happiness or competitiveness. The snap was an emotional release under pressure, not premeditated anger or indifference. The correct emotion is highlighted above.</div>';
+    var correctBtn = document.getElementById('ae-Embarrassed-and-overwhelmed');
+    if (correctBtn) correctBtn.classList.add('ab-correct');
+  }
+  var aw = document.getElementById('aishaAssumpWrap');
+  if (aw) { aw.style.opacity = '1'; aw.style.pointerEvents = 'auto'; }
+}
+
+function selectAishaAssump(el, isCorrect) {
+  if (aishaAssumpDone) return;
+  aishaAssumpDone = true;
+  el.classList.add(isCorrect ? 'ab-correct' : 'ab-incorrect');
+  var parent = el.closest('.aisha-options');
+  if (parent) parent.querySelectorAll('.aisha-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var fb = document.getElementById('aishaAssumpFeedback');
+  if (isCorrect) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correct interpretation. Aisha snapped because frustration built to a critical point in that moment - not because she is a permanently bad person or does not care about others. Context matters enormously in empathy. A momentary outburst under competitive emotional pressure is very different from a character trait. Seeing the situational cause rather than assigning permanent character judgement is a key empathy skill.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">This interpretation is too judgemental or misses the context. Empathy asks us to consider situational explanations before character-based ones. Aisha was in a tense competitive situation and her frustration overflowed momentarily - this is a situational stress response, not a defining character flaw.</div>';
+  }
+  var rw = document.getElementById('aishaRespWrap');
+  if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+  checkAishaComplete();
+}
+
+function selectAishaResp(id, isCorrect) {
+  if (aishaRespDone) return;
+  aishaRespDone = true;
+  var el = document.getElementById('ar-' + id);
+  if (el) el.classList.add(isCorrect ? 'ab-correct' : 'ab-incorrect');
+  document.querySelectorAll('#aishaRespWrap .aisha-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var fb = document.getElementById('aishaRespFeedback');
+  if (isCorrect) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The best empathic response. "That looked like a really frustrating moment. Are you okay?" names the emotion (frustration) without judging the behaviour, checks in on the person rather than the action, and does not demand explanation or apology. It signals care and gives Aisha room to respond in her own time and way. This is empathy in action.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">This response focuses on correcting the behaviour rather than connecting with the person. In moments after an emotional outburst, what is most needed is acknowledgement, not instruction. Blame and demands for self-control activate defensiveness rather than opening a door to genuine repair. The most empathic response is now highlighted.</div>';
+    var correctBtn = document.getElementById('ar-empathic');
+    if (correctBtn) correctBtn.classList.add('ab-correct');
+  }
+  checkAishaComplete();
+}
+
+function checkAishaComplete() {
+  if (aishaEmotionDone && aishaAssumpDone && aishaRespDone) {
+    var b = document.getElementById('aishaNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function answerDetective(caseId, answer, isCorrect) {
+  if (detAnswers[caseId] !== undefined) return;
+  detAnswers[caseId] = isCorrect;
+  var c = detectiveCases.find(function(c){ return c.id === caseId; });
+  c.options.forEach(function(o) {
+    var el = document.getElementById('do-' + caseId + '-' + o.replace(/\s+/g,'_'));
+    if (!el) return;
+    el.classList.add('det-disabled');
+    if (o === answer) el.classList.add(isCorrect ? 'det-correct' : 'det-incorrect');
+    else if (o === c.correct) el.classList.add('det-correct');
+  });
+  var fb = document.getElementById('df-' + caseId);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'di-feedback ' + (isCorrect ? 'di-ok' : 'di-wrong');
+    fb.textContent = c.feedback;
+  }
+  var di = document.getElementById('di-' + caseId);
+  if (di && isCorrect) di.classList.add('di-solved');
+  var total = Object.keys(detAnswers).length;
+  if (total === detectiveCases.length) {
+    var nb = document.getElementById('detNextBtn');
+    if (nb) nb.disabled = false;
+    var fb2 = document.getElementById('detFeedback');
+    var correct = Object.values(detAnswers).filter(Boolean).length;
+    if (fb2) fb2.innerHTML = '<div class="feedback-msg ' + (correct >= 3 ? 'correct-msg' : 'gold-msg') + '">' + correct + ' of 4 correct. ' + (correct === 4 ? 'Perfect score - you are reading emotional clues with genuine precision.' : correct >= 3 ? 'Strong performance. Emotional clue-reading is a skill that develops with practice and conscious attention.' : 'Good effort. Remember to focus on what the behaviour signals about the internal state rather than the most obvious surface explanation.') + '</div>';
+  }
+}
+
+/* ======= QUIZ ======= */
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+/* ======= RESTART ======= */
+function restartLab() {
+  clueTagged = {}; clueCount = 0;
+  perspChosen = false; perspCorrect = false; perspText = ''; perspValid = false;
+  intensityLevel = 50;
+  resp1Id = null; resp1Locked = false; resp2Id = null;
+  supportText = ''; supportValid = false; reflectText = ''; reflectValid = false;
+  aishaEmotionDone = false; aishaAssumpDone = false; aishaRespDone = false;
+  detAnswers = {}; quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+/* ======= CONFETTI ======= */
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#e8a820','#2ab8b0','#9078c8','#38c880','#e07080','#a06808','#1a7870','#d0c0f0'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+/* ======= INIT ======= */
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

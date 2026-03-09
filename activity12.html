@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Emotional Regulation Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f6ff;
+  --card:#ffffff;
+  --ocean:#1848c0;--ocean-dark:#0c2888;--ocean-light:#a8c8f8;
+  --teal:#189898;--teal-dark:#0a5858;--teal-light:#98e0e0;
+  --amber:#d89020;--amber-dark:#885800;--amber-light:#f8dea0;
+  --red:#e03030;--red-dark:#980808;--red-light:#f8b0b0;
+  --green:#18c878;--green-dark:#0a7848;--green-light:#a0f0c0;
+  --violet:#7838c8;--violet-dark:#480898;--violet-light:#c8a8f8;
+  --coral:#e84848;
+  --text:#080c20;--text-soft:#243050;
+  --shadow-sm:0 4px 16px rgba(12,40,136,0.12);
+  --shadow-md:0 8px 32px rgba(12,40,136,0.16);
+  --shadow-lg:0 16px 48px rgba(12,40,136,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 7% 10%,rgba(24,72,192,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 93% 82%,rgba(120,56,200,0.14) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(24,200,120,0.09) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--ocean-dark),var(--violet-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--ocean-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(12,40,136,0.09);color:var(--ocean-dark);border:1.5px solid rgba(12,40,136,0.24)}
+.act-banner.act2{background:rgba(72,8,152,0.09);color:var(--violet-dark);border:1.5px solid rgba(72,8,152,0.24)}
+.act-banner.act3{background:rgba(136,88,0,0.09);color:var(--amber-dark);border:1.5px solid rgba(136,88,0,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(24,72,192,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--ocean-dark),var(--teal-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(12,40,136,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(24,72,192,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--ocean-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(24,72,192,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(24,72,192,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--ocean-dark);background:rgba(24,72,192,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(72,8,152,0.09)}
+.stage-label.amber{color:var(--amber-dark);background:rgba(136,88,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(24,72,192,0.09),rgba(120,56,200,0.07));border:1.5px solid rgba(24,72,192,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--ocean-dark);font-style:normal}
+.story-box p span.amber{color:var(--amber-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(224,48,48,0.10),rgba(24,72,192,0.09));border:2px solid rgba(224,48,48,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--red-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* WARNING SIGNS */
+.warn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 26px}
+.warn-card{background:var(--bg);border:2px solid rgba(24,72,192,0.20);border-radius:var(--radius-sm);padding:16px 12px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.warn-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--ocean)}
+.warn-card.wc-rising{border-color:var(--red-dark);background:linear-gradient(135deg,rgba(224,48,48,0.12),rgba(24,72,192,0.07));box-shadow:0 0 0 3px rgba(152,8,8,0.12),var(--shadow-sm);transform:translateY(-2px)}
+.warn-card.wc-calm{border-color:var(--teal-dark);background:linear-gradient(135deg,rgba(24,152,152,0.12),rgba(24,200,120,0.07));box-shadow:0 0 0 3px rgba(10,88,88,0.12),var(--shadow-sm);transform:translateY(-2px)}
+.warn-card.wc-wrong{border-color:var(--amber-dark);background:rgba(216,144,32,0.07);animation:wrongShake 0.4s ease}
+.warn-card .wc-icon{font-size:28px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.warn-card:hover .wc-icon{transform:scale(1.14)}
+.warn-card .wc-text{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.3}
+.wc-check{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.warn-card.wc-rising .wc-check{opacity:1;transform:scale(1);background:var(--red-dark)}
+.warn-card.wc-calm .wc-check{opacity:1;transform:scale(1);background:var(--teal-dark)}
+
+/* SORT */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;min-height:52px;padding:12px 14px;background:rgba(24,72,192,0.06);border:2px dashed rgba(24,72,192,0.26);border-radius:var(--radius-sm)}
+.sort-card-item{background:#fff;border:2px solid rgba(24,72,192,0.22);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-card-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--ocean)}
+.sort-card-item.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.sort-zone.zone-reaction{border-color:rgba(152,8,8,0.32);background:rgba(224,48,48,0.07)}
+.sort-zone.zone-response{border-color:rgba(10,88,88,0.30);background:rgba(24,152,152,0.07)}
+.sort-zone.zone-escalate{border-color:rgba(152,8,8,0.32);background:rgba(224,48,48,0.07)}
+.sort-zone.zone-deescalate{border-color:rgba(10,88,88,0.30);background:rgba(24,152,152,0.07)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-reaction .sz-title,.sort-zone.zone-escalate .sz-title{color:var(--red-dark)}
+.sort-zone.zone-response .sz-title,.sort-zone.zone-deescalate .sz-title{color:var(--teal-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:5px}
+.sz-remove{cursor:pointer;font-size:14px;color:var(--text-soft);transition:color 0.2s}
+.sz-remove:hover{color:var(--red-dark)}
+
+/* DUAL INTENSITY METER */
+.dual-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(24,72,192,0.07),rgba(24,200,120,0.06));border:1.5px solid rgba(24,72,192,0.20);border-radius:var(--radius-sm);padding:24px}
+.dual-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.dual-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.dual-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--ocean-dark);box-shadow:0 3px 14px rgba(12,40,136,0.36);cursor:pointer;transition:transform 0.2s ease}
+.dual-slider::-webkit-slider-thumb:hover,.dual-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.dual-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--ocean-dark);cursor:pointer}
+.dual-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dual-bar-side{padding:16px;border-radius:var(--radius-sm);border:2px solid}
+.dual-bar-side.intensity-side{border-color:rgba(152,8,8,0.28);background:rgba(224,48,48,0.07)}
+.dual-bar-side.control-side{border-color:rgba(10,88,88,0.28);background:rgba(24,152,152,0.07)}
+.dbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dbs-emoji{font-size:24px}
+.dbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.dbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.dbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.intensity-side .dbs-fill{background:linear-gradient(90deg,var(--red-light),var(--red-dark));box-shadow:0 2px 6px rgba(152,8,8,0.28)}
+.control-side .dbs-fill{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark));box-shadow:0 2px 6px rgba(10,88,88,0.28)}
+.dbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.intensity-side .dbs-pct{color:var(--red-dark)}
+.control-side .dbs-pct{color:var(--teal-dark)}
+.dbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:36px}
+
+/* PAUSE GAP */
+.pause-options{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.pause-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(24,72,192,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.pause-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--ocean)}
+.pause-btn .paub-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease}
+.pause-btn:hover .paub-icon{transform:scale(1.10)}
+.pause-btn .paub-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.pause-btn .paub-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.pause-btn.pb-harmful{border-color:var(--red-dark);background:rgba(224,48,48,0.08);animation:wrongShake 0.4s ease}
+.pause-btn.pb-ok{border-color:var(--amber-dark);background:rgba(216,144,32,0.09);animation:correctPop 0.4s ease}
+.pause-btn.pb-best{border-color:var(--teal-dark);background:rgba(24,152,152,0.09);animation:correctPop 0.4s ease}
+
+/* REGULATION TOOL CHOICE */
+.reg-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.reg-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(24,72,192,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.reg-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--ocean)}
+.reg-btn .rb-icon{font-size:28px;flex-shrink:0}
+.reg-btn .rb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.reg-btn .rb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.reg-btn.rb-harmful{border-color:var(--red-dark);background:rgba(224,48,48,0.08);animation:wrongShake 0.4s ease}
+.reg-btn.rb-ok{border-color:var(--amber-dark);background:rgba(216,144,32,0.09);animation:correctPop 0.4s ease}
+.reg-btn.rb-best{border-color:var(--green-dark);background:rgba(24,200,120,0.09);animation:correctPop 0.4s ease}
+
+/* TOOLKIT BUILDER */
+.toolkit-chips{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 20px}
+.toolkit-chip{background:var(--bg);border:2px solid rgba(24,72,192,0.22);border-radius:10px;padding:10px 16px;cursor:pointer;transition:var(--t);font-size:13.5px;font-weight:800;color:var(--text-soft);display:flex;align-items:center;gap:7px}
+.toolkit-chip:hover{border-color:var(--ocean-dark);color:var(--text);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.toolkit-chip.tc-selected{background:linear-gradient(135deg,var(--ocean-dark),var(--teal-dark));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(12,40,136,0.26);animation:correctPop 0.35s ease}
+.toolkit-chip.tc-bad{border-color:var(--red-dark);background:rgba(224,48,48,0.07);color:var(--red-dark);animation:wrongShake 0.4s ease;pointer-events:none}
+.toolkit-display{background:linear-gradient(135deg,rgba(24,72,192,0.08),rgba(24,152,152,0.07));border:1.5px solid rgba(24,72,192,0.22);border-radius:var(--radius-sm);padding:18px 20px;margin:16px 0 24px;min-height:80px}
+.toolkit-display .td-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;color:var(--ocean-dark);margin-bottom:12px}
+.toolkit-items{display:flex;flex-wrap:wrap;gap:9px;min-height:36px}
+.toolkit-item{background:#fff;border:2px solid rgba(24,72,192,0.20);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;color:var(--ocean-dark);display:flex;align-items:center;gap:6px;animation:popIn 0.3s ease both}
+
+/* METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(24,72,192,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.intensity-fill{background:linear-gradient(90deg,var(--red-light),var(--red-dark));box-shadow:0 2px 8px rgba(152,8,8,0.28)}
+.meter-fill.control-fill{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark));box-shadow:0 2px 8px rgba(10,88,88,0.28)}
+.meter-fill.resil-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark));box-shadow:0 2px 8px rgba(10,120,72,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,48,48,0.09);border:1.5px solid rgba(152,8,8,0.22)}
+.outcome-box.ok{background:rgba(216,144,32,0.10);border:1.5px solid rgba(136,88,0,0.22)}
+.outcome-box.best{background:rgba(24,200,120,0.09);border:1.5px solid rgba(10,120,72,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(24,72,192,0.08),rgba(120,56,200,0.07),rgba(24,200,120,0.06));border:2px solid rgba(24,72,192,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(24,72,192,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,200,120,0.10),rgba(24,152,152,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--ocean-dark);padding:2px 0}
+
+/* HIBA SCENARIO */
+.hiba-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.hiba-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(24,72,192,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.hiba-btn:hover{border-color:var(--ocean);transform:translateX(3px)}
+.hiba-btn .hb-icon{font-size:24px;flex-shrink:0}
+.hiba-btn .hb-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.hiba-btn .hb-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.hiba-btn.hb-correct{border-color:var(--teal-dark);background:rgba(24,152,152,0.10);animation:correctPop 0.4s ease}
+.hiba-btn.hb-incorrect{border-color:var(--red-dark);background:rgba(224,48,48,0.08);animation:wrongShake 0.4s ease}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(24,72,192,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--ocean);background:rgba(24,72,192,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--teal-dark);background:rgba(24,152,152,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--red-dark);background:rgba(224,48,48,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--teal-dark);background:rgba(24,152,152,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(24,152,152,0.16);color:#0a4848}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,48,48,0.12);color:#800808}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(24,152,152,0.13);color:#0a4848;border:1.5px solid rgba(10,88,88,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(224,48,48,0.10);color:#800808;border:1.5px solid rgba(152,8,8,0.22)}
+.feedback-msg.info-msg{background:rgba(72,8,152,0.08);color:var(--violet-dark);border:1.5px solid rgba(72,8,152,0.20)}
+.feedback-msg.ocean-msg{background:rgba(12,40,136,0.08);color:var(--ocean-dark);border:1.5px solid rgba(12,40,136,0.22)}
+.feedback-msg.gold-msg{background:rgba(136,88,0,0.09);color:var(--amber-dark);border:1.5px solid rgba(136,88,0,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(24,72,192,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(36,48,80,0.38)}
+.reflection-input:focus{border-color:var(--ocean-dark);box-shadow:0 0 0 3px rgba(12,40,136,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--teal-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--ocean-dark),var(--teal-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(12,40,136,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(12,40,136,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(24,72,192,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(24,72,192,0.08);border-color:var(--ocean-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(24,72,192,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--ocean-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(24,72,192,0.18);border-radius:999px}
+
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(216,144,32,0.14),rgba(120,56,200,0.11));border:1.5px solid rgba(216,144,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(24,72,192,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,246,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(24,72,192,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(24,72,192,0.06),rgba(120,56,200,0.05),rgba(24,200,120,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .warn-grid{grid-template-columns:repeat(2,1fr)}
+  .dual-bars{grid-template-columns:1fr}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🔵 Regulation Lab</div>
+    <h1><span>Emotional Regulation</span> Mastery</h1>
+    <p>Understand emotional waves - Regulate reactions - Choose wise responses</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌊</div>
+    <h2>Regulation Mastery Unlocked!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now understand emotional waves - and how to ride them with skill instead of being swept away.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">👁️</span><div class="b-title">Emotion Observer</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">⏸️</span><div class="b-title">Pause Master</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🧭</span><div class="b-title">Wise Responder</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let warnSel       = new Set();
+let warnOk        = false;
+let sortPlac      = {};
+let sortSel       = null;
+let dualLevel     = 82;
+let pauseChoice   = null;
+let pauseLocked   = false;
+let reg1Choice    = null;
+let reg1Locked    = false;
+let kitSel        = new Set();
+let kitOk         = false;
+let regText       = '';
+let regValid      = false;
+let reflectText   = '';
+let reflectValid  = false;
+let hibaTrigDone  = false;
+let hibaEmoDone   = false;
+let hibaStratDone = false;
+let hibaTrigCount = 0;
+let sort2Plac     = {};
+let sort2Sel      = null;
+let quizAnswers   = {};
+
+const warnData = [
+  {id:'jaw',    icon:'😬', text:'Tight jaw',        mode:'rising'},
+  {id:'calm',   icon:'😊', text:'Calm breathing',   mode:'calm'},
+  {id:'heart',  icon:'💓', text:'Fast heartbeat',   mode:'rising'},
+  {id:'fists',  icon:'✊', text:'Clenched fists',   mode:'rising'},
+  {id:'relax',  icon:'🧘', text:'Relaxed posture',  mode:'calm'},
+  {id:'hot',    icon:'🔥', text:'Face feeling hot',  mode:'rising'}
+];
+
+const sortItems = [
+  {id:'yell',    text:'Yelling',          zone:'reaction'},
+  {id:'throw',   text:'Throwing objects', zone:'reaction'},
+  {id:'blame',   text:'Blaming others',   zone:'reaction'},
+  {id:'pause',   text:'Pausing',          zone:'response'},
+  {id:'breath',  text:'Taking a breath',  zone:'response'},
+  {id:'speak',   text:'Speaking calmly',  zone:'response'}
+];
+
+const dualStates = [
+  {range:[0,18],   iLabel:'Minimal', cLabel:'Full Control', iMood:'Emotional state completely calm. Rational thinking fully accessible. Body signals relaxed and neutral.', cMood:'Maximum self-regulation capacity. Wise response easy and natural. No effort required to pause.'},
+  {range:[19,38],  iLabel:'Low', cLabel:'Strong', iMood:'Mild emotional activation. Slightly elevated but fully manageable. Regulation tools easily accessible.', cMood:'Strong control. Able to pause and think deliberately. Empathy and perspective easily accessed.'},
+  {range:[39,58],  iLabel:'Moderate', cLabel:'Reduced', iMood:'Clear emotional activation. Uncomfortable but within the regulated zone. Regulation tools helpful here.', cMood:'Control present but requiring effort. Pause skills important. The gap between stimulus and response needs to be deliberately widened.'},
+  {range:[59,78],  iLabel:'High', cLabel:'Low', iMood:'Strong emotional surge. Reactive impulses powerful. The window for a wise response is narrowing rapidly. Regulation urgently needed.', cMood:'Low control access. Reactive response likely without deliberate intervention. This is where regulation tools make the most difference.'},
+  {range:[79,100], iLabel:'Maximum', cLabel:'Minimal', iMood:'Emotional peak. Body fully activated. Amygdala hijack territory - the rational brain has very limited access. Reaction almost inevitable without prior training.', cMood:'Minimal control. At this level, reaction happens before thinking. The pause gap has essentially closed. This is why early warning sign detection is so critical.'}
+];
+
+const pauseOptions = [
+  {
+    id:'shout', icon:'🔴', text:'Shout back at the person who caused the frustration', sub:'Reaction at the peak - no pause, no gap, no choice',
+    quality:'harmful', intensLevel:96, ctrlLevel:4,
+    outcome:{title:'Reaction Without the Gap', body:'Shouting at the emotional peak is what happens when the pause gap is zero - when the stimulus triggers a reaction so immediately that no choice is made. At this level of emotional intensity, the prefrontal cortex (the thinking and decision-making brain) has very limited access. The amygdala (the emotional alarm system) is running the show. The words said, the actions taken, and their consequences are all things the rational brain would choose very differently. But it never got the chance.', tip:'Neuroscience: The phenomenon known as "amygdala hijack" - coined by psychologist Daniel Goleman - describes the moment when emotional activation is so high that the amygdala processes and responds to a stimulus before the prefrontal cortex can intervene with reason, perspective, or considered choice.'}
+  },
+  {
+    id:'walk', icon:'🟡', text:'Walk away without saying anything, still visibly angry', sub:'Physical space gained but emotion unprocessed - delayed reaction possible',
+    quality:'ok', intensLevel:62, ctrlLevel:36,
+    outcome:{title:'Space Without Resolution', body:'Walking away creates physical distance from the escalating situation, which prevents immediate reactive escalation. This is genuinely valuable. But walking away while still visibly angry leaves the emotional activation high and unprocessed - the anger may well discharge in a different context, at a different person, or through a different outlet later. The pause gained physical separation but not the internal regulation needed for a genuinely wise response.', tip:'Principle: Physical removal from a triggering situation is a valid first step in regulation - it prevents escalation. But it is most effective when combined with actual regulation tools (breathing, self-talk, movement) rather than used alone as an avoidance strategy.'}
+  },
+  {
+    id:'breathe', icon:'🟢', text:'Take 3 slow breaths, name the feeling, then respond clearly', sub:'Activates the pause gap - emotion acknowledged, regulation tool deployed, response chosen',
+    quality:'best', intensLevel:28, ctrlLevel:80,
+    outcome:{title:'The Pause Gap in Action', body:'Three slow breaths activate the parasympathetic nervous system, directly reducing cortisol and slowing heart rate - physiologically lowering emotional intensity. Naming the feeling ("I\'m frustrated") recruits the prefrontal cortex to label what the amygdala is experiencing, which research shows measurably reduces amygdala activation. Together these create the pause gap: the space between emotional stimulus and chosen response. In that space, a wise response becomes possible.', tip:'Research: A study by Matthew Lieberman at UCLA demonstrated that labelling emotional states reduces amygdala activity and increases prefrontal cortex activity. The act of naming an emotion is not just psychologically useful - it produces measurable neurological changes that make regulation more accessible.'}
+  }
+];
+
+const toolChips = [
+  {id:'deepb',  icon:'🫁', text:'Deep breathing',     bad:false},
+  {id:'count',  icon:'🔢', text:'Counting slowly',    bad:false},
+  {id:'selftk', icon:'💬', text:'Positive self-talk', bad:false},
+  {id:'water',  icon:'💧', text:'Drinking water',     bad:false},
+  {id:'yell2',  icon:'🗣️', text:'Yelling',            bad:true},
+  {id:'stretch',icon:'🤸', text:'Body stretching',    bad:false}
+];
+
+const hibaSteps = {
+  trigger: [
+    {id:'msg',    icon:'📱', text:'Friend not replying to her message', correct:true},
+    {id:'lunch',  icon:'🍽️', text:'Having a different lunch than usual', correct:false},
+    {id:'hw',     icon:'📚', text:'A hard piece of homework', correct:false}
+  ],
+  emotion: [
+    {id:'hurt',   icon:'💔', text:'Hurt and worried she has done something wrong', correct:true},
+    {id:'happy',  icon:'😊', text:'Happy and excited', correct:false},
+    {id:'bored',  icon:'😑', text:'Bored and uninterested', correct:false}
+  ],
+  strategy: [
+    {id:'send',   icon:'🔴', text:'Send ten follow-up messages immediately to demand a reply', correct:false},
+    {id:'assume', icon:'🟡', text:'Assume the worst and feel bad for the rest of the day', correct:false},
+    {id:'pause',  icon:'🟢', text:'Name the feeling, remind herself of one explanation that is not negative, and wait', correct:true}
+  ]
+};
+
+const sort2Items = [
+  {id:'slamDoor', text:'Slamming a door',                  zone:'escalate'},
+  {id:'slowBreath', text:'Slow deep breathing',            zone:'deescalate'},
+  {id:'ruminate', text:'Replaying the upsetting event',    zone:'escalate'},
+  {id:'walk2',    text:'Taking a calm walk',               zone:'deescalate'},
+  {id:'scrollang', text:'Reading angry comments online',   zone:'escalate'},
+  {id:'journal',  text:'Writing feelings in a journal',    zone:'deescalate'},
+  {id:'retaliate', text:'Saying something to retaliate',   zone:'escalate'},
+  {id:'music',    text:'Listening to calming music',       zone:'deescalate'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What typically happens when we react at the peak of emotional intensity?',
+    options:[
+      {icon:'💥', text:'The reaction bypasses the thinking brain entirely, meaning the response is driven by the alarm system rather than by reason, values, or considered choice', correct:true},
+      {icon:'🧠', text:'The emotional peak actually sharpens our thinking, helping us make faster and more decisive responses', correct:false},
+      {icon:'⏳', text:'Reacting at the peak is the same as reacting at any other intensity - the timing makes no difference to quality', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. At emotional peak intensity, the amygdala\'s activation is so strong that it effectively bypasses the prefrontal cortex\'s regulatory capacity - what Daniel Goleman called the "amygdala hijack." The response produced is driven by the alarm system\'s survival imperatives rather than by rational thought, values, or considered choice. This is why things said and done at emotional peak are so consistently regretted afterward - they were not chosen by the part of us that holds our actual values.',
+      incorrect:'Not quite. Emotional peak intensity is specifically where regulation is most needed and hardest to access. At maximum activation, the amygdala\'s signals dominate and the prefrontal cortex\'s regulatory function is significantly suppressed. The response produced bypasses reason entirely. This is why the pause gap - the space created before a peak reaction - is so valuable: it allows the thinking brain to participate in the response.'
+    }
+  },
+  {
+    q:'Question 2: Why does naming an emotion (saying "I am frustrated" or "I feel hurt") help with regulation?',
+    options:[
+      {icon:'😤', text:'It does not actually help - naming emotions is just a social convention with no real psychological impact', correct:false},
+      {icon:'🏷️', text:'Labelling an emotion activates the prefrontal cortex to process what the amygdala is experiencing, which measurably reduces amygdala activation and makes regulation more accessible', correct:true},
+      {icon:'🎭', text:'Naming emotions helps only by distracting us from feeling them - the distraction itself is the regulatory mechanism', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. Research by Matthew Lieberman and colleagues at UCLA using neuroimaging demonstrated that the act of labelling an emotional state activates the prefrontal cortex and measurably reduces amygdala activation - a process called "affect labelling." This is not a social convention or a distraction technique. It is a specific neurological mechanism: naming recruits the rational brain to process what the alarm brain is experiencing, directly reducing the intensity of the emotional response.',
+      incorrect:'Not quite. Naming emotions has specific and measurable neurological effects. UCLA neuroimaging research showed that labelling an emotional state activates prefrontal cortex activity and reduces amygdala activation - the opposite of what happens during reactive emotional discharge. The act of saying "I am frustrated" or "I feel hurt" recruits the rational brain\'s regulatory capacity and directly reduces the intensity of the emotional experience. It is a regulation tool, not a convention.'
+    }
+  },
+  {
+    q:'Question 3: What primarily creates and strengthens emotional self-control over time?',
+    options:[
+      {icon:'📖', text:'Learning facts about emotions from books and courses, which transfers directly into real-world regulation capacity', correct:false},
+      {icon:'🔄', text:'Repeatedly practising the notice-pause-regulate-respond cycle in real emotional situations, building the neural pathways for regulation through actual use', correct:true},
+      {icon:'🧬', text:'Emotional control is primarily genetic - practice has limited impact compared to innate temperament', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. Emotional regulation is a skill, and like all skills it is built through deliberate practice in real contexts. Each time you notice an emotion rising, pause before reacting, deploy a regulation tool, and choose a wise response rather than an automatic one - you strengthen the neural pathways for regulation in the prefrontal cortex. Neuroplasticity research consistently shows that regulation capacity is trainable. The training mechanism is the practice cycle itself: noticing, pausing, regulating, responding.',
+      incorrect:'Not quite. Emotional self-control is primarily built through practice in actual emotional situations - not through intellectual knowledge alone, and not fixed by genetics. Each time the notice-pause-regulate-respond cycle is completed in a real situation, the neural pathways for regulation are strengthened. Research on emotional regulation training consistently shows significant improvements in regulation capacity over time. The most important factor is repeated practice in genuinely activating situations, not reading about regulation in calm conditions.'
+    }
+  }
+];
+
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟣', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getDualState(v) {
+  return dualStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(n) {
+  var pct = Math.round(((n - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + n + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Emotional Waves') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #012</div>' +
+    '<h2>Emotions Rise Like Waves. Wisdom Lives in the Pause.</h2>' +
+    '<p>Welcome to the Emotional Regulation Mastery Lab. Emotions are not the problem. Anger, hurt, frustration, and fear are all normal, necessary, and informative experiences - they carry important information about what we value and what matters to us. The challenge is not to eliminate emotions. It is to develop the skill of choosing what we do while feeling them. That is emotional regulation: not suppression, not avoidance - wise action in the presence of feeling.</p>' +
+    '<div class="story-box" data-icon="⚽">' +
+      '<p><span>Bilal</span> is ten years old. During recess football, the referee calls him offside. He is certain it is wrong. He can feel the anger rising immediately: face hot, fists tightening, heartbeat faster, voice getting louder. The thought arrives hard and fast: "This is completely unfair!" The next three seconds will determine whether he reacts at the peak of the wave - or chooses a different path.</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"This is SO unfair! They are wrong and I am going to say so right now."</p></div>' +
+    '<p>Inside Bilal, an emotional wave has formed and is building rapidly. This is normal - the brain\'s threat detection system has activated in response to perceived injustice. The body has mobilised in preparation for action. And at this precise moment, Bilal faces a choice that most people do not even realise they have: to react at the peak, or to use the pause gap.</p>' +
+    '<div class="feedback-msg info-msg">🌊 <strong>Core concept:</strong> Emotions rise like waves - they build, reach a peak, and then naturally fall if we do not act to maintain them. If we react at the peak, we lose control of the response. If we can pause - even for three seconds - the wave begins to fall and the thinking brain regains access. The pause is not weakness. It is the most powerful skill in emotional regulation.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Mastery Training</button>' +
+  '</div>';
+}
+
+function s2() {
+  warnSel = new Set(); warnOk = false;
+  var cards = warnData.map(function(w) {
+    return '<div class="warn-card" id="wc-' + w.id + '" onclick="toggleWarn(\'' + w.id + '\',\'' + w.mode + '\')">' +
+      '<div class="wc-check">✓</div>' +
+      '<span class="wc-icon">' + w.icon + '</span>' +
+      '<div class="wc-text">' + w.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Emotional Waves') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Early Warning Signs</div>' +
+    '<h2>Reading the Body\'s Alarm System</h2>' +
+    '<p>The body sends early warning signals before emotions reach their peak - and these signals are among the most valuable information available to us. Learning to notice them early means regulation is possible before the wave crests. Early detection is the difference between a manageable emotional experience and an overwhelming one.</p>' +
+    '<p>Select all four cards that show a sign of emotion rising. Two cards show calm body signals - read each one carefully.</p>' +
+    '<div class="warn-grid">' + cards + '</div>' +
+    '<div id="warnFeedback"></div>' +
+    '<button class="btn-primary" id="warnNextBtn" onclick="renderStage(3)" disabled>Next: Reaction vs Response -></button>' +
+  '</div>';
+}
+
+function s3() {
+  sortPlac = {}; sortSel = null;
+  var bank = sortItems.map(function(c) {
+    return '<div class="sort-card-item" id="stc-' + c.id + '" onclick="handleSort1Click(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Emotional Waves') +
+    backBtn(2,'Back to Warning Signs') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Reaction vs Response</div>' +
+    '<h2>The Most Important Distinction</h2>' +
+    '<p>A reaction is automatic - it follows the emotional signal without deliberate thought. A response is chosen - it follows a pause in which the thinking brain participates. Both begin with the same emotional experience. The difference is what happens between stimulus and action. Reactions can feel satisfying in the moment. Responses produce outcomes we actually want.</p>' +
+    '<p>Sort each behaviour into the correct category. Think carefully about each one.</p>' +
+    '<div class="sort-bank" id="sortBank1">' + bank + '</div>' +
+    '<div id="sortHint1" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a behaviour, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-reaction" onclick="placeSort1(\'reaction\')">' +
+        '<div class="sz-title">Reaction</div>' +
+        '<div class="sz-items" id="zone-reaction"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-response" onclick="placeSort1(\'response\')">' +
+        '<div class="sz-title">Response</div>' +
+        '<div class="sz-items" id="zone-response"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sort1Feedback"></div>' +
+    '<button class="btn-primary" id="sort1NextBtn" onclick="renderStage(4)" disabled>Next: Intensity Meter -></button>' +
+  '</div>';
+}
+
+function s4() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Emotional Waves') +
+    backBtn(3,'Back to Reaction vs Response') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Emotional Intensity Meter</div>' +
+    '<h2>Measuring the Wave</h2>' +
+    '<p>Emotional intensity and self-control operate on an inverse relationship - as one rises, the other falls. Understanding where you are on this spectrum in real time is the foundation of self-awareness and the first step of regulation. Move the slider to estimate where Bilal\'s emotional intensity and control levels sit during the offside call moment.</p>' +
+    '<div class="dual-meter-wrap">' +
+      '<div class="dual-slider-labels"><span>🌊 Full Control</span><span>⚖️ Balanced</span><span>🌋 Peak Intensity</span></div>' +
+      '<input type="range" class="dual-slider" id="dualSl" min="0" max="100" value="82" oninput="updateDual(this.value)"/>' +
+      '<div class="dual-bars">' +
+        '<div class="dual-bar-side intensity-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🌋</span><span class="dbs-title">Emotion Intensity</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="intFill" style="width:82%"></div></div>' +
+          '<div class="dbs-pct" id="intPct">82%</div>' +
+          '<div class="dbs-mood" id="intMood">Near peak. Amygdala hijack territory.</div>' +
+        '</div>' +
+        '<div class="dual-bar-side control-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🧭</span><span class="dbs-title">Self-Control Level</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="ctlFill" style="width:18%"></div></div>' +
+          '<div class="dbs-pct" id="ctlPct">18%</div>' +
+          '<div class="dbs-mood" id="ctlMood">Minimal. Reactive response highly likely.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg ocean-msg">🎯 <strong>Bilal\'s state:</strong> Perceived injustice in a public setting with physical game stakes places most people in the High to Maximum Intensity range - the meter position where the pause gap is at its narrowest and regulation tools are most urgently needed. This is exactly the situation where even a three-second pause can make a fundamental difference to the quality of the response.</div>' +
+    '<button class="btn-primary" onclick="renderStage(5)">Next: The Pause Gap -></button>' +
+  '</div>';
+}
+
+function s5() {
+  pauseChoice = null; pauseLocked = false;
+  var btns = pauseOptions.map(function(p) {
+    return '<button class="pause-btn" id="pb-' + p.id + '" onclick="choosePause(\'' + p.id + '\')">' +
+      '<span class="paub-icon">' + p.icon + '</span>' +
+      '<div><div class="paub-text">' + p.text + '</div><div class="paub-sub">' + p.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Emotional Waves') +
+    backBtn(4,'Back to Intensity Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - The Pause Gap</div>' +
+    '<h2>Between Emotion and Action Lies a Choice</h2>' +
+    '<p>Viktor Frankl wrote: "Between stimulus and response there is a space. In that space lies our freedom." The pause gap is that space made deliberate - the conscious decision to widen the distance between what we feel and what we do. The pause gap is not passive. It is an active skill, practised and built through repetition. Choose what Bilal should do in the three seconds after the offside call and see how the meters respond.</p>' +
+    '<div class="pause-options">' + btns + '</div>' +
+    '<div id="pauseOutcome"></div>' +
+    '<div id="pauseNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(6)">Learn the Regulation Formula -></button></div>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {icon:'👁️', title:'Notice the Body', desc:'Jaw tight. Heart fast. Face hot. Fists clenching. These are the early warning signals. Catching them before the peak is everything - because early detection means early regulation.'},
+    {icon:'🏷️', title:'Name the Emotion', desc:'"I am feeling angry." "I am frustrated." "I feel hurt." Naming the emotion recruits the prefrontal cortex to process what the amygdala is experiencing. Measurably reduces intensity.'},
+    {icon:'⏸️', title:'Pause', desc:'Three slow breaths. Count to five. Step back physically. This is the gap widening - the space between stimulus and response being deliberately created. Even three seconds changes what is available.'},
+    {icon:'🧰', title:'Choose a Tool', desc:'Deep breathing. Positive self-talk. Counting. Walking. Water. A pre-chosen tool deployed in the pause. The toolkit works because it was decided before the emotion arrived, not during it.'},
+    {icon:'🧭', title:'Respond Wisely', desc:'From this regulated place, a genuine choice is available. Not a reaction produced by the alarm system - a response chosen by the values and intentions of the thinking brain. This is emotional mastery.'}
+  ];
+  var rows = steps.map(function(s, i) {
+    return '<div class="formula-row" style="animation-delay:' + (i*0.09) + 's"><span class="fr-icon">' + s.icon + '</span><div><div class="fr-title">' + s.title + '</div><div class="fr-desc">' + s.desc + '</div></div></div>';
+  }).join('<div class="formula-arrow">↓</div>');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Emotional Waves') +
+    backBtn(5,'Back to Pause Gap') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - Regulation Formula</div>' +
+    '<h2>The Five-Step Regulation Formula</h2>' +
+    '<p>Emotional regulation is not a single action - it is a five-step sequence that can be learned, practised, and made increasingly automatic. The sequence does not require the emotion to go away. It does not require pretending the emotion is not there. It requires noticing, naming, pausing, selecting a tool, and then choosing a response from the regulated space that creates. This is the complete map of emotional mastery.</p>' +
+    '<div class="formula-box">' + rows + '<div class="formula-row formula-result" style="margin-top:12px"><span class="fr-icon">🌊</span><div><div class="fr-title">Riding the Wave</div><div class="fr-desc">This five-step sequence transforms the emotional experience from something that happens to you into something you navigate. The emotion still arrives. The wave still rises. But instead of being swept away at the peak, you have the tools to pause, steady, and choose. Over repetition, this sequence becomes faster, more automatic, and increasingly powerful - until regulation begins to feel natural even under real pressure.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg gold-msg">🏅 <strong>Badge Progress:</strong> Emotion Observer Level 1 - almost earned! Continue to Act 2 to practise regulation tools...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Practising Regulation -></button>' +
+  '</div>';
+}
+
+function s7() {
+  reg1Choice = null; reg1Locked = false;
+  var btns = [
+    {id:'shout2', icon:'🔴', text:'Shout back at the referee immediately', sub:'Reaction - peak intensity, no pause, no tool',
+     quality:'harmful', iL:94, cL:6,
+     outcome:{title:'Reactive Discharge', body:'Shouting back at the referee is a reactive discharge - the emotional energy is expelled directly without any regulation. In the moment, this can feel satisfying - the feeling of "getting it out." But the consequences of reactive emotional discharge in social settings are consistently worse than the original frustration. Relationships are damaged. Reputations are affected. And the brain learns that reactive discharge is the way this kind of situation is handled - making it more likely next time.', tip:'Principle: Reactive emotional discharge does not reduce the underlying emotional experience long-term. Research on "venting" consistently shows that it maintains or increases, rather than reduces, emotional intensity over time.'}
+    },
+    {id:'walk3', icon:'🟡', text:'Walk away angrily without engaging', sub:'Avoidance - emotion not processed, delay without resolution',
+     quality:'ok', iL:58, cL:38,
+     outcome:{title:'Removal Without Regulation', body:'Walking away is better than reactive escalation - it prevents the immediate situation from worsening and creates physical space that can be useful for regulation. But walking away while still at high emotional intensity often means the anger is displaced rather than regulated: it may express itself toward a different person, in a different context, or as ongoing rumination that maintains the emotional activation long after the original event.', tip:'Principle: Physical removal is a valid first step in de-escalation. Its effectiveness depends entirely on what happens next - whether actual regulation tools are deployed in the space created, or whether the emotional intensity simply continues without resolution.'}
+    },
+    {id:'reg', icon:'🟢', text:'Take 3 slow breaths, say "I feel frustrated", then speak clearly', sub:'Full regulation sequence - notice, name, pause, tool, respond',
+     quality:'best', iL:24, cL:82,
+     outcome:{title:'The Regulation Sequence', body:'Three slow breaths activate parasympathetic physiological regulation. "I feel frustrated" recruits prefrontal processing and reduces amygdala activation through affect labelling. Speaking clearly from this regulated place allows the actual concern (the disputed call) to be communicated in a way that others can hear and respond to. This is the complete regulation sequence: notice, name, pause, tool, respond. And crucially, it demonstrates to Bilal\'s own brain that he can handle this - building genuine regulation capacity.', tip:'Research: Slow diaphragmatic breathing with an extended exhale is one of the most empirically supported rapid regulation tools. It directly activates the vagus nerve and parasympathetic nervous system, producing measurable reductions in cortisol and heart rate within 2-3 minutes.'}
+    }
+  ];
+  var btnsHTML = btns.map(function(b) {
+    return '<button class="reg-btn" id="rb1-' + b.id + '" onclick="chooseReg1(\'' + b.id + '\')">' +
+      '<span class="rb-icon">' + b.icon + '</span>' +
+      '<div><div class="rb-text">' + b.text + '</div><div class="rb-sub">' + b.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Regulation') +
+    backBtn(6,'Back to Formula') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Choose Regulation Tool</div>' +
+    '<h2>Bilal\'s Next Three Seconds</h2>' +
+    '<p>The offside call has just happened. The anger is high. Three options are available in the next three seconds. Each will produce fundamentally different outcomes for Bilal\'s emotional state, his relationships with teammates, and what his brain learns about how to handle high-intensity frustration. Choose the response that demonstrates real emotional mastery and watch the meters respond.</p>' +
+    '<div class="reg-options">' + btnsHTML + '</div>' +
+    '<div id="reg1Outcome"></div>' +
+    '<div id="reg1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Build Your Regulation Toolkit -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  kitSel = new Set(); kitOk = false;
+  var chips = toolChips.map(function(tc) {
+    return '<div class="toolkit-chip' + (tc.bad ? ' tc-bad' : '') + '" id="tc-' + tc.id + '" onclick="toggleKit(\'' + tc.id + '\',' + tc.bad + ')">' +
+      tc.icon + ' ' + tc.text +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Regulation') +
+    backBtn(7,'Back to Regulation Tool') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Build Your Toolkit</div>' +
+    '<h2>Your Personal Regulation Toolkit</h2>' +
+    '<p>A regulation toolkit is a pre-chosen set of tools that you decide on in advance, before a high-intensity emotional moment arrives. Pre-choosing is essential because the thinking brain has reduced capacity during emotional peaks - and reduced capacity means reduced ability to generate good ideas in the moment. Your toolkit removes the decision from the moment of highest stress and places it here, where the thinking brain is fully available.</p>' +
+    '<p>Select exactly 3 tools for your toolkit. One option is not a genuine regulation tool - click it to see why.</p>' +
+    '<div class="toolkit-chips">' + chips + '</div>' +
+    '<div class="toolkit-display">' +
+      '<div class="td-title">Your Regulation Toolkit</div>' +
+      '<div class="toolkit-items" id="toolkitItems"><span style="font-size:13px;font-weight:600;color:var(--text-soft)">Select 3 tools above...</span></div>' +
+    '</div>' +
+    '<div id="kitFeedback"></div>' +
+    '<button class="btn-primary" id="kitNextBtn" onclick="renderStage(9)" disabled>Next: Personal Regulation Plan -></button>' +
+  '</div>';
+}
+
+function s9() {
+  regValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Regulation') +
+    backBtn(8,'Back to Toolkit') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Personal Regulation Plan</div>' +
+    '<h2>Your Customised Regulation Plan</h2>' +
+    '<p>A regulation plan is a personalised, pre-written sequence that you can access when emotions are rising and the thinking brain\'s resources are reduced. Writing it in advance is the key: in the moment of high intensity, having a plan already decided means you are using the plan, not trying to create one while under pressure. The specificity of the plan determines how useful it is when you need it most.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your plan should include three elements:<br/>' +
+      '<strong>Body signal:</strong> Specifically what body sign will tell you that your emotions are rising?<br/>' +
+      '<strong>Tool:</strong> The specific regulation tool from your toolkit that you will deploy first<br/>' +
+      '<strong>Wise response:</strong> What does responding wisely look like in this moment?' +
+    '</div>' +
+    '<label class="input-label">When I feel my emotions rising, I can...</label>' +
+    '<textarea class="reflection-input" id="regInput" oninput="checkReg(this.value)" placeholder="For example: When I notice my jaw tightening and my heartbeat getting faster, I know my emotions are rising. I will stop what I am doing, take three slow breaths, and say to myself: I am feeling angry and that is okay. I do not need to react right now. Then I will speak about what I need calmly, after the breath..." rows="5"></textarea>' +
+    '<div class="char-counter" id="regCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg ocean-msg" style="margin-bottom:16px">🧠 <strong>Implementation intentions:</strong> Research by Peter Gollwitzer shows that "if-then" implementation intentions - "If I notice X, then I will do Y" - significantly increase the likelihood that a planned behaviour will actually occur under pressure. The specificity of the plan is directly related to its reliability in the moment. A plan that says "I will try to stay calm" provides no real guidance. A plan that says "When I feel my jaw tight, I will take three breaths and say I am frustrated" is usable.</div>' +
+    '<button class="btn-primary" id="regNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on the Pause -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Practising Regulation') +
+    backBtn(9,'Back to Regulation Plan') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Pausing Reduce Emotional Explosions?</h2>' +
+    '<p>The pause is the most important component in the entire regulation sequence - but understanding why it works makes it significantly more likely to be used when it is most needed. The mechanism is neurological, not mystical: the pause creates the conditions in which the prefrontal cortex can participate in the response, rather than the amygdala producing the reaction alone.</p>' +
+    '<p>Answer all three questions with as much depth and specificity as you can:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Explain in your own words what happens neurologically during an emotional peak - which brain systems are most active, and how does the pause change what is available?<br/>' +
+      '2. Why is it important to choose your regulation tools before an emotional moment arrives, rather than trying to think of them during the peak?<br/>' +
+      '3. Describe a specific recent situation where a pause would have produced a significantly different outcome. What would you have done differently?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about the amygdala, the prefrontal cortex, the switching cost of high emotion on rational thinking, the value of pre-decided tools, and a real situation from your own experience..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🏅 <strong>Badge Progress:</strong> Pause Master Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Transfer to Real Life -></button>' +
+  '</div>';
+}
+
+function s11() {
+  hibaTrigDone = false; hibaEmoDone = false; hibaStratDone = false; hibaTrigCount = 0;
+  function makeBtns(stepKey, fnName) {
+    return hibaSteps[stepKey].map(function(opt) {
+      return '<button class="hiba-btn" id="h' + stepKey.charAt(0) + '-' + opt.id + '" onclick="' + fnName + '(\'' + opt.id + '\',' + opt.correct + ')">' +
+        '<span class="hb-icon">' + opt.icon + '</span>' +
+        '<div><div class="hb-text">' + opt.text + '</div></div>' +
+      '</button>';
+    }).join('');
+  }
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer to Real-Life Scenarios') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Hiba\'s Ignored Message</h2>' +
+    '<div class="story-box" data-icon="📱">' +
+      '<p><span class="amber">Hiba</span> is twelve years old. She sent her closest friend a message this morning - something personal and important to her. Four hours later, the message is still unread. No response. The friend was active on another platform two hours ago. Hiba can feel something uncomfortable building: a tightness in her chest, a loop of wondering what she did wrong, an impulse to keep checking the phone.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify the emotional trigger</div>' +
+    '<div class="hiba-options">' + makeBtns('trigger','selectHibaTrig') + '</div>' +
+    '<div id="hibaTrigFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Identify the likely emotion</div>' +
+    '<div id="hibaEmoWrap" style="opacity:0.4;pointer-events:none"><div class="hiba-options">' + makeBtns('emotion','selectHibaEmo') + '</div></div>' +
+    '<div id="hibaEmoFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose the regulation strategy</div>' +
+    '<div id="hibaStratWrap" style="opacity:0.4;pointer-events:none"><div class="hiba-options">' + makeBtns('strategy','selectHibaStrat') + '</div></div>' +
+    '<div id="hibaStratFeedback"></div>' +
+    '<button class="btn-primary" id="hibaNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Escalation Sorting -></button>' +
+  '</div>';
+}
+
+function s12() {
+  sort2Plac = {}; sort2Sel = null;
+  var bank = sort2Items.map(function(c) {
+    return '<div class="sort-card-item" id="s2c-' + c.id + '" onclick="handleSort2Click(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer to Real-Life Scenarios') +
+    backBtn(11,'Back to Hiba\'s Scenario') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 12 - Escalation vs De-escalation</div>' +
+    '<h2>Does This Escalate or De-escalate?</h2>' +
+    '<p>Some behaviours maintain or amplify emotional intensity - they keep the wave high or push it higher. Others allow the wave to fall - they create conditions in which emotional intensity naturally decreases and regulation becomes easier. The distinction is not always obvious: some escalating behaviours feel relieving in the short term while actually maintaining the emotional state they claim to release.</p>' +
+    '<p>Sort each behaviour into the correct category. Pay particular attention to the ones that might initially seem like they would help.</p>' +
+    '<div class="sort-bank" id="sortBank2">' + bank + '</div>' +
+    '<div id="sortHint2" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a behaviour, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-escalate" onclick="placeSort2(\'escalate\')">' +
+        '<div class="sz-title">Escalates Emotion</div>' +
+        '<div class="sz-items" id="zone-escalate"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-deescalate" onclick="placeSort2(\'deescalate\')">' +
+        '<div class="sz-title">De-escalates Emotion</div>' +
+        '<div class="sz-items" id="zone-deescalate"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sort2Feedback"></div>' +
+    '<button class="btn-primary" id="sort2NextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer to Real-Life Scenarios') +
+    backBtn(12,'Back to Escalation Sort') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have navigated all three acts of the Emotional Regulation Mastery Lab with genuine depth. Let\'s confirm how clearly the core concepts have settled. Answer all three questions carefully - draw on everything you have explored today about emotional waves, the pause gap, and what creates lasting regulation capacity.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Regulation Master!</h2>' +
+    '<p>You completed the full Emotional Regulation Mastery Lab - all 3 Acts, 14 stages, and a genuine exploration of one of the most important human skills: choosing your response rather than being driven by your reaction. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">👁️</span><div class="b-title">Emotion Observer</div><div class="b-sub">Read the rising wave</div></div>' +
+      '<div class="badge-item"><span class="b-icon">⏸️</span><div class="b-title">Pause Master</div><div class="b-sub">Created the gap</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🧭</span><div class="b-title">Wise Responder</div><div class="b-sub">Chose the response</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">👁️</span><div><div class="sk-title">Reading the Wave Early</div><div class="sk-desc">Emotions rise like waves - they build gradually, reach a peak, and fall if not maintained. Early warning signs (tight jaw, fast heartbeat, hot face, clenched fists) are the body\'s signals that the wave is building. Catching these signals early is the foundation of regulation: the earlier detection happens, the more capacity is available for the regulation response. The pause gap is widest at the beginning of the wave, and narrowest at its peak.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">⏸️</span><div><div class="sk-title">The Pause Gap Is Power</div><div class="sk-desc">Between stimulus and response there is a space. The pause gap is that space made deliberate. Three slow breaths. Naming the emotion. Taking a step back. Each creates conditions in which the prefrontal cortex can participate in the response - rather than the amygdala producing the reaction alone. The pause does not eliminate the emotion. It creates access to choice. And choice is where wisdom lives.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🧭</span><div><div class="sk-title">Wise Response Over Reactive Discharge</div><div class="sk-desc">A reaction is produced by the alarm system without deliberate thought. A response is chosen by the thinking brain after a pause. Both begin with the same emotional experience. The difference is the pause gap between them. Regulation tools - breathing, naming, counting, movement - are the bridge between the emotional peak and the wise response. A pre-chosen toolkit, a pre-written plan, and repeated practice are what make this bridge available when it is most needed.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="🌊" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'The next time you feel a wave rising - face hot, fists tight, thoughts accelerating - you will remember this: the wave is not you. It is information about what matters to you. You do not have to be swept away by it. Three breaths. A name for the feeling. The gap widens. The wave begins to fall. And in that space, the response that reflects your actual values becomes possible. That is not weakness. That is the most sophisticated thing a human being can do. 🌊' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--ocean-dark),var(--teal-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ===== POST RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    warnSel.forEach(function(id) {
+      var item = warnData.find(function(w){ return w.id === id; });
+      var el = document.getElementById('wc-' + id);
+      if (el && item) el.classList.add('wc-' + item.mode);
+    });
+    checkWarn();
+  }
+  if (n === 3) restoreSort1UI();
+  if (n === 4) updateDual(dualLevel);
+  if (n === 8) {
+    kitSel.forEach(function(id) {
+      var el = document.getElementById('tc-' + id);
+      if (el) el.classList.add('tc-selected');
+    });
+    renderKit();
+    checkKit();
+  }
+  if (n === 9 && regText) {
+    var ta = document.getElementById('regInput');
+    if (ta) ta.value = regText;
+    checkReg(regText);
+  }
+  if (n === 10 && reflectText) {
+    var ta2 = document.getElementById('reflectInput');
+    if (ta2) ta2.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (hibaTrigDone) {
+        var ew = document.getElementById('hibaEmoWrap');
+        if (ew) { ew.style.opacity = '1'; ew.style.pointerEvents = 'auto'; }
+      }
+      if (hibaEmoDone) {
+        var sw = document.getElementById('hibaStratWrap');
+        if (sw) { sw.style.opacity = '1'; sw.style.pointerEvents = 'auto'; }
+      }
+      checkHibaComplete();
+    }, 60);
+  }
+  if (n === 12) restoreSort2UI();
+}
+
+/* ACT 1 */
+function toggleWarn(id, mode) {
+  var el = document.getElementById('wc-' + id);
+  if (warnSel.has(id)) {
+    warnSel.delete(id);
+    el.classList.remove('wc-rising'); el.classList.remove('wc-calm');
+  } else {
+    warnSel.add(id);
+    el.classList.add('wc-' + mode);
+  }
+  checkWarn();
+}
+
+function checkWarn() {
+  var risingCount = Array.from(warnSel).filter(function(id) {
+    return warnData.find(function(w){ return w.id === id; }).mode === 'rising';
+  }).length;
+  var calmCount = Array.from(warnSel).filter(function(id) {
+    return warnData.find(function(w){ return w.id === id; }).mode === 'calm';
+  }).length;
+  var fb = document.getElementById('warnFeedback');
+  var nb = document.getElementById('warnNextBtn');
+  if (risingCount === 4 && calmCount === 0) {
+    warnOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All four early warning signs correctly identified. Tight jaw, fast heartbeat, clenched fists, and face feeling hot are all physiological signals of the sympathetic nervous system activating - the body preparing for threat response. Calm breathing and relaxed posture are the opposite signals, indicating the parasympathetic system is active and the body is in a regulated state. Knowing which is which is the foundation of the "Notice the Body" step.</div>';
+    if (nb) nb.disabled = false;
+  } else if (calmCount > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Some of your selections are calm body signals - not rising emotion signs. Calm breathing and relaxed posture indicate a regulated nervous system, which is the opposite of what we are looking for here. Remove those selections and find the four signs that show the sympathetic nervous system activating.</div>';
+    if (nb) nb.disabled = true; warnOk = false;
+  } else {
+    if (fb && warnSel.size > 0) fb.innerHTML = '<div class="feedback-msg ocean-msg">' + risingCount + ' of 4 rising signals found. Keep going.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function handleSort1Click(id) {
+  if (sortPlac[id]) return;
+  sortSel = id;
+  document.querySelectorAll('#sortBank1 .sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('stc-' + id);
+  if (el) el.style.outline = '3px solid var(--ocean-dark)';
+  var hint = document.getElementById('sortHint1');
+  var item = sortItems.find(function(c){ return c.id === id; });
+  if (hint && item) hint.textContent = 'Now click a zone: "' + item.text + '"';
+}
+
+function placeSort1(zone) {
+  if (!sortSel) return;
+  var item = sortItems.find(function(c){ return c.id === sortSel; });
+  if (!item) return;
+  sortPlac[sortSel] = zone;
+  var el = document.getElementById('stc-' + sortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort1(\'' + sortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  sortSel = null;
+  var hint = document.getElementById('sortHint1');
+  if (hint) hint.textContent = 'Click another item to continue';
+  checkSort1Done();
+}
+
+function removeSort1(id, zone) {
+  delete sortPlac[id];
+  var el = document.getElementById('stc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = sortItems.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSort1Done();
+}
+
+function restoreSort1UI() {
+  Object.keys(sortPlac).forEach(function(id) {
+    var zone = sortPlac[id];
+    var item = sortItems.find(function(c){ return c.id === id; });
+    var el = document.getElementById('stc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort1(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSort1Done();
+}
+
+function checkSort1Done() {
+  var total = Object.keys(sortPlac).length;
+  var correct = sortItems.filter(function(c){ return sortPlac[c.id] === c.zone; }).length;
+  var fb = document.getElementById('sort1Feedback');
+  var nb = document.getElementById('sort1NextBtn');
+  if (total < sortItems.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg ocean-msg">' + total + ' of 6 placed.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === sortItems.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. Reactions (yelling, throwing objects, blaming others) are all automatic discharges that bypass deliberate thought - they happen before a pause has been created. Responses (pausing, taking a breath, speaking calmly) all involve a deliberate action between the emotional signal and the outward behaviour. Both begin with the same internal emotional experience. The pause gap is what separates them.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 6). Ask: does this behaviour involve any pause between the emotional signal and the outward action? No pause = reaction. Deliberate pause = response.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function updateDual(val) {
+  dualLevel = parseInt(val);
+  var iVal = dualLevel;
+  var cVal = 100 - dualLevel;
+  var state = getDualState(dualLevel);
+  if (!state) return;
+  var iF = document.getElementById('intFill');
+  var cF = document.getElementById('ctlFill');
+  var iP = document.getElementById('intPct');
+  var cP = document.getElementById('ctlPct');
+  var iM = document.getElementById('intMood');
+  var cM = document.getElementById('ctlMood');
+  var sl = document.getElementById('dualSl');
+  if (iF) iF.style.width = iVal + '%';
+  if (cF) cF.style.width = cVal + '%';
+  if (iP) iP.textContent = iVal + '%';
+  if (cP) cP.textContent = cVal + '%';
+  if (iM) iM.textContent = state.iMood;
+  if (cM) cM.textContent = state.cMood;
+  if (sl) {
+    var g1 = 'rgba(224,48,48,' + (0.30 + iVal/190) + ')';
+    var g2 = 'rgba(24,152,152,' + (0.30 + cVal/190) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+function choosePause(id) {
+  if (pauseLocked) return;
+  pauseLocked = true; pauseChoice = id;
+  var chosen = pauseOptions.find(function(p){ return p.id === id; });
+  pauseOptions.forEach(function(p) {
+    var el = document.getElementById('pb-' + p.id);
+    if (el) { if (p.id === id) el.classList.add('pb-' + p.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('pauseOutcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🌋 Intensity Level</span><span id="pIL">0%</span></div><div class="meter-track"><div class="meter-fill intensity-fill" id="pIF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🧭 Self-Control Level</span><span id="pCL">0%</span></div><div class="meter-track"><div class="meter-fill control-fill" id="pCF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var iF = document.getElementById('pIF'), cF = document.getElementById('pCF');
+    var iL = document.getElementById('pIL'), cL = document.getElementById('pCL');
+    if (iF) iF.style.width = chosen.intensLevel + '%';
+    if (cF) cF.style.width = chosen.ctrlLevel + '%';
+    if (iL) iL.textContent = chosen.intensLevel + '%';
+    if (cL) cL.textContent = chosen.ctrlLevel + '%';
+  }, 150);
+  var nw = document.getElementById('pauseNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+/* ACT 2 */
+function chooseReg1(id) {
+  if (reg1Locked) return;
+  reg1Locked = true; reg1Choice = id;
+  var regOpts = [
+    {id:'shout2', quality:'harmful', iL:94, cL:6,
+     outcome:{title:'Reactive Discharge', body:'Shouting back at the referee is a reactive discharge - the emotional energy is expelled directly without any regulation. In the moment, this can feel satisfying - the feeling of "getting it out." But the consequences of reactive emotional discharge in social settings are consistently worse than the original frustration. Relationships are damaged. Reputations are affected. And the brain learns that reactive discharge is the way this kind of situation is handled - making it more likely next time.', tip:'Principle: Reactive emotional discharge does not reduce the underlying emotional experience long-term. Research on "venting" consistently shows that it maintains or increases, rather than reduces, emotional intensity over time.'}
+    },
+    {id:'walk3', quality:'ok', iL:58, cL:38,
+     outcome:{title:'Removal Without Regulation', body:'Walking away is better than reactive escalation - it prevents the immediate situation from worsening and creates physical space that can be useful for regulation. But walking away while still at high emotional intensity often means the anger is displaced rather than regulated: it may express itself toward a different person, in a different context, or as ongoing rumination that maintains the emotional activation long after the original event.', tip:'Principle: Physical removal is a valid first step in de-escalation. Its effectiveness depends entirely on what happens next - whether actual regulation tools are deployed in the space created, or whether the emotional intensity simply continues without resolution.'}
+    },
+    {id:'reg', quality:'best', iL:24, cL:82,
+     outcome:{title:'The Regulation Sequence', body:'Three slow breaths activate parasympathetic physiological regulation. "I feel frustrated" recruits prefrontal processing and reduces amygdala activation through affect labelling. Speaking clearly from this regulated place allows the actual concern (the disputed call) to be communicated in a way that others can hear and respond to. This is the complete regulation sequence: notice, name, pause, tool, respond. And crucially, it demonstrates to Bilal\'s own brain that he can handle this - building genuine regulation capacity.', tip:'Research: Slow diaphragmatic breathing with an extended exhale is one of the most empirically supported rapid regulation tools. It directly activates the vagus nerve and parasympathetic nervous system, producing measurable reductions in cortisol and heart rate within 2-3 minutes.'}
+    }
+  ];
+  var chosen = regOpts.find(function(r){ return r.id === id; });
+  if (!chosen) return;
+  document.querySelectorAll('.reg-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('rb1-' + id);
+  if (el) el.classList.add('rb-' + chosen.quality);
+  var out = document.getElementById('reg1Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🌋 Intensity Level</span><span id="r1IL">0%</span></div><div class="meter-track"><div class="meter-fill intensity-fill" id="r1IF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🧭 Control Level</span><span id="r1CL">0%</span></div><div class="meter-track"><div class="meter-fill control-fill" id="r1CF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var iF = document.getElementById('r1IF'), cF = document.getElementById('r1CF');
+    var iL = document.getElementById('r1IL'), cL = document.getElementById('r1CL');
+    if (iF) iF.style.width = chosen.iL + '%';
+    if (cF) cF.style.width = chosen.cL + '%';
+    if (iL) iL.textContent = chosen.iL + '%';
+    if (cL) cL.textContent = chosen.cL + '%';
+  }, 150);
+  var nw = document.getElementById('reg1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function toggleKit(id, bad) {
+  if (bad) {
+    var el = document.getElementById('tc-' + id);
+    if (el) el.classList.add('tc-bad');
+    var fb = document.getElementById('kitFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Yelling is not a regulation tool - it is a reactive discharge that maintains or increases emotional intensity rather than reducing it. Research consistently shows that "getting it out" through emotional venting does not provide genuine relief; it rehearses and reinforces the emotional state. Remove this from your toolkit and choose one of the five genuine regulation tools instead.</div>';
+    return;
+  }
+  var el2 = document.getElementById('tc-' + id);
+  if (kitSel.has(id)) {
+    kitSel.delete(id);
+    if (el2) el2.classList.remove('tc-selected');
+  } else {
+    if (kitSel.size >= 3) return;
+    kitSel.add(id);
+    if (el2) el2.classList.add('tc-selected');
+  }
+  renderKit();
+  checkKit();
+}
+
+function renderKit() {
+  var items = document.getElementById('toolkitItems');
+  if (!items) return;
+  if (kitSel.size === 0) {
+    items.innerHTML = '<span style="font-size:13px;font-weight:600;color:var(--text-soft)">Select 3 tools above...</span>';
+    return;
+  }
+  items.innerHTML = Array.from(kitSel).map(function(id) {
+    var tc = toolChips.find(function(t){ return t.id === id; });
+    return tc ? '<div class="toolkit-item">' + tc.icon + ' ' + tc.text + '</div>' : '';
+  }).join('');
+}
+
+function checkKit() {
+  var fb = document.getElementById('kitFeedback');
+  var nb = document.getElementById('kitNextBtn');
+  if (kitSel.size === 3) {
+    kitOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Toolkit complete with 3 genuine regulation tools. Deep breathing, counting, positive self-talk, drinking water, and stretching all work through different physiological and cognitive pathways: breathing activates the parasympathetic system; counting redirects attention and occupies the thinking brain; positive self-talk recruits the prefrontal cortex; water provides a physical pause and mild physiological regulation; stretching releases physical tension and activates body awareness. Different tools work best in different situations - which is why having three gives genuine flexibility.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (nb) nb.disabled = true; kitOk = false;
+    if (fb && kitSel.size > 0 && !fb.innerHTML.includes('incorrect')) fb.innerHTML = '<div class="feedback-msg ocean-msg">' + kitSel.size + ' of 3 tools selected. Choose one more.</div>';
+  }
+}
+
+function checkReg(val) {
+  regText = val;
+  var len = val.trim().length;
+  regValid = len >= 40;
+  var c = document.getElementById('regCounter');
+  var b = document.getElementById('regNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (regValid ? ' met' : ''); }
+  if (b) b.disabled = !regValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ACT 3 */
+var hibaTCount = 0;
+var hibaTCorrect = 0;
+
+function selectHibaTrig(id, correct) {
+  var el = document.getElementById('ht-' + id);
+  if (el && (el.classList.contains('hb-correct') || el.classList.contains('hb-incorrect'))) return;
+  if (el) el.classList.add(correct ? 'hb-correct' : 'hb-incorrect');
+  hibaTCount++;
+  if (hibaTCount >= 3) {
+    hibaTrigDone = true;
+    var fb = document.getElementById('hibaTrigFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correctly identified. The emotional trigger is the specific event that activates the emotional response: the friend not replying to the message. A different lunch is neutral - it produces no particular emotional activation. Hard homework produces frustration, not the hurt-and-worried emotional pattern that matches this scenario. Identifying the specific trigger precisely is important because it determines which regulation approach will be most effective.</div>';
+    var ew = document.getElementById('hibaEmoWrap');
+    if (ew) { ew.style.opacity = '1'; ew.style.pointerEvents = 'auto'; }
+    checkHibaComplete();
+  }
+}
+
+function selectHibaEmo(id, correct) {
+  if (hibaEmoDone) return;
+  hibaEmoDone = true;
+  document.querySelectorAll('#hibaEmoWrap .hiba-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('he-' + id);
+  if (el) el.classList.add(correct ? 'hb-correct' : 'hb-incorrect');
+  var fb = document.getElementById('hibaEmoFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Accurate identification. The combination of a tight chest, checking behaviour, and wondering "what did I do wrong" points to hurt and anxiety rather than anger or boredom. Social uncertainty - particularly around a valued relationship - typically activates attachment-related emotional responses: hurt (the relationship connection feels threatened) and worry (about what the silence means). Naming this accurately allows the regulation approach to target the actual emotional experience.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">The emotional signals described - chest tightness, repeated checking, wondering what she did wrong - point specifically to hurt and worry, not happiness or boredom. The correct emotion is highlighted. Accurate emotion identification matters because different emotions call for different regulation approaches.</div>';
+    var c2 = document.getElementById('he-hurt');
+    if (c2) c2.classList.add('hb-correct');
+  }
+  var sw = document.getElementById('hibaStratWrap');
+  if (sw) { sw.style.opacity = '1'; sw.style.pointerEvents = 'auto'; }
+  checkHibaComplete();
+}
+
+function selectHibaStrat(id, correct) {
+  if (hibaStratDone) return;
+  hibaStratDone = true;
+  document.querySelectorAll('#hibaStratWrap .hiba-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('hs-' + id);
+  if (el) el.classList.add(correct ? 'hb-correct' : 'hb-incorrect');
+  var fb = document.getElementById('hibaStratFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The most emotionally intelligent strategy. Naming the feeling ("I feel hurt and worried") brings the prefrontal cortex into the experience. Generating one non-negative explanation ("she is probably busy, or her phone died") directly challenges the catastrophic default interpretation with a realistic alternative - not forced positivity, but genuine cognitive flexibility. Waiting rather than sending multiple messages allows the situation to resolve itself naturally and preserves the friendship dynamic.</div>';
+  } else if (id === 'send') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Ten follow-up messages would escalate both Hiba\'s own emotional intensity (each unanswered message increases the anxiety) and likely strain the friendship. This is a reactive response driven by anxiety rather than a regulated, wise response. The correct strategy is highlighted.</div>';
+    var c2 = document.getElementById('hs-pause');
+    if (c2) c2.classList.add('hb-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Assuming the worst and feeling bad all day is a form of cognitive escalation - it maintains and amplifies the emotional state through rumination. The correct strategy - name, reframe, wait - is highlighted.</div>';
+    var c3 = document.getElementById('hs-pause');
+    if (c3) c3.classList.add('hb-correct');
+  }
+  checkHibaComplete();
+}
+
+function checkHibaComplete() {
+  if (hibaTrigDone && hibaEmoDone && hibaStratDone) {
+    var b = document.getElementById('hibaNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function handleSort2Click(id) {
+  if (sort2Plac[id]) return;
+  sort2Sel = id;
+  document.querySelectorAll('#sortBank2 .sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('s2c-' + id);
+  if (el) el.style.outline = '3px solid var(--ocean-dark)';
+  var hint = document.getElementById('sortHint2');
+  var item = sort2Items.find(function(c){ return c.id === id; });
+  if (hint && item) hint.textContent = 'Now click a zone: "' + item.text + '"';
+}
+
+function placeSort2(zone) {
+  if (!sort2Sel) return;
+  var item = sort2Items.find(function(c){ return c.id === sort2Sel; });
+  if (!item) return;
+  sort2Plac[sort2Sel] = zone;
+  var el = document.getElementById('s2c-' + sort2Sel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort2(\'' + sort2Sel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  sort2Sel = null;
+  var hint = document.getElementById('sortHint2');
+  if (hint) hint.textContent = 'Click another item to continue';
+  checkSort2Done();
+}
+
+function removeSort2(id, zone) {
+  delete sort2Plac[id];
+  var el = document.getElementById('s2c-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = sort2Items.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSort2Done();
+}
+
+function restoreSort2UI() {
+  Object.keys(sort2Plac).forEach(function(id) {
+    var zone = sort2Plac[id];
+    var item = sort2Items.find(function(c){ return c.id === id; });
+    var el = document.getElementById('s2c-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort2(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSort2Done();
+}
+
+function checkSort2Done() {
+  var total = Object.keys(sort2Plac).length;
+  var correct = sort2Items.filter(function(c){ return sort2Plac[c.id] === c.zone; }).length;
+  var fb = document.getElementById('sort2Feedback');
+  var nb = document.getElementById('sort2NextBtn');
+  if (total < sort2Items.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg ocean-msg">' + total + ' of 8 placed.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === sort2Items.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. De-escalating behaviours (slow breathing, calm walking, journalling, calming music) all activate parasympathetic nervous system function and allow the emotional wave to fall naturally. Escalating behaviours (door slamming, ruminating, reading angry content, retaliating) all maintain high sympathetic activation and keep the wave at or above its current level - or push it higher. Note that some escalating behaviours (door slamming, retaliating) may feel satisfying briefly, but they maintain emotional intensity rather than reducing it.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 8). Ask: after doing this, will the emotional intensity be higher or lower than before? Higher = escalates. Lower = de-escalates. Be careful with door slamming and retaliating - they may feel good briefly but maintain high activation.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function answerQuiz(qi, oi, correct) {
+  if (quizAnswers[qi] !== undefined) return;
+  quizAnswers[qi] = correct;
+  var q = quizData[qi];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qi + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === oi) el.classList.add(correct ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qi);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (correct ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = correct ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  warnSel = new Set(); warnOk = false;
+  sortPlac = {}; sortSel = null;
+  dualLevel = 82;
+  pauseChoice = null; pauseLocked = false;
+  reg1Choice = null; reg1Locked = false;
+  kitSel = new Set(); kitOk = false;
+  regText = ''; regValid = false;
+  reflectText = ''; reflectValid = false;
+  hibaTrigDone = false; hibaEmoDone = false; hibaStratDone = false;
+  hibaTrigCount = 0; hibaTCount = 0; hibaTCorrect = 0;
+  sort2Plac = {}; sort2Sel = null;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#1848c0','#189898','#d89020','#e03030','#18c878','#7838c8','#a8c8f8','#a0f0c0'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

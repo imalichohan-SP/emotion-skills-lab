@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Emotion Detective Mission — Premium EQ Module</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+/* ============================================= CSS VARIABLES & RESET ============================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--card:#ffffff;--blue:#a8c5f0;--blue-dark:#6a9fd8;
+  --green:#a8e6cf;--green-dark:#4caf88;--yellow:#ffd98a;--yellow-dark:#e6a820;
+  --peach:#ffb8a0;--peach-dark:#e07050;--lavender:#c9b8f0;--purple:#9b7fd4;--teal:#6ec6b8;
+  --text:#2d3a5a;--text-soft:#6b7a9a;
+  --shadow-sm:0 4px 16px rgba(100,130,200,0.13);--shadow-md:0 8px 32px rgba(100,130,200,0.18);--shadow-lg:0 16px 48px rgba(100,130,200,0.22);
+  --radius:20px;--radius-sm:12px;--transition:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(circle at 15% 20%,rgba(168,197,240,0.25) 0%,transparent 50%),
+    radial-gradient(circle at 85% 75%,rgba(168,230,207,0.20) 0%,transparent 50%),
+    radial-gradient(circle at 50% 50%,rgba(255,217,138,0.12) 0%,transparent 60%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* ============================================= HEADER ============================================= */
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue),var(--lavender));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(24px,5vw,34px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--blue-dark)}
+.header p{font-size:15px;color:var(--text-soft);font-weight:600}
+
+/* ============================================= ACT BANNER ============================================= */
+.act-banner{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.6px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(168,197,240,0.18);color:var(--blue-dark);border:1.5px solid rgba(168,197,240,0.35)}
+.act-banner.act2{background:rgba(155,127,212,0.12);color:var(--purple);border:1.5px solid rgba(155,127,212,0.3)}
+.act-banner.act3{background:rgba(255,217,138,0.2);color:var(--yellow-dark);border:1.5px solid rgba(255,217,138,0.45)}
+.act-banner .act-icon{font-size:20px}
+
+/* ============================================= PROGRESS ============================================= */
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(168,197,240,0.25);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.06)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-dark),var(--lavender));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(106,159,216,0.4)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(168,197,240,0.35);transition:var(--transition)}
+.stage-dot.active{background:var(--blue-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+/* ============================================= STAGE CARD ============================================= */
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(168,197,240,0.2);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(168,197,240,0.15),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue-dark);background:rgba(168,197,240,0.18);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.purple{color:var(--purple);background:rgba(155,127,212,0.12)}
+.stage-label.gold{color:var(--yellow-dark);background:rgba(255,217,138,0.22)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+/* ============================================= STORY BOX ============================================= */
+.story-box{background:linear-gradient(135deg,rgba(168,197,240,0.12),rgba(168,230,207,0.10));border:1.5px solid rgba(168,197,240,0.3);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--blue-dark);font-style:normal}
+.story-box p span.green{color:var(--green-dark)}
+
+/* ============================================= CLUE GRID ============================================= */
+.clue-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0 28px}
+.clue-card{background:var(--bg);border:2px solid rgba(168,197,240,0.3);border-radius:var(--radius-sm);padding:18px 16px;cursor:pointer;transition:var(--transition);text-align:center;position:relative;overflow:hidden}
+.clue-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(168,197,240,0.15),rgba(168,230,207,0.10));opacity:0;transition:var(--transition)}
+.clue-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.clue-card:hover::after{opacity:1}
+.clue-card.selected{border-color:var(--blue-dark);background:linear-gradient(135deg,rgba(168,197,240,0.22),rgba(201,184,240,0.15));box-shadow:0 0 0 3px rgba(106,159,216,0.2),var(--shadow-sm);transform:translateY(-2px)}
+.clue-card.selected::after{opacity:1}
+.clue-icon{font-size:28px;margin-bottom:8px;display:block;transition:transform 0.3s ease}
+.clue-card:hover .clue-icon,.clue-card.selected .clue-icon{transform:scale(1.2)}
+.clue-text{font-size:13.5px;font-weight:800;color:var(--text);line-height:1.35;position:relative;z-index:1}
+.clue-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--blue-dark);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--transition)}
+.clue-card.selected .clue-check{opacity:1;transform:scale(1)}
+.clue-hint{font-size:13px;color:var(--text-soft);font-weight:700;text-align:center;margin-top:-8px;margin-bottom:20px}
+
+/* ============================================= EMOTION BUTTONS ============================================= */
+.emotion-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;margin:22px 0 28px}
+.emotion-btn{background:var(--bg);border:2px solid rgba(168,197,240,0.25);border-radius:var(--radius-sm);padding:16px 10px;cursor:pointer;transition:var(--transition);text-align:center;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:8px}
+.emotion-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.emotion-btn .e-icon{font-size:30px;transition:transform 0.3s ease}
+.emotion-btn:hover .e-icon{transform:scale(1.18)}
+.emotion-btn.correct{border-color:var(--green-dark);background:linear-gradient(135deg,rgba(168,230,207,0.28),rgba(76,175,136,0.12));box-shadow:0 0 0 3px rgba(76,175,136,0.25),var(--shadow-sm);animation:correctPop 0.4s ease}
+.emotion-btn.incorrect{border-color:var(--peach-dark);background:linear-gradient(135deg,rgba(255,184,160,0.25),rgba(224,112,80,0.10));box-shadow:0 0 0 3px rgba(224,112,80,0.2);animation:wrongShake 0.4s ease}
+
+/* ============================================= FEEDBACK MESSAGES ============================================= */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;text-align:center;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(168,230,207,0.3);color:#2e7a5a;border:1.5px solid rgba(76,175,136,0.3)}
+.feedback-msg.incorrect-msg{background:rgba(255,184,160,0.3);color:#b84020;border:1.5px solid rgba(224,112,80,0.3)}
+.feedback-msg.info-msg{background:rgba(168,197,240,0.2);color:var(--blue-dark);border:1.5px solid rgba(168,197,240,0.4)}
+.feedback-msg.purple-msg{background:rgba(155,127,212,0.12);color:var(--purple);border:1.5px solid rgba(155,127,212,0.3)}
+
+/* ============================================= SLIDER ============================================= */
+.slider-wrap{margin:24px 0 10px}
+.slider-labels{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12.5px;font-weight:800;color:var(--text-soft)}
+.intensity-slider{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:999px;outline:none;cursor:pointer}
+.intensity-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);box-shadow:0 3px 12px rgba(106,159,216,0.4);cursor:pointer;transition:transform 0.2s ease}
+.intensity-slider::-webkit-slider-thumb:hover,.intensity-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.intensity-slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);cursor:pointer}
+.intensity-display{margin-top:20px;text-align:center;padding:16px;background:linear-gradient(135deg,rgba(168,197,240,0.15),rgba(201,184,240,0.10));border-radius:var(--radius-sm);border:1.5px solid rgba(168,197,240,0.25)}
+.intensity-display .intensity-emoji{font-size:36px;display:block;margin-bottom:6px}
+.intensity-display .intensity-label{font-size:16px;font-weight:900;color:var(--text)}
+
+/* ============================================= TEXT INPUTS ============================================= */
+.reflection-input,.short-input{width:100%;background:var(--bg);border:2px solid rgba(168,197,240,0.35);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--transition);margin-bottom:14px}
+.reflection-input{min-height:110px}
+.short-input{min-height:76px}
+.reflection-input::placeholder,.short-input::placeholder{color:rgba(107,122,154,0.55)}
+.reflection-input:focus,.short-input:focus{border-color:var(--blue-dark);box-shadow:0 0 0 3px rgba(106,159,216,0.18);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--green-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* ============================================= BUTTONS ============================================= */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--lavender));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--transition);box-shadow:0 6px 20px rgba(106,159,216,0.35);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(106,159,216,0.45)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(155,127,212,0.1);color:var(--purple);border:2px solid rgba(155,127,212,0.35);border-radius:14px;padding:13px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:var(--transition);flex:1}
+.btn-secondary:hover{background:rgba(155,127,212,0.18);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(168,197,240,0.4);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--transition);margin-bottom:22px}
+.btn-back:hover{background:rgba(168,197,240,0.12);border-color:var(--blue-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:22px;background:var(--bg);border:2px solid rgba(168,197,240,0.35);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--transition)}
+.btn-restart:hover{background:#fff;border-color:var(--blue-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* ============================================= DECISION GRID ============================================= */
+.decision-grid{display:flex;flex-direction:column;gap:14px;margin:20px 0 24px}
+.decision-btn{display:flex;align-items:center;gap:16px;background:var(--bg);border:2px solid rgba(168,197,240,0.28);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--transition);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.decision-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.decision-btn .d-icon{font-size:32px;flex-shrink:0;transition:transform 0.3s ease}
+.decision-btn:hover .d-icon{transform:scale(1.15)}
+.decision-btn .d-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.decision-btn .d-sub{font-size:12.5px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.decision-btn.selected-bad{border-color:var(--peach-dark);background:rgba(255,184,160,0.15);animation:wrongShake 0.4s ease}
+.decision-btn.selected-ok{border-color:var(--yellow-dark);background:rgba(255,217,138,0.18);animation:correctPop 0.4s ease}
+.decision-btn.selected-best{border-color:var(--green-dark);background:rgba(168,230,207,0.22);animation:correctPop 0.4s ease}
+
+/* ============================================= OUTCOME METERS ============================================= */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(168,197,240,0.2);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.nervous{background:linear-gradient(90deg,var(--peach),var(--peach-dark));box-shadow:0 2px 8px rgba(224,112,80,0.3)}
+.meter-fill.confident{background:linear-gradient(90deg,var(--green),var(--green-dark));box-shadow:0 2px 8px rgba(76,175,136,0.3)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.bad{background:rgba(255,184,160,0.2);border:1.5px solid rgba(224,112,80,0.3)}
+.outcome-box.ok{background:rgba(255,217,138,0.2);border:1.5px solid rgba(230,168,32,0.3)}
+.outcome-box.best{background:rgba(168,230,207,0.22);border:1.5px solid rgba(76,175,136,0.3)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* ============================================= BREATHING CIRCLE ============================================= */
+.breathing-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 0 16px;gap:20px}
+.breath-circle-container{position:relative;width:160px;height:160px}
+.breath-circle{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(168,197,240,0.5),rgba(201,184,240,0.3));border:3px solid rgba(106,159,216,0.4);display:flex;align-items:center;justify-content:center;transition:transform 4s ease-in-out,background 4s ease-in-out,box-shadow 4s ease-in-out;box-shadow:0 0 0 0 rgba(106,159,216,0.3)}
+.breath-circle.inhale{transform:scale(1.5);background:radial-gradient(circle,rgba(168,197,240,0.65),rgba(106,159,216,0.35));box-shadow:0 0 40px 10px rgba(106,159,216,0.2)}
+.breath-circle.hold{transform:scale(1.5);background:radial-gradient(circle,rgba(201,184,240,0.65),rgba(155,127,212,0.35));box-shadow:0 0 40px 10px rgba(155,127,212,0.2)}
+.breath-circle.exhale{transform:scale(1);background:radial-gradient(circle,rgba(168,230,207,0.6),rgba(76,175,136,0.25));box-shadow:0 0 20px 4px rgba(76,175,136,0.15)}
+.breath-circle-inner{font-size:36px}
+.breath-instruction{font-size:20px;font-weight:900;color:var(--text);text-align:center;min-height:32px}
+.breath-sub{font-size:14px;font-weight:600;color:var(--text-soft);text-align:center;max-width:300px}
+.breath-cycles{display:flex;gap:10px}
+.breath-cycle-dot{width:14px;height:14px;border-radius:50%;background:rgba(168,197,240,0.3);border:2px solid rgba(168,197,240,0.4);transition:all 0.5s ease}
+.breath-cycle-dot.active{background:var(--blue-dark);border-color:var(--blue-dark);transform:scale(1.2)}
+.breath-cycle-dot.done{background:var(--green-dark);border-color:var(--green-dark)}
+.breath-timer{font-size:13px;font-weight:800;color:var(--text-soft);background:rgba(168,197,240,0.15);padding:6px 14px;border-radius:999px}
+
+/* ============================================= THOUGHT BUBBLES ============================================= */
+.thought-grid{display:flex;flex-direction:column;gap:14px;margin:18px 0 24px}
+.thought-bubble{position:relative;background:var(--bg);border:2px solid rgba(168,197,240,0.3);border-radius:18px;padding:18px 20px 18px 62px;cursor:pointer;transition:var(--transition);font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:700;color:var(--text);line-height:1.5;text-align:left;width:100%}
+.thought-bubble::before{content:attr(data-icon);font-size:26px;position:absolute;left:16px;top:50%;transform:translateY(-50%)}
+.thought-bubble:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.thought-bubble.unhelpful-selected{border-color:var(--peach-dark);background:rgba(255,184,160,0.18);animation:correctPop 0.35s ease}
+.thought-bubble.helpful-selected{border-color:var(--green-dark);background:rgba(168,230,207,0.2);animation:correctPop 0.35s ease}
+.thought-instructions{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.thought-pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;padding:7px 14px;border-radius:999px;border:2px solid}
+.thought-pill.unhelpful{color:var(--peach-dark);border-color:rgba(224,112,80,0.35);background:rgba(255,184,160,0.1)}
+.thought-pill.helpful{color:var(--green-dark);border-color:rgba(76,175,136,0.35);background:rgba(168,230,207,0.12)}
+.thought-pill.pending{opacity:0.5}
+.thought-pill.done{opacity:1}
+
+/* ============================================= QUIZ ============================================= */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(168,197,240,0.28);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--transition);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--blue);background:rgba(168,197,240,0.08);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--green-dark);background:rgba(168,230,207,0.22);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--peach-dark);background:rgba(255,184,160,0.18);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--green-dark);background:rgba(168,230,207,0.14);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(168,230,207,0.3);color:#2e7a5a}
+.quiz-feedback.q-fb-incorrect{background:rgba(255,184,160,0.3);color:#b84020}
+
+/* ============================================= EMOJI SELECTOR / MOOD CHIPS ============================================= */
+.emoji-selector{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0 24px}
+.emoji-opt{display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--bg);border:2px solid rgba(168,197,240,0.28);border-radius:var(--radius-sm);padding:14px 12px;cursor:pointer;transition:var(--transition);font-family:'Nunito',sans-serif;min-width:72px}
+.emoji-opt:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.emoji-opt .em-face{font-size:30px;transition:transform 0.3s ease}
+.emoji-opt:hover .em-face{transform:scale(1.2)}
+.emoji-opt .em-label{font-size:11.5px;font-weight:800;color:var(--text-soft);text-align:center}
+.emoji-opt.selected{border-color:var(--purple);background:rgba(155,127,212,0.1);box-shadow:0 0 0 3px rgba(155,127,212,0.18),var(--shadow-sm);transform:translateY(-2px)}
+.emoji-opt.selected .em-label{color:var(--purple)}
+.mood-chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.mood-chip{background:var(--bg);border:2px solid rgba(168,197,240,0.3);border-radius:999px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--transition)}
+.mood-chip:hover{border-color:var(--blue-dark);color:var(--text);background:rgba(168,197,240,0.1)}
+.mood-chip.selected{background:linear-gradient(135deg,var(--blue),var(--lavender));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(106,159,216,0.35)}
+
+/* ============================================= BADGE GRID ============================================= */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(255,217,138,0.18),rgba(255,184,160,0.14));border:1.5px solid rgba(255,217,138,0.4);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+/* ============================================= SKILLS SUMMARY ============================================= */
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(168,197,240,0.25);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+/* ============================================= SECTION DIVIDER ============================================= */
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(168,197,240,0.3);border-radius:999px}
+
+/* ============================================= CELEBRATION OVERLAY ============================================= */
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,244,255,0.92);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(168,197,240,0.25);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(168,197,240,0.08),rgba(168,230,207,0.07),rgba(255,217,138,0.06));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+
+/* ============================================= CONFETTI CANVAS ============================================= */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* ============================================= ANIMATIONS ============================================= */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+/* ============================================= RESPONSIVE ============================================= */
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .clue-grid{gap:10px}
+  .emotion-grid{grid-template-columns:repeat(3,1fr)}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+  .badge-item{padding:14px 8px}
+  .badge-item .b-icon{font-size:28px}
+  .breath-circle,.breath-circle-container{width:130px;height:130px}
+  .thought-bubble{padding-left:52px}
+  .thought-instructions{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🔎 EQ Mission</div>
+    <h1>Emotion <span>Detective</span> Mission</h1>
+    <p>Investigate feelings • Make smart decisions • Grow your EQ</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🎉</div>
+    <h2>Mission Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You are now a certified Emotion Detective!</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Emotion Detective</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🧘</span><div class="b-title">Calm Thinker</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💡</span><div class="b-title">Smart Decision Maker</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartMission()" style="width:100%;justify-content:center;display:flex;margin-top:16px">↩ Start the Mission Again</button>
+  </div>
+</div>
+
+<script>
+/* =============================================
+   CONSTANTS
+============================================= */
+const TOTAL_STAGES = 14;
+
+/* =============================================
+   STATE
+============================================= */
+let currentStage = 1;
+// Act 1
+let selectedClues       = new Set();
+let reasoningText       = '';
+let emotionAnswered     = false;
+let emotionCorrect      = false;
+let bodyThoughtsValid   = false;
+// Act 2
+let breathingComplete   = false;
+let breathTimers        = [];
+let act2Choice          = null;
+let act2DecisionLocked  = false;
+let act2TryChoice       = null;
+let act2ReflectionValid = false;
+// Act 3
+let saraClues               = new Set();
+let saraEmotionAnswered     = false;
+let saraEmotionCorrect      = false;
+let thoughtUnhelpful        = null;
+let thoughtHelpful          = null;
+let saraStrategyChosen      = null;
+let personalEmojiSelected   = null;
+let personalMoodsSelected   = new Set();
+let quizAnswers             = {};
+
+/* =============================================
+   DATA — ACT 1
+============================================= */
+const aliClues = [
+  {id:'sweaty', icon:'💧', text:'Sweaty, clammy hands'},
+  {id:'heart',  icon:'💓', text:'Heart racing in his chest'},
+  {id:'front',  icon:'🎤', text:'Standing alone at the front'},
+  {id:'eyes',   icon:'👀', text:'Thirty pairs of eyes on him'}
+];
+
+const aliEmotions = [
+  {id:'excited', icon:'🤩', label:'Excited',  correct:false},
+  {id:'nervous', icon:'😰', label:'Nervous',  correct:true},
+  {id:'angry',   icon:'😠', label:'Angry',    correct:false},
+  {id:'bored',   icon:'😑', label:'Bored',    correct:false},
+  {id:'happy',   icon:'😄', label:'Happy',    correct:false}
+];
+
+const intensityLevels = [
+  {range:[0,20],   emoji:'😌', label:'Just a Little Nervous'},
+  {range:[21,40],  emoji:'🙁', label:'Slightly Nervous'},
+  {range:[41,60],  emoji:'😟', label:'Moderately Nervous'},
+  {range:[61,80],  emoji:'😰', label:'Pretty Nervous'},
+  {range:[81,100], emoji:'😱', label:'Very Nervous!'}
+];
+
+/* =============================================
+   DATA — ACT 2
+============================================= */
+const decisions = [
+  {
+    id:'run', icon:'🏃', text:'Run away from the presentation',
+    sub:'Leave the classroom to escape the fear',
+    quality:'bad', nervousLevel:85, confidentLevel:10,
+    outcome:{
+      title:'😬 Running Away',
+      body:'Ali rushes out before the teacher calls his name. His heart is still pounding — maybe even faster than before. The short-term relief is real, but it comes at a cost. His brain has now recorded this moment as confirmation that presentations are genuinely dangerous. Next time, the anxiety will arrive earlier, stronger, and harder to manage.',
+      tip:'💡 Science says: Avoidance reinforces fear. Facing something difficult — even imperfectly — is how the brain learns to feel safe again.'
+    }
+  },
+  {
+    id:'breathe', icon:'🌬️', text:'Take 3 slow, deep breaths',
+    sub:'Breathe in for 4 counts, hold for 2, breathe out for 6',
+    quality:'best', nervousLevel:32, confidentLevel:75,
+    outcome:{
+      title:'✅ Deep Breathing Works',
+      body:'Ali closes his eyes for ten seconds and breathes — slowly, deliberately. With each long exhale, a calming signal travels from his lungs to his brain. His heart rate drops. His hands steady. The fog of panic begins to lift. He walks to the front feeling not fearless, but capable. The breathing didn\'t eliminate the nervousness — it brought it to a manageable level.',
+      tip:'💡 Science says: A long, slow exhale activates the parasympathetic nervous system — your body\'s built-in calm response. It\'s one of the fastest and most powerful tools for emotional regulation.'
+    }
+  },
+  {
+    id:'affirm', icon:'💬', text:'Tell himself "I prepared. I can do this."',
+    sub:'Use positive self-talk to shift the inner narrative',
+    quality:'ok', nervousLevel:52, confidentLevel:62,
+    outcome:{
+      title:'👍 Positive Self-Talk Helps',
+      body:'Ali whispers quietly: "I rehearsed this five times. I know this material." His inner voice — which had been predicting disaster — shifts slightly toward possibility. His confidence grows noticeably. He still feels nervous, but the self-talk creates enough mental space to take the first step forward.',
+      tip:'💡 Science says: Specific, honest self-talk ("I practised five times") is more effective than vague reassurance ("It will be fine"). The brain responds to evidence, not just encouragement.'
+    }
+  }
+];
+
+/* =============================================
+   DATA — ACT 3
+============================================= */
+const saraClueData = [
+  {id:'new',     icon:'👟', text:'First day with a brand new team'},
+  {id:'watch',   icon:'👁️', text:'Experienced players watching her'},
+  {id:'stomach', icon:'🦋', text:'Butterflies fluttering in her stomach'},
+  {id:'quiet',   icon:'🤐', text:'She goes very quiet and withdrawn'}
+];
+
+const saraEmotionData = [
+  {id:'nervous',   icon:'😰', label:'Nervous',   correct:true},
+  {id:'excited',   icon:'🤩', label:'Excited',   correct:false},
+  {id:'sad',       icon:'😢', label:'Sad',       correct:false},
+  {id:'confident', icon:'😎', label:'Confident', correct:false},
+  {id:'angry',     icon:'😠', label:'Angry',     correct:false}
+];
+
+const thoughtBubbles = [
+  {id:'judge',  icon:'😟', text:'"They will judge me if I make a mistake."',      type:'unhelpful'},
+  {id:'belong', icon:'😞', text:'"I don\'t belong here. I\'m not good enough."', type:'unhelpful'},
+  {id:'try',    icon:'💪', text:'"I can try my best and see what happens."',      type:'helpful'}
+];
+
+const saraStrategies = [
+  {
+    id:'ignore', icon:'🙈',
+    text:'Ignore the feeling and just play',
+    sub:'Push the nervousness aside and focus on the game',
+    quality:'ok',
+    outcome:'Suppressing feelings doesn\'t make them disappear — they tend to surface unexpectedly. Focusing on the game does help a little, but the underlying nervousness remains active. This is a short-term fix, not a long-term skill.'
+  },
+  {
+    id:'breathe', icon:'🌬️',
+    text:'Take a few slow, deep breaths',
+    sub:'Use the calming breathing technique from Act 2',
+    quality:'best',
+    outcome:'Excellent choice! Sara takes three slow breaths before the first whistle. Her nervous system shifts from alert to calm. Her muscles relax slightly. Her focus sharpens. She steps onto the field feeling prepared — not fearless, but ready to try.'
+  },
+  {
+    id:'remind', icon:'⭐',
+    text:'Remind herself why she loves soccer',
+    sub:'Reconnect with her genuine strengths and passion',
+    quality:'best',
+    outcome:'Smart choice! Sara recalls the feeling of her best goal, the sound of the ball connecting perfectly with her boot. Her nervous feeling begins to blend with excitement and purpose — this is called <strong>cognitive reframing</strong>: transforming a threatening feeling into a motivating one by changing what you focus on.'
+  }
+];
+
+const personalEmojis = [
+  {face:'😰', label:'Very often'},
+  {face:'😟', label:'Sometimes'},
+  {face:'😊', label:'A little'},
+  {face:'😌', label:'Rarely'},
+  {face:'😎', label:'Almost never'}
+];
+
+const moodChips = ['Before a test','Meeting new people','Trying something new','Sports or performance','Speaking in public','After making a mistake'];
+
+/* =============================================
+   QUIZ DATA
+============================================= */
+const quizData = [
+  {
+    q:'Question 1: Which of these is a physical BODY clue that someone is feeling nervous?',
+    options:[
+      {icon:'💧', text:'Sweaty palms and a racing heartbeat', correct:true},
+      {icon:'😴', text:'Feeling drowsy and yawning slowly',    correct:false},
+      {icon:'😂', text:'Laughing and feeling completely calm', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right! When we\'re nervous, the body activates its stress response — heart rate increases, palms sweat, and breathing speeds up. These are signals that the brain believes something important or potentially threatening is happening.',
+      incorrect:'Not quite. Sweaty palms and a racing heart are the classic physical signs of nervousness — the body\'s stress response preparing us for action. Drowsiness and laughter are signs of relaxation, not nervousness.'
+    }
+  },
+  {
+    q:'Question 2: Which calming strategy works by activating the body\'s natural calm response?',
+    options:[
+      {icon:'🏃', text:'Running away from the situation', correct:false},
+      {icon:'🌬️', text:'Slow, deep breathing with a long exhale', correct:true},
+      {icon:'📱', text:'Quickly distracting yourself with a screen', correct:false}
+    ],
+    feedback:{
+      correct:'Correct! A long, slow exhale sends a direct signal to the parasympathetic nervous system — the part of your nervous system responsible for rest and calm. It counteracts the stress response almost immediately.',
+      incorrect:'Not this one. Slow breathing — especially a long exhale — is what directly activates the body\'s calm system. Running away increases stress, and screens simply delay rather than resolve the emotional response.'
+    }
+  },
+  {
+    q:'Question 3: Why doesn\'t running away from something scary help in the long run?',
+    options:[
+      {icon:'✅', text:'It does help — avoiding things makes them less scary over time', correct:false},
+      {icon:'🔄', text:'The brain learns the situation is dangerous, so fear grows stronger', correct:true},
+      {icon:'😌', text:'It helps the body fully recover and reset from the stress', correct:false}
+    ],
+    feedback:{
+      correct:'Spot on! Avoidance is a short-term relief that creates a long-term problem. Each time we escape something scary, the brain records: "That was dangerous — we got out just in time." So next time, the alarm sounds earlier and louder. Facing fears — carefully, with support — is how real confidence is built.',
+      incorrect:'Not quite. Avoidance actually increases fear over time. The brain interprets escape as evidence that the situation was genuinely dangerous. Real confidence comes from facing difficult things and discovering you can handle them.'
+    }
+  }
+];
+
+/* =============================================
+   UTILITIES
+============================================= */
+function backBtn(stage, label) {
+  return `<div class="stage-nav"><button class="btn-back" onclick="renderStage(${stage})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>${label}</button></div>`;
+}
+
+function actBanner(act, text) {
+  const icons = {1:'🔵', 2:'🟣', 3:'🟡'};
+  return `<div class="act-banner act${act}"><span class="act-icon">${icons[act]}</span> ${text}</div>`;
+}
+
+function clearBreathTimers() {
+  breathTimers.forEach(t => clearTimeout(t));
+  breathTimers = [];
+}
+
+/* =============================================
+   PROGRESS
+============================================= */
+function updateProgress(stage) {
+  const pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent   = `Stage ${stage} of ${TOTAL_STAGES}`;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  const dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (let i = 1; i <= TOTAL_STAGES; i++) {
+    const d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* =============================================
+   RENDER ROUTER
+============================================= */
+function renderStage(n) {
+  clearBreathTimers();
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  const fns = [null,
+    s1,s2,s3,s4,s5,s6,s7,   // Act 1
+    s8,s9,s10,               // Act 2
+    s11,s12,s13,s14          // Act 3
+  ];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* =============================================
+   ACT 1 — STAGES 1–7
+============================================= */
+
+/* Stage 1: Story Introduction */
+function s1() {
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    <div class="stage-label"><span class="dot"></span> Case File #001</div>
+    <h2>The Mystery Feeling</h2>
+    <p>Welcome to Emotion Detective HQ. Your job today is to do what the best emotional scientists do: observe, investigate, and understand feelings from the inside out. A new case has just arrived.</p>
+    <div class="story-box" data-icon="🔍">
+      <p><span>Ali</span> is twelve years old. Today is unlike any other. He has spent three evenings practising his science project presentation — rehearsing his words, preparing his notes, checking his slides. But now, standing just outside the classroom door with his notes in his hand, something feels very different from practice. His palms are damp and clammy. His heart is thudding against his ribs, louder than he expects. When he swallows, his throat feels like sandpaper. Through the door he can hear the muffled sounds of his classmates. A heavy, strange feeling settles in his stomach. He stares at the door handle and a thought creeps in: <em>"What if I forget everything the moment they look at me?"</em></p>
+    </div>
+    <p>Your mission: <strong>Figure out exactly what Ali is feeling, and understand why.</strong> Are you ready to investigate?</p>
+    <button class="btn-primary" onclick="renderStage(2)">🔍 Begin Investigation</button>
+  </div>`;
+}
+
+/* Stage 2: Clue Selection */
+function s2() {
+  const cards = aliClues.map(c => `
+    <div class="clue-card" id="clue-${c.id}" onclick="toggleClue('${c.id}')">
+      <div class="clue-check">✓</div>
+      <span class="clue-icon">${c.icon}</span>
+      <div class="clue-text">${c.text}</div>
+    </div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    ${backBtn(1,'Back to Story')}
+    <div class="stage-label"><span class="dot"></span> Stage 2 — Gather Evidence</div>
+    <h2>Collect the Clues</h2>
+    <p>A careful detective notices everything — what the body is doing, what situation the person is in, and what thoughts might be running through their mind. Look at the evidence below and tap every clue that reveals something important about how Ali is feeling.</p>
+    <div class="clue-hint">👆 Tap each card to collect it as evidence</div>
+    <div class="clue-grid">${cards}</div>
+    <button class="btn-primary" id="clueNextBtn" onclick="renderStage(3)" disabled>Next: Explain Your Reasoning →</button>
+  </div>`;
+}
+
+/* Stage 3 (NEW): Explain Reasoning */
+function s3() {
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    ${backBtn(2,'Back to Clues')}
+    <div class="stage-label"><span class="dot"></span> Stage 3 — Reasoning</div>
+    <h2>Explain Your Thinking</h2>
+    <p>The best detectives don't just collect evidence — they explain what it means. You've spotted the clues. Now write 2–3 sentences explaining why those clues point toward a particular emotion. Think about: what do these body signals usually mean? What do they have in common?</p>
+    <textarea class="reflection-input" id="reasoningInput" oninput="checkReasoning(this.value)"
+      placeholder="For example: 'The sweaty hands and fast heartbeat are physical signs that Ali's body is stressed. These happen when someone feels nervous or anxious because the body is preparing to deal with something challenging. Standing in front of people who are all watching you would cause exactly these reactions...'"
+      rows="5"></textarea>
+    <div class="char-counter" id="reasoningCounter">0 / 20 minimum characters</div>
+    <button class="btn-primary" id="reasoningNextBtn" onclick="renderStage(4)" disabled>Next: Name the Emotion →</button>
+  </div>`;
+}
+
+/* Stage 4: Emotion Selection */
+function s4() {
+  emotionAnswered = false;
+  const btns = aliEmotions.map(e => `
+    <button class="emotion-btn" id="emotion-${e.id}" onclick="selectEmotion('${e.id}',${e.correct})">
+      <span class="e-icon">${e.icon}</span>${e.label}
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    ${backBtn(3,'Back to Reasoning')}
+    <div class="stage-label"><span class="dot"></span> Stage 4 — Name the Emotion</div>
+    <h2>What Is Ali Feeling?</h2>
+    <p>You have gathered evidence and explained your reasoning. Now make your official detective's conclusion. Based on everything you've observed — the physical signals, the situation, and Ali's internal thoughts — which emotion best fits?</p>
+    <div class="emotion-grid">${btns}</div>
+    <div id="emotionFeedback"></div>
+    <button class="btn-primary" id="emotionNextBtn" onclick="renderStage(5)" disabled>Next: Measure the Intensity →</button>
+  </div>`;
+}
+
+/* Stage 5: Intensity Slider */
+function s5() {
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    ${backBtn(4,'Back to Emotion')}
+    <div class="stage-label"><span class="dot"></span> Stage 5 — Measure Intensity</div>
+    <h2>How Strong Is the Feeling?</h2>
+    <p>Emotions are never simply "on" or "off" — they exist on a spectrum from barely noticeable to completely overwhelming. Understanding intensity matters, because a mildly nervous person needs different support than an extremely nervous person. Use the slider to estimate how Ali is feeling right now.</p>
+    <div class="slider-wrap">
+      <div class="slider-labels"><span>😌 A Little Nervous</span><span>😱 Extremely Nervous</span></div>
+      <input type="range" class="intensity-slider" id="intensitySlider" min="0" max="100" value="50" oninput="updateIntensity(this.value)" />
+    </div>
+    <div class="intensity-display">
+      <span class="intensity-emoji" id="intensityEmoji">😟</span>
+      <div class="intensity-label" id="intensityLabel">You chose: Moderately Nervous</div>
+    </div>
+    <br/>
+    <button class="btn-primary" onclick="renderStage(6)">Next: Explore Body &amp; Thoughts →</button>
+  </div>`;
+}
+
+/* Stage 6 (NEW): Body vs Thoughts */
+function s6() {
+  bodyThoughtsValid = false;
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    ${backBtn(5,'Back to Intensity')}
+    <div class="stage-label"><span class="dot"></span> Stage 6 — Body &amp; Mind</div>
+    <h2>Body vs. Thoughts</h2>
+    <p>Emotions don't live in just one place. They happen simultaneously in two connected systems: the <strong>body</strong> and the <strong>mind</strong>. Understanding both gives a much richer picture of what someone is actually experiencing — and opens up more ways to help.</p>
+    <label class="input-label">🫀 What is happening in Ali's BODY right now?</label>
+    <textarea class="short-input" id="bodyInput" oninput="checkBodyThoughts()"
+      placeholder="Describe the physical sensations... e.g. 'His hands are sweating, his heart is racing, his throat feels dry and tight, and there might be tension in his stomach and shoulders...'" rows="3"></textarea>
+    <label class="input-label">💭 What might be happening in Ali's THOUGHTS right now?</label>
+    <textarea class="short-input" id="thoughtsInput" oninput="checkBodyThoughts()"
+      placeholder="What might he be saying to himself silently? e.g. 'He might be imagining all the ways things could go wrong, replaying worst-case scenarios, or telling himself he's not good enough...'" rows="3"></textarea>
+    <div class="char-counter" id="bodyThoughtsCounter">Both fields need at least 15 characters each</div>
+    <div class="feedback-msg info-msg" style="margin-bottom:20px;text-align:left">
+      💡 <strong>Did you know?</strong> The body's stress signals and the mind's worried thoughts create a feedback loop — each one makes the other stronger. This is why calming strategies that address the body (like breathing) can also quiet anxious thoughts.
+    </div>
+    <button class="btn-primary" id="bodyThoughtsNextBtn" onclick="renderStage(7)" disabled>Next: Act 1 Reflection →</button>
+  </div>`;
+}
+
+/* Stage 7: Act 1 Reflection */
+function s7() {
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 — Emotion Investigation')}
+    ${backBtn(6,'Back to Body &amp; Mind')}
+    <div class="stage-label"><span class="dot"></span> Stage 7 — Reflect</div>
+    <h2>Act 1 Complete — Brilliant Work!</h2>
+    <p>You've done something impressive: you read a story, gathered physical clues, explained your reasoning, named the emotion, measured its intensity, and explored how it lives in both the body and mind. That is emotional intelligence in action.</p>
+    <p><strong>Final Act 1 reflection:</strong> In your own words, summarise what you discovered about Ali's emotional experience. Which clues were most useful? What did this investigation teach you about how nervousness works?</p>
+    <textarea class="reflection-input" id="act1Reflection"
+      placeholder="Write your summary here... For example, you might reflect on which physical clues stood out most, what Ali's thoughts were doing to make the feeling stronger, or what you now understand about nervousness that you didn't before..." rows="4"></textarea>
+    <div class="feedback-msg info-msg" style="margin-bottom:20px">
+      🏅 <strong>Badge Progress:</strong> Emotion Detective Level 1 — almost earned! Now let's discover what Ali should actually do about his nervousness…
+    </div>
+    <button class="btn-primary" onclick="renderStage(8)">➡️ Continue to Act 2: Decision Time</button>
+  </div>`;
+}
+
+/* =============================================
+   ACT 2 — STAGES 8–10
+============================================= */
+
+/* Stage 8 (NEW): Guided Breathing */
+function s8() {
+  breathingComplete = false;
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 — Decision Simulation')}
+    ${backBtn(7,'Back to Reflection')}
+    <div class="stage-label purple"><span class="dot"></span> Stage 8 — Feel the Tool First</div>
+    <h2>Experience the Technique</h2>
+    <p>Before you decide what Ali should do, you are going to practise the most evidence-backed calming tool yourself. Complete 3 full breathing cycles. This is the exact technique that can transform someone's emotional state in under 40 seconds — by directly signalling the nervous system to shift from stress mode to calm mode.</p>
+    <div class="breathing-wrap" id="breathingWrap">
+      <div class="breath-circle-container">
+        <div class="breath-circle" id="breathCircle">
+          <span class="breath-circle-inner" id="breathEmoji">🌬️</span>
+        </div>
+      </div>
+      <div class="breath-instruction" id="breathInstruction">Press Start to begin</div>
+      <div class="breath-sub" id="breathSub">Complete all 3 breathing cycles to unlock the next stage</div>
+      <div class="breath-cycles" id="breathDots">
+        <div class="breath-cycle-dot" id="bdot-0"></div>
+        <div class="breath-cycle-dot" id="bdot-1"></div>
+        <div class="breath-cycle-dot" id="bdot-2"></div>
+      </div>
+      <div class="breath-timer" id="breathTimer">Ready when you are</div>
+    </div>
+    <button class="btn-primary" id="breathStartBtn" onclick="startBreathing()" style="margin-top:8px">▶ Start Breathing Exercise</button>
+    <button class="btn-primary" id="breathNextBtn" onclick="renderStage(9)" disabled style="margin-top:12px;background:linear-gradient(135deg,var(--green-dark),var(--teal))">✅ I've Completed the Breathing — Continue →</button>
+  </div>`;
+}
+
+/* Stage 9: Decision Simulation */
+function s9() {
+  act2DecisionLocked = false;
+  act2Choice = null;
+  const cards = decisions.map(d => `
+    <button class="decision-btn" id="dec-${d.id}" onclick="chooseDecision('${d.id}')">
+      <span class="d-icon">${d.icon}</span>
+      <div><div class="d-text">${d.text}</div><div class="d-sub">${d.sub}</div></div>
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 — Decision Simulation')}
+    ${backBtn(8,'Back to Breathing')}
+    <div class="stage-label purple"><span class="dot"></span> Stage 9 — Make a Decision</div>
+    <h2>What Should Ali Do?</h2>
+    <p>Ali is standing outside the classroom. He has roughly ten seconds before he needs to walk in. His nervousness is real and strong. He has three options available to him right now. Which strategy would you choose for him — and why do you think it would work?</p>
+    <div class="decision-grid" id="decisionGrid">${cards}</div>
+    <div id="decisionOutcome"></div>
+    <div id="decisionNextWrap" style="display:none">
+      <button class="btn-primary" onclick="renderStage(10)">➡️ Explore Another Strategy &amp; Compare</button>
+    </div>
+  </div>`;
+}
+
+/* Stage 10: Compare + Reflection */
+function s10() {
+  act2TryChoice = null;
+  act2ReflectionValid = false;
+  const first = decisions.find(d => d.id === act2Choice);
+  const remaining = decisions.filter(d => d.id !== act2Choice);
+  const tryCards = remaining.map(d => `
+    <button class="decision-btn" id="try-${d.id}" onclick="tryDecision('${d.id}')">
+      <span class="d-icon">${d.icon}</span>
+      <div><div class="d-text">${d.text}</div><div class="d-sub">${d.sub}</div></div>
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 — Decision Simulation')}
+    ${backBtn(9,'Back to Decisions')}
+    <div class="stage-label purple"><span class="dot"></span> Stage 10 — Compare &amp; Reflect</div>
+    <h2>Try a Different Strategy</h2>
+    <p>You chose <strong>${first.icon} ${first.text}</strong> for Ali. Now test one of the other strategies and compare the results side by side. Understanding why different choices produce different outcomes is one of the most important emotional intelligence skills.</p>
+    <div class="section-divider">Try another strategy</div>
+    <div class="decision-grid" id="tryGrid">${tryCards}</div>
+    <div id="tryOutcome"></div>
+    <div id="act2ReflectionWrap" style="display:none;margin-top:20px">
+      <div class="section-divider">Your reflection</div>
+      <p style="font-size:14px;margin-bottom:12px">Answer all three prompts below:</p>
+      <p style="font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.65">
+        1️⃣ Which strategy reduced nervousness the most, and why do you think that happened?<br/>
+        2️⃣ What is actually happening inside the body when deep breathing helps?<br/>
+        3️⃣ What would YOU personally choose in a situation like Ali's, and why?
+      </p>
+      <textarea class="reflection-input" id="act2Reflection" oninput="checkAct2Reflection(this.value)"
+        placeholder="Write your thoughts here... Try to address all three questions. There are no wrong answers — this is about deepening your own understanding..." rows="5"></textarea>
+      <div class="char-counter" id="act2Counter">0 / 40 minimum characters</div>
+      <div class="feedback-msg purple-msg" style="margin-bottom:16px">
+        🧘 <strong>Badge Progress:</strong> Calm Thinker Level 1 — almost earned! One final act to go…
+      </div>
+      <button class="btn-primary" id="act2NextBtn" onclick="renderStage(11)" disabled>➡️ Continue to Act 3: New Challenge</button>
+    </div>
+  </div>`;
+}
+
+/* =============================================
+   ACT 3 — STAGES 11–14
+============================================= */
+
+/* Stage 11: Sara — Full Scenario */
+function s11() {
+  saraClues.clear();
+  saraEmotionAnswered = false; saraEmotionCorrect = false;
+  thoughtUnhelpful = null; thoughtHelpful = null;
+  saraStrategyChosen = null;
+  const tBubbles = thoughtBubbles.map(t => `
+    <button class="thought-bubble" data-icon="${t.icon}" data-type="${t.type}" id="thought-${t.id}" onclick="selectThought('${t.id}','${t.type}')">
+      ${t.text}
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 — Skill Transfer Challenge')}
+    ${backBtn(10,'Back to Act 2')}
+    <div class="stage-label gold"><span class="dot"></span> Stage 11 — New Case File</div>
+    <h2>A Brand New Case!</h2>
+    <p>The skills you've built in Acts 1 and 2 now need to be applied to a completely new situation with a different character. This is where real learning happens — when you can transfer a skill beyond where you first learned it.</p>
+    <div class="story-box" data-icon="⚽">
+      <p><span class="green">Sara</span> is ten years old and today she is joining a new soccer team for the very first time. She has played soccer since she was six and genuinely loves it — but she doesn't know a single person on this team. As she laces up her boots on the sideline, she notices the other players laughing and joking together in a tight group — they've known each other for years. Sara goes very quiet. She fidgets with her laces longer than necessary. She can feel something fluttery and uneasy stirring in her stomach. She catches herself thinking: <em>"What if they think I\'m not good enough to be here? What if I make a mistake in front of everyone on my very first day?"</em></p>
+    </div>
+
+    <div class="section-divider">Step 1 of 4 — Collect the clues</div>
+    <p>Which details from Sara's story are important emotional evidence?</p>
+    <div class="clue-grid">
+      ${saraClueData.map(c => `
+        <div class="clue-card" id="sara-clue-${c.id}" onclick="toggleSaraClue('${c.id}')">
+          <div class="clue-check">✓</div>
+          <span class="clue-icon">${c.icon}</span>
+          <div class="clue-text">${c.text}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="section-divider">Step 2 of 4 — Name the emotion</div>
+    <p>What is Sara most likely experiencing right now?</p>
+    <div class="emotion-grid">
+      ${saraEmotionData.map(e => `
+        <button class="emotion-btn" id="sara-emotion-${e.id}" onclick="selectSaraEmotion('${e.id}',${e.correct})">
+          <span class="e-icon">${e.icon}</span>${e.label}
+        </button>`).join('')}
+    </div>
+    <div id="saraEmotionFeedback"></div>
+
+    <div class="section-divider">Step 3 of 4 — Thought Bubble Analysis</div>
+    <p>These are three thoughts that might be running through Sara's mind. Select <strong>one unhelpful thought</strong> and <strong>one helpful thought</strong>. Think carefully about what makes a thought helpful or unhelpful.</p>
+    <div class="thought-instructions">
+      <div class="thought-pill unhelpful pending" id="pill-unhelpful">❌ Unhelpful: not selected yet</div>
+      <div class="thought-pill helpful pending" id="pill-helpful">✅ Helpful: not selected yet</div>
+    </div>
+    <div class="thought-grid">${tBubbles}</div>
+    <div id="thoughtFeedback"></div>
+
+    <div class="section-divider">Step 4 of 4 — Choose Sara's strategy</div>
+    <p>Now that you understand what Sara is thinking and feeling, what is the most useful thing she can do right now?</p>
+    <div class="decision-grid" id="saraStrategyGrid">
+      ${saraStrategies.map(s => `
+        <button class="decision-btn" id="sara-strat-${s.id}" onclick="chooseSaraStrategy('${s.id}')">
+          <span class="d-icon">${s.icon}</span>
+          <div><div class="d-text">${s.text}</div><div class="d-sub">${s.sub}</div></div>
+        </button>`).join('')}
+    </div>
+    <div id="saraStrategyFeedback"></div>
+    <button class="btn-primary" id="saraNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Your Personal Connection →</button>
+  </div>`;
+}
+
+/* Stage 12: Personal Connection */
+function s12() {
+  const emojiOpts = personalEmojis.map(e => `
+    <div class="emoji-opt" id="emo-opt-${e.label.replace(/\s/g,'_')}" onclick="selectPersonalEmoji('${e.label}')">
+      <span class="em-face">${e.face}</span>
+      <div class="em-label">${e.label}</div>
+    </div>`).join('');
+  const chipOpts = moodChips.map(m => `
+    <div class="mood-chip" id="chip-${m.replace(/\s/g,'_')}" onclick="toggleMoodChip('${m}')">${m}</div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 — Skill Transfer Challenge')}
+    ${backBtn(11,'Back to Sara\'s Story')}
+    <div class="stage-label gold"><span class="dot"></span> Stage 12 — Your Experience</div>
+    <h2>Now It's About You</h2>
+    <p>Ali felt nervous before a presentation. Sara felt nervous joining a new team. Nervousness is one of the most universal human emotions — almost everyone experiences it regularly, throughout their entire life. Now let's turn the investigation inward.</p>
+    <div class="section-divider">How often do you feel nervous?</div>
+    <div class="emoji-selector" id="emojiSelector">${emojiOpts}</div>
+    <div class="section-divider">When does it tend to happen for you? (choose any)</div>
+    <div class="mood-chips" id="moodChips">${chipOpts}</div>
+    <div class="section-divider">What already helps you feel calmer?</div>
+    <textarea class="reflection-input" id="personalReflection"
+      placeholder="Think about what you naturally do, or what you've learned today that you'd like to try. For example: 'I usually talk to someone I trust, or I take a few deep breaths. After today's lesson, I want to try noticing my body signals earlier so I can use the breathing technique before things get overwhelming...'" rows="4"></textarea>
+    <button class="btn-primary" onclick="renderStage(13)" style="margin-top:8px">Next: Quick Skill Check →</button>
+  </div>`;
+}
+
+/* Stage 13 (NEW): Mini Quiz */
+function s13() {
+  quizAnswers = {};
+  const questionsHTML = quizData.map((q,i) => `
+    <div class="quiz-question" id="quiz-q-${i}" style="animation-delay:${i*0.1}s">
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt,j) => `
+          <button class="quiz-option" id="quiz-opt-${i}-${j}" onclick="answerQuiz(${i},${j},${opt.correct})">
+            <span class="q-icon">${opt.icon}</span>${opt.text}
+          </button>`).join('')}
+      </div>
+      <div id="quiz-feedback-${i}" class="quiz-feedback"></div>
+    </div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 — Skill Transfer Challenge')}
+    ${backBtn(12,'Back to Reflection')}
+    <div class="stage-label gold"><span class="dot"></span> Stage 13 — Skill Check</div>
+    <h2>Quick Knowledge Check</h2>
+    <p>You've worked hard through this entire module. Let's see how much has genuinely landed. Answer all three questions — your responses reveal how deeply you've internalised the key ideas. Take your time; there's no clock.</p>
+    ${questionsHTML}
+    <button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">🏅 Claim Your Badges &amp; Complete the Mission!</button>
+  </div>`;
+}
+
+/* Stage 14: Final Summary */
+function s14() {
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent   = 'Mission Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(d => {d.classList.remove('active'); d.classList.add('done');});
+    launchConfetti();
+  }, 300);
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 — Mission Complete!')}
+    <div class="stage-label gold"><span class="dot"></span> Stage 14 — Badges Earned</div>
+    <h2>🎉 Outstanding Work, Detective!</h2>
+    <p>You have completed the full Emotion Detective Mission — all 3 Acts, 14 stages, and a genuine journey into emotional intelligence. Here are the three badges you've earned:</p>
+    <div class="badge-grid">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Emotion Detective</div><div class="b-sub">Identified feelings from body clues</div></div>
+      <div class="badge-item"><span class="b-icon">🧘</span><div class="b-title">Calm Thinker</div><div class="b-sub">Mastered calming strategies</div></div>
+      <div class="badge-item"><span class="b-icon">💡</span><div class="b-title">Smart Decision Maker</div><div class="b-sub">Compared outcomes wisely</div></div>
+    </div>
+    <div class="section-divider">What You Learned Today</div>
+    <div class="skills-summary">
+      <div class="skill-row">
+        <span class="sk-icon">🔍</span>
+        <div>
+          <div class="sk-title">Emotional Awareness</div>
+          <div class="sk-desc">Emotions leave physical clues in the body — a racing heart, sweaty palms, butterflies. You now know how to read these signals in yourself and others. This awareness is the foundation of emotional intelligence.</div>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="sk-icon">🌬️</span>
+        <div>
+          <div class="sk-title">Self-Regulation Through Breathing</div>
+          <div class="sk-desc">You practised slow, deep breathing and understood why it works: a long exhale directly activates the parasympathetic nervous system — your body's built-in calm response. This tool is available to you anywhere, any time, for free.</div>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="sk-icon">💭</span>
+        <div>
+          <div class="sk-title">Cognitive Reframing</div>
+          <div class="sk-desc">You identified unhelpful thoughts ("I don't belong here") and helpful ones ("I can try my best"), and understood that the inner narrative we choose has a direct effect on our feelings and performance. Thoughts are not facts — they can be questioned and changed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="story-box" data-icon="⭐" style="margin-bottom:24px">
+      <p style="font-style:normal;font-size:14.5px;line-height:1.9">
+        <strong>A message for you:</strong><br/>
+        Emotional intelligence is not a fixed trait you're born with — it is a set of skills that grow through practice and reflection. Every time you pause to name what you're feeling, every time you choose a calming strategy instead of reacting immediately, every time you try to understand what's happening in someone else's inner world — you are growing. What you practised today will be available to you in real situations, in real moments, when it matters most. You already have more than enough. Keep going. 🌟
+      </p>
+    </div>
+    <button class="btn-primary" onclick="document.getElementById('celebrationOverlay').classList.add('active')" style="background:linear-gradient(135deg,#4caf88,#6a9fd8);margin-bottom:12px">🎊 See Your Certificate</button>
+    <button class="btn-restart" onclick="restartMission()" style="width:100%;justify-content:center;display:flex">↩ Start the Mission Again</button>
+  </div>`;
+}
+
+/* =============================================
+   POST-RENDER STATE RESTORE
+============================================= */
+function postRender(n) {
+  if (n === 2) {
+    selectedClues.forEach(id => {const e = document.getElementById('clue-'+id); if(e) e.classList.add('selected');});
+    const b = document.getElementById('clueNextBtn'); if(b) b.disabled = selectedClues.size === 0;
+  }
+  if (n === 3 && reasoningText) {
+    const ta = document.getElementById('reasoningInput'); if(ta) ta.value = reasoningText;
+    checkReasoning(reasoningText);
+  }
+  if (n === 4 && emotionAnswered) {
+    setTimeout(() => {
+      const c = document.getElementById('emotion-nervous'); if(c) c.classList.add('correct');
+      const fb = document.getElementById('emotionFeedback');
+      if(fb) fb.innerHTML = emotionCorrect
+        ? `<div class="feedback-msg correct-msg">✅ Exactly right! Every clue points unmistakably to nervousness.</div>`
+        : `<div class="feedback-msg incorrect-msg">🔍 The correct answer is <strong>Nervous</strong>.</div>`;
+      const nb = document.getElementById('emotionNextBtn'); if(nb) nb.disabled = false;
+    }, 50);
+  }
+  if (n === 5) updateIntensity(50);
+  if (n === 11) {
+    setTimeout(() => {
+      saraClues.forEach(id => {const e = document.getElementById('sara-clue-'+id); if(e) e.classList.add('selected');});
+      if (saraEmotionAnswered) {
+        const c = document.getElementById('sara-emotion-nervous'); if(c) c.classList.add('correct');
+        const fb = document.getElementById('saraEmotionFeedback');
+        if(fb) fb.innerHTML = saraEmotionCorrect
+          ? `<div class="feedback-msg correct-msg">✅ Correct! Those clues point clearly to nervousness.</div>`
+          : `<div class="feedback-msg incorrect-msg">🔍 The correct answer is <strong>Nervous</strong>.</div>`;
+      }
+      restoreThoughts();
+      if (saraStrategyChosen) {
+        const s = saraStrategies.find(x => x.id === saraStrategyChosen);
+        const el = document.getElementById('sara-strat-'+saraStrategyChosen);
+        if(el) {el.classList.add(s.quality==='best'?'selected-best':'selected-ok'); el.style.cursor='default';}
+        const fb = document.getElementById('saraStrategyFeedback');
+        if(fb) fb.innerHTML = `<div class="outcome-box ${s.quality}" style="margin-top:14px"><div class="outcome-title">${s.icon} ${s.quality==='best'?'✅ Excellent choice!':'👍 A reasonable choice'}</div>${s.outcome}</div>`;
+      }
+      checkSaraComplete();
+    }, 60);
+  }
+  if (n === 12) {
+    setTimeout(() => {
+      if (personalEmojiSelected) {
+        const el = document.getElementById('emo-opt-'+personalEmojiSelected.replace(/\s/g,'_')); if(el) el.classList.add('selected');
+      }
+      personalMoodsSelected.forEach(m => {const el = document.getElementById('chip-'+m.replace(/\s/g,'_')); if(el) el.classList.add('selected');});
+    }, 50);
+  }
+}
+
+function restoreThoughts() {
+  if (thoughtUnhelpful) {
+    const el = document.getElementById('thought-'+thoughtUnhelpful); if(el) el.classList.add('unhelpful-selected');
+    const p = document.getElementById('pill-unhelpful'); if(p) {p.textContent='❌ Unhelpful: selected ✓'; p.classList.remove('pending'); p.classList.add('done');}
+  }
+  if (thoughtHelpful) {
+    const el = document.getElementById('thought-'+thoughtHelpful); if(el) el.classList.add('helpful-selected');
+    const p = document.getElementById('pill-helpful'); if(p) {p.textContent='✅ Helpful: selected ✓'; p.classList.remove('pending'); p.classList.add('done');}
+  }
+  if (thoughtUnhelpful && thoughtHelpful) {
+    const fb = document.getElementById('thoughtFeedback');
+    if(fb) fb.innerHTML = buildThoughtFeedback();
+  }
+}
+
+/* =============================================
+   ACT 1 INTERACTIONS
+============================================= */
+function toggleClue(id) {
+  const el = document.getElementById('clue-'+id);
+  if (selectedClues.has(id)) {selectedClues.delete(id); el.classList.remove('selected');}
+  else {selectedClues.add(id); el.classList.add('selected');}
+  const b = document.getElementById('clueNextBtn'); if(b) b.disabled = selectedClues.size === 0;
+}
+
+function checkReasoning(val) {
+  reasoningText = val;
+  const len = val.trim().length;
+  const c = document.getElementById('reasoningCounter');
+  const b = document.getElementById('reasoningNextBtn');
+  if(c) {c.textContent = `${len} / 20 minimum characters`; c.className = 'char-counter'+(len>=20?' met':'');}
+  if(b) b.disabled = len < 20;
+}
+
+function selectEmotion(id, isCorrect) {
+  if (emotionAnswered) return;
+  emotionAnswered = true; emotionCorrect = isCorrect;
+  document.getElementById('emotion-'+id).classList.add(isCorrect?'correct':'incorrect');
+  const fb = document.getElementById('emotionFeedback');
+  if (isCorrect) {
+    fb.innerHTML = `<div class="feedback-msg correct-msg">✅ Exactly right! The sweaty palms, racing heart, and worried thoughts all point unmistakably to nervousness. Outstanding detective work!</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback-msg incorrect-msg">🔍 Not quite. Look at the clues again — sweaty hands, a racing heart, and worried internal thoughts are all classic signs of <strong>nervousness</strong>.</div>`;
+    setTimeout(() => {const c = document.getElementById('emotion-nervous'); if(c) c.classList.add('correct');}, 700);
+  }
+  document.getElementById('emotionNextBtn').disabled = false;
+}
+
+function updateIntensity(value) {
+  const v = parseInt(value);
+  const level = intensityLevels.find(l => v>=l.range[0] && v<=l.range[1]);
+  if (level) {
+    document.getElementById('intensityEmoji').textContent = level.emoji;
+    document.getElementById('intensityLabel').textContent = 'You chose: '+level.label;
+  }
+  document.getElementById('intensitySlider').style.background =
+    `linear-gradient(90deg,var(--blue-dark) ${v}%,rgba(168,197,240,0.35) ${v}%)`;
+}
+
+function checkBodyThoughts() {
+  const b = (document.getElementById('bodyInput')?.value||'').trim();
+  const t = (document.getElementById('thoughtsInput')?.value||'').trim();
+  const ok = b.length>=15 && t.length>=15;
+  bodyThoughtsValid = ok;
+  const c = document.getElementById('bodyThoughtsCounter');
+  const btn = document.getElementById('bodyThoughtsNextBtn');
+  if(c) {c.textContent = ok?'✓ Both fields complete — great!':'Both fields need at least 15 characters each'; c.className='char-counter'+(ok?' met':'');}
+  if(btn) btn.disabled = !ok;
+}
+
+/* =============================================
+   ACT 2 BREATHING
+============================================= */
+function startBreathing() {
+  const sb = document.getElementById('breathStartBtn');
+  if(sb) sb.disabled = true;
+  let cycle = 0;
+
+  function runCycle() {
+    if (cycle >= 3) {
+      breathingComplete = true;
+      document.getElementById('breathInstruction').textContent = '✅ Beautifully done!';
+      document.getElementById('breathSub').textContent = 'Notice how your body feels right now. That is your calm response activating.';
+      document.getElementById('breathTimer').textContent = 'Complete';
+      document.getElementById('breathEmoji').textContent = '😌';
+      const circle = document.getElementById('breathCircle');
+      if(circle) circle.className = 'breath-circle';
+      const nb = document.getElementById('breathNextBtn');
+      if(nb) nb.disabled = false;
+      return;
+    }
+    const dot = document.getElementById('bdot-'+cycle);
+    if(dot) dot.classList.add('active');
+
+    // Inhale 4s
+    document.getElementById('breathInstruction').textContent = 'Breathe in… 🌬️';
+    document.getElementById('breathSub').textContent = `Cycle ${cycle+1} of 3 — slowly in through your nose`;
+    document.getElementById('breathTimer').textContent = '4 seconds';
+    document.getElementById('breathEmoji').textContent = '🌬️';
+    const circle = document.getElementById('breathCircle');
+    if(circle) circle.className = 'breath-circle inhale';
+
+    let t1 = setTimeout(() => {
+      // Hold 2s
+      document.getElementById('breathInstruction').textContent = 'Hold… ⏸️';
+      document.getElementById('breathSub').textContent = 'Hold gently — feel the stillness in your body';
+      document.getElementById('breathTimer').textContent = '2 seconds';
+      document.getElementById('breathEmoji').textContent = '⏸️';
+      if(circle) circle.className = 'breath-circle hold';
+
+      let t2 = setTimeout(() => {
+        // Exhale 6s
+        document.getElementById('breathInstruction').textContent = 'Breathe out… 💨';
+        document.getElementById('breathSub').textContent = 'Long, slow exhale through your mouth — let everything go';
+        document.getElementById('breathTimer').textContent = '6 seconds';
+        document.getElementById('breathEmoji').textContent = '💨';
+        if(circle) circle.className = 'breath-circle exhale';
+
+        let t3 = setTimeout(() => {
+          if(dot) {dot.classList.remove('active'); dot.classList.add('done');}
+          cycle++;
+          runCycle();
+        }, 6000);
+        breathTimers.push(t3);
+      }, 2000);
+      breathTimers.push(t2);
+    }, 4000);
+    breathTimers.push(t1);
+  }
+  runCycle();
+}
+
+/* =============================================
+   ACT 2 DECISION INTERACTIONS
+============================================= */
+function chooseDecision(id) {
+  if (act2DecisionLocked) return;
+  act2DecisionLocked = true; act2Choice = id;
+  const chosen = decisions.find(d => d.id===id);
+  decisions.forEach(d => {
+    const el = document.getElementById('dec-'+d.id);
+    if(el) {if(d.id===id) el.classList.add(d.quality==='best'?'selected-best':d.quality==='ok'?'selected-ok':'selected-bad'); el.style.cursor='default';}
+  });
+  const out = document.getElementById('decisionOutcome');
+  out.innerHTML = `
+    <div class="meters-wrap">
+      <div class="meter-row"><div class="meter-label-row"><span>😰 Nervous Level</span><span id="nLvl">0%</span></div><div class="meter-track"><div class="meter-fill nervous" id="nFill"></div></div></div>
+      <div class="meter-row"><div class="meter-label-row"><span>💪 Confidence Level</span><span id="cLvl">0%</span></div><div class="meter-track"><div class="meter-fill confident" id="cFill"></div></div></div>
+    </div>
+    <div class="outcome-box ${chosen.quality}"><div class="outcome-title">${chosen.outcome.title}</div>${chosen.outcome.body}<div class="outcome-tip">${chosen.outcome.tip}</div></div>`;
+  setTimeout(() => {
+    const nf=document.getElementById('nFill'), cf=document.getElementById('cFill');
+    const nl=document.getElementById('nLvl'), cl=document.getElementById('cLvl');
+    if(nf){nf.style.width=chosen.nervousLevel+'%'; nl.textContent=chosen.nervousLevel+'%';}
+    if(cf){cf.style.width=chosen.confidentLevel+'%'; cl.textContent=chosen.confidentLevel+'%';}
+  }, 150);
+  document.getElementById('decisionNextWrap').style.display = 'block';
+}
+
+function tryDecision(id) {
+  if (act2TryChoice) return;
+  act2TryChoice = id;
+  const chosen = decisions.find(d=>d.id===id);
+  const first  = decisions.find(d=>d.id===act2Choice);
+  const el = document.getElementById('try-'+id);
+  if(el) el.classList.add(chosen.quality==='best'?'selected-best':chosen.quality==='ok'?'selected-ok':'selected-bad');
+  decisions.filter(d=>d.id!==act2Choice).forEach(d=>{const e=document.getElementById('try-'+d.id); if(e) e.style.cursor='default';});
+
+  const out = document.getElementById('tryOutcome');
+  out.innerHTML = `
+    <div class="meters-wrap">
+      <div class="section-divider">Your first choice: ${first.icon}</div>
+      <div class="meter-row"><div class="meter-label-row"><span>😰 Nervous</span><span>${first.nervousLevel}%</span></div><div class="meter-track"><div class="meter-fill nervous" style="width:${first.nervousLevel}%"></div></div></div>
+      <div class="meter-row"><div class="meter-label-row"><span>💪 Confidence</span><span>${first.confidentLevel}%</span></div><div class="meter-track"><div class="meter-fill confident" style="width:${first.confidentLevel}%"></div></div></div>
+      <div class="section-divider">This choice: ${chosen.icon}</div>
+      <div class="meter-row"><div class="meter-label-row"><span>😰 Nervous</span><span>${chosen.nervousLevel}%</span></div><div class="meter-track"><div class="meter-fill nervous" id="tnFill"></div></div></div>
+      <div class="meter-row"><div class="meter-label-row"><span>💪 Confidence</span><span>${chosen.confidentLevel}%</span></div><div class="meter-track"><div class="meter-fill confident" id="tcFill"></div></div></div>
+    </div>
+    <div class="outcome-box ${chosen.quality}"><div class="outcome-title">${chosen.outcome.title}</div>${chosen.outcome.body}<div class="outcome-tip">${chosen.outcome.tip}</div></div>`;
+  setTimeout(() => {
+    const tn=document.getElementById('tnFill'), tc=document.getElementById('tcFill');
+    if(tn) tn.style.width=chosen.nervousLevel+'%';
+    if(tc) tc.style.width=chosen.confidentLevel+'%';
+  }, 150);
+  document.getElementById('act2ReflectionWrap').style.display = 'block';
+}
+
+function checkAct2Reflection(val) {
+  const len = val.trim().length;
+  const c = document.getElementById('act2Counter');
+  const b = document.getElementById('act2NextBtn');
+  if(c){c.textContent=`${len} / 40 minimum characters`; c.className='char-counter'+(len>=40?' met':'');}
+  if(b) b.disabled = len < 40;
+}
+
+/* =============================================
+   ACT 3 INTERACTIONS
+============================================= */
+function toggleSaraClue(id) {
+  const el = document.getElementById('sara-clue-'+id);
+  if(saraClues.has(id)){saraClues.delete(id); el.classList.remove('selected');}
+  else{saraClues.add(id); el.classList.add('selected');}
+}
+
+function selectSaraEmotion(id, isCorrect) {
+  if(saraEmotionAnswered) return;
+  saraEmotionAnswered=true; saraEmotionCorrect=isCorrect;
+  document.getElementById('sara-emotion-'+id).classList.add(isCorrect?'correct':'incorrect');
+  const fb = document.getElementById('saraEmotionFeedback');
+  if(isCorrect) {
+    fb.innerHTML=`<div class="feedback-msg correct-msg">✅ Correct! Butterflies in the stomach, going very quiet, fidgeting — all strong signals of nervousness in an unfamiliar situation.</div>`;
+  } else {
+    fb.innerHTML=`<div class="feedback-msg incorrect-msg">🔍 Not quite. The answer is <strong>Nervous</strong> — the body signals and worried thoughts are the key evidence.</div>`;
+    setTimeout(()=>{const c=document.getElementById('sara-emotion-nervous'); if(c) c.classList.add('correct');},700);
+  }
+  checkSaraComplete();
+}
+
+function buildThoughtFeedback() {
+  return `<div class="feedback-msg correct-msg" style="text-align:left">
+    ✅ <strong>Excellent analysis!</strong><br/>
+    The thoughts <em>"They will judge me"</em> and <em>"I don't belong here"</em> are unhelpful because they assume the worst outcome without any real evidence — and they focus entirely on what Sara cannot control (other people's opinions). They also lower confidence before she's even started.<br/><br/>
+    <em>"I can try my best and see what happens"</em> is helpful because it is honest, realistic, and places Sara's focus on something she <em>can</em> control — her own effort. It leaves the outcome open rather than catastrophising.<br/><br/>
+    <strong>This is cognitive reframing</strong> — the deliberate process of noticing an unhelpful thought and replacing it with a more balanced, evidence-based alternative. It is a learnable skill that becomes more natural with practice.
+  </div>`;
+}
+
+function selectThought(id, type) {
+  if (type === 'unhelpful') {
+    if(thoughtUnhelpful===id){
+      thoughtUnhelpful=null;
+      document.getElementById('thought-'+id).classList.remove('unhelpful-selected');
+      const p=document.getElementById('pill-unhelpful'); if(p){p.textContent='❌ Unhelpful: not selected yet'; p.className='thought-pill unhelpful pending';}
+    } else {
+      if(thoughtUnhelpful){document.getElementById('thought-'+thoughtUnhelpful)?.classList.remove('unhelpful-selected');}
+      thoughtUnhelpful=id;
+      document.getElementById('thought-'+id).classList.add('unhelpful-selected');
+      document.getElementById('thought-'+id).classList.remove('helpful-selected');
+      const p=document.getElementById('pill-unhelpful'); if(p){p.textContent='❌ Unhelpful: selected ✓'; p.className='thought-pill unhelpful done';}
+    }
+  } else if (type === 'helpful') {
+    if(thoughtHelpful===id){
+      thoughtHelpful=null;
+      document.getElementById('thought-'+id).classList.remove('helpful-selected');
+      const p=document.getElementById('pill-helpful'); if(p){p.textContent='✅ Helpful: not selected yet'; p.className='thought-pill helpful pending';}
+    } else {
+      if(thoughtHelpful){document.getElementById('thought-'+thoughtHelpful)?.classList.remove('helpful-selected');}
+      thoughtHelpful=id;
+      document.getElementById('thought-'+id).classList.add('helpful-selected');
+      document.getElementById('thought-'+id).classList.remove('unhelpful-selected');
+      const p=document.getElementById('pill-helpful'); if(p){p.textContent='✅ Helpful: selected ✓'; p.className='thought-pill helpful done';}
+    }
+  }
+  const fb=document.getElementById('thoughtFeedback');
+  if(thoughtUnhelpful && thoughtHelpful){
+    if(fb) fb.innerHTML=buildThoughtFeedback();
+    checkSaraComplete();
+  } else {
+    if(fb) fb.innerHTML='';
+  }
+}
+
+function chooseSaraStrategy(id) {
+  if(saraStrategyChosen) return;
+  saraStrategyChosen=id;
+  const s=saraStrategies.find(x=>x.id===id);
+  saraStrategies.forEach(st=>{const el=document.getElementById('sara-strat-'+st.id); if(el) el.style.cursor='default';});
+  const el=document.getElementById('sara-strat-'+id);
+  if(el) el.classList.add(s.quality==='best'?'selected-best':'selected-ok');
+  const fb=document.getElementById('saraStrategyFeedback');
+  fb.innerHTML=`<div class="outcome-box ${s.quality}" style="margin-top:14px"><div class="outcome-title">${s.icon} ${s.quality==='best'?'✅ Excellent choice!':'👍 A reasonable choice'}</div>${s.outcome}</div>`;
+  checkSaraComplete();
+}
+
+function checkSaraComplete() {
+  if(saraEmotionAnswered && thoughtUnhelpful && thoughtHelpful && saraStrategyChosen){
+    const b=document.getElementById('saraNextBtn'); if(b) b.disabled=false;
+  }
+}
+
+function selectPersonalEmoji(label) {
+  personalEmojiSelected=label;
+  document.querySelectorAll('.emoji-opt').forEach(el=>el.classList.remove('selected'));
+  const el=document.getElementById('emo-opt-'+label.replace(/\s/g,'_')); if(el) el.classList.add('selected');
+}
+
+function toggleMoodChip(mood) {
+  const key=mood.replace(/\s/g,'_');
+  const el=document.getElementById('chip-'+key);
+  if(personalMoodsSelected.has(mood)){personalMoodsSelected.delete(mood); el.classList.remove('selected');}
+  else{personalMoodsSelected.add(mood); el.classList.add('selected');}
+}
+
+/* =============================================
+   QUIZ INTERACTIONS
+============================================= */
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if(quizAnswers[qIndex]!==undefined) return;
+  quizAnswers[qIndex]=isCorrect;
+  const q=quizData[qIndex];
+  q.options.forEach((_,j)=>{
+    const el=document.getElementById(`quiz-opt-${qIndex}-${j}`);
+    if(!el) return;
+    el.style.cursor='default';
+    if(j===optIndex) el.classList.add(isCorrect?'q-correct':'q-incorrect');
+    else if(q.options[j].correct) el.classList.add('q-reveal');
+  });
+  const fb=document.getElementById(`quiz-feedback-${qIndex}`);
+  if(fb){
+    fb.style.display='block';
+    fb.className='quiz-feedback '+(isCorrect?'q-fb-correct':'q-fb-incorrect');
+    fb.textContent=isCorrect?q.feedback.correct:q.feedback.incorrect;
+  }
+  if(Object.keys(quizAnswers).length===quizData.length){
+    const b=document.getElementById('quizNextBtn'); if(b) b.disabled=false;
+  }
+}
+
+/* =============================================
+   RESTART
+============================================= */
+function restartMission() {
+  clearBreathTimers();
+  selectedClues.clear(); reasoningText=''; emotionAnswered=false; emotionCorrect=false; bodyThoughtsValid=false;
+  breathingComplete=false; act2Choice=null; act2DecisionLocked=false; act2TryChoice=null; act2ReflectionValid=false;
+  saraClues.clear(); saraEmotionAnswered=false; saraEmotionCorrect=false;
+  thoughtUnhelpful=null; thoughtHelpful=null; saraStrategyChosen=null;
+  personalEmojiSelected=null; personalMoodsSelected.clear(); quizAnswers={};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+/* =============================================
+   CONFETTI
+============================================= */
+function launchConfetti() {
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const colors=['#a8c5f0','#a8e6cf','#ffd98a','#ffb8a0','#c9b8f0','#6a9fd8','#4caf88'];
+  const pieces=Array.from({length:160},()=>({
+    x:Math.random()*canvas.width, y:Math.random()*canvas.height-canvas.height,
+    w:Math.random()*12+5, h:Math.random()*6+3,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    rot:Math.random()*360, rotSpeed:(Math.random()-0.5)*6,
+    speed:Math.random()*3+1.5, drift:(Math.random()-0.5)*1.5, opacity:Math.random()*0.5+0.5
+  }));
+  let frame=0; const maxFrames=280;
+  (function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save(); ctx.globalAlpha=p.opacity*Math.max(0,1-frame/maxFrames);
+      ctx.translate(p.x+p.w/2,p.y+p.h/2); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.y+=p.speed; p.x+=p.drift; p.rot+=p.rotSpeed;
+    });
+    frame++;
+    if(frame<maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  })();
+}
+
+/* =============================================
+   INIT
+============================================= */
+renderStage(1);
+window.addEventListener('resize',()=>{
+  const c=document.getElementById('confetti-canvas');
+  c.width=window.innerWidth; c.height=window.innerHeight;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Focus and Distraction Trainer</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f2f0ff;
+  --card:#ffffff;
+  --indigo:#3c28c8;--indigo-dark:#1c0898;--indigo-light:#b0a8f8;
+  --blue:#2868d8;--blue-dark:#0840a8;--blue-light:#a8c8f8;
+  --green:#18c878;--green-dark:#0a8050;--green-light:#a0f0c0;
+  --orange:#e87820;--orange-dark:#a84800;--orange-light:#f8c8a0;
+  --red:#e04040;--red-dark:#a00808;--red-light:#f8b0b0;
+  --violet:#9840c8;--violet-dark:#5c0890;--violet-light:#e0b0f8;
+  --gold:#c89000;--gold-dark:#805800;--gold-light:#f8e0a0;
+  --text:#0c0820;--text-soft:#302848;
+  --shadow-sm:0 4px 16px rgba(28,8,152,0.12);
+  --shadow-md:0 8px 32px rgba(28,8,152,0.16);
+  --shadow-lg:0 16px 48px rgba(28,8,152,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 8% 10%,rgba(60,40,200,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 92% 82%,rgba(152,64,200,0.15) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(24,200,120,0.10) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--indigo-dark),var(--violet-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--indigo-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(28,8,152,0.09);color:var(--indigo-dark);border:1.5px solid rgba(28,8,152,0.24)}
+.act-banner.act2{background:rgba(92,8,144,0.09);color:var(--violet-dark);border:1.5px solid rgba(92,8,144,0.24)}
+.act-banner.act3{background:rgba(128,88,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(128,88,0,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(60,40,200,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indigo-dark),var(--blue-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(28,8,152,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(60,40,200,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--indigo-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(60,40,200,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(60,40,200,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--indigo-dark);background:rgba(60,40,200,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(92,8,144,0.09)}
+.stage-label.gold{color:var(--gold-dark);background:rgba(128,88,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(60,40,200,0.09),rgba(152,64,200,0.07));border:1.5px solid rgba(60,40,200,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--indigo-dark);font-style:normal}
+.story-box p span.gold{color:var(--gold-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(232,120,32,0.10),rgba(60,40,200,0.09));border:2px solid rgba(232,120,32,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--orange-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* DISTRACTION CATEGORIZATION */
+.dist-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 24px}
+.dist-col{border-radius:var(--radius-sm);padding:16px 14px;border:2px solid}
+.dist-col.ext-col{border-color:rgba(168,72,0,0.28);background:rgba(232,120,32,0.07)}
+.dist-col.int-col{border-color:rgba(92,8,144,0.24);background:rgba(152,64,200,0.07)}
+.dist-col-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px}
+.ext-col .dist-col-title{color:var(--orange-dark)}
+.int-col .dist-col-title{color:var(--violet-dark)}
+.dist-items{display:flex;flex-direction:column;gap:8px}
+.dist-item{background:#fff;border:2px solid rgba(60,40,200,0.16);border-radius:10px;padding:10px 14px;cursor:pointer;transition:var(--t);font-size:13.5px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;position:relative}
+.dist-item:hover{transform:translateX(3px);border-color:var(--indigo);box-shadow:var(--shadow-sm)}
+.dist-item.di-correct{border-color:var(--green-dark);background:rgba(24,200,120,0.10);animation:correctPop 0.35s ease}
+.dist-item.di-wrong{border-color:var(--red-dark);background:rgba(224,64,64,0.07);animation:wrongShake 0.4s ease}
+.dist-item.di-placed{opacity:0.45;pointer-events:none}
+.di-icon{font-size:18px;flex-shrink:0}
+
+/* DISTRACTIONS POOL */
+.dist-pool{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 14px;padding:14px 16px;background:rgba(60,40,200,0.06);border:2px dashed rgba(60,40,200,0.26);border-radius:var(--radius-sm);min-height:52px}
+.dist-chip{background:#fff;border:2px solid rgba(60,40,200,0.22);border-radius:999px;padding:9px 16px;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:7px;user-select:none}
+.dist-chip:hover{border-color:var(--indigo-dark);color:var(--text);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.dist-chip.placed{opacity:0.38;pointer-events:none;border-style:dashed}
+
+/* DUAL FOCUS METER */
+.dual-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(60,40,200,0.07),rgba(24,200,120,0.06));border:1.5px solid rgba(60,40,200,0.20);border-radius:var(--radius-sm);padding:24px}
+.dual-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.dual-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.dual-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--indigo-dark);box-shadow:0 3px 14px rgba(28,8,152,0.36);cursor:pointer;transition:transform 0.2s ease}
+.dual-slider::-webkit-slider-thumb:hover,.dual-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.dual-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--indigo-dark);cursor:pointer}
+.dual-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dual-bar-side{padding:16px;border-radius:var(--radius-sm);border:2px solid}
+.dual-bar-side.focus-side{border-color:rgba(8,64,168,0.28);background:rgba(40,104,216,0.07)}
+.dual-bar-side.dist-side{border-color:rgba(168,72,0,0.28);background:rgba(232,120,32,0.07)}
+.dbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dbs-emoji{font-size:24px}
+.dbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.dbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.dbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.focus-side .dbs-fill{background:linear-gradient(90deg,var(--blue-light),var(--blue-dark));box-shadow:0 2px 6px rgba(8,64,168,0.28)}
+.dist-side .dbs-fill{background:linear-gradient(90deg,var(--orange-light),var(--orange-dark));box-shadow:0 2px 6px rgba(168,72,0,0.28)}
+.dbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.focus-side .dbs-pct{color:var(--blue-dark)}
+.dist-side .dbs-pct{color:var(--orange-dark)}
+.dbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:36px}
+
+/* ATTENTION LEAK */
+.attention-leak-visual{margin:18px 0 24px;background:linear-gradient(135deg,rgba(224,64,64,0.07),rgba(60,40,200,0.06));border:1.5px solid rgba(224,64,64,0.22);border-radius:var(--radius-sm);padding:24px}
+.leak-header{font-size:13px;font-weight:900;color:var(--red-dark);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px}
+.leak-timeline{display:flex;flex-direction:column;gap:10px}
+.leak-event{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:1.5px solid rgba(60,40,200,0.14);background:#fff;animation:fadeUp 0.4s ease both}
+.leak-event .le-time{font-size:12px;font-weight:900;color:var(--indigo-dark);min-width:52px}
+.leak-event .le-action{font-size:13.5px;font-weight:800;color:var(--text);flex:1}
+.leak-event .le-bar{height:8px;border-radius:999px;transition:width 1s ease,background 0.5s ease}
+.leak-event .le-pct{font-size:12px;font-weight:900;min-width:36px;text-align:right}
+
+/* SWITCH COST */
+.switch-cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 24px}
+.sc-card{background:var(--bg);border:2px solid rgba(60,40,200,0.20);border-radius:var(--radius-sm);padding:18px 14px;text-align:center;animation:fadeUp 0.4s ease both}
+.sc-card.sc-task{border-color:rgba(28,8,152,0.28);background:rgba(60,40,200,0.08)}
+.sc-card.sc-result{border-color:rgba(168,72,0,0.28);background:rgba(232,120,32,0.08)}
+.sc-card .scc-icon{font-size:32px;margin-bottom:8px;display:block}
+.sc-card .scc-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.sc-card .scc-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.sc-arrow{display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--indigo-dark)}
+
+/* FOCUS PLAN OPTIONS */
+.plan-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.plan-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(60,40,200,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.plan-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--indigo)}
+.plan-btn .pb-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease}
+.plan-btn:hover .pb-icon{transform:scale(1.10)}
+.plan-btn .pb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.plan-btn .pb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.plan-btn.sel-harmful{border-color:var(--red-dark);background:rgba(224,64,64,0.08);animation:wrongShake 0.4s ease}
+.plan-btn.sel-ok{border-color:var(--gold-dark);background:rgba(200,144,0,0.09);animation:correctPop 0.4s ease}
+.plan-btn.sel-best{border-color:var(--green-dark);background:rgba(24,200,120,0.09);animation:correctPop 0.4s ease}
+
+/* RECOVERY OPTIONS */
+.recovery-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.recovery-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(60,40,200,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.recovery-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--indigo)}
+.recovery-btn .rb-icon{font-size:28px;flex-shrink:0}
+.recovery-btn .rb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.recovery-btn .rb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.recovery-btn.sel-harmful{border-color:var(--red-dark);background:rgba(224,64,64,0.08);animation:wrongShake 0.4s ease}
+.recovery-btn.sel-ok{border-color:var(--gold-dark);background:rgba(200,144,0,0.09);animation:correctPop 0.4s ease}
+.recovery-btn.sel-best{border-color:var(--green-dark);background:rgba(24,200,120,0.09);animation:correctPop 0.4s ease}
+
+/* METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(60,40,200,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.focus-fill{background:linear-gradient(90deg,var(--blue-light),var(--blue-dark));box-shadow:0 2px 8px rgba(8,64,168,0.28)}
+.meter-fill.dist-fill{background:linear-gradient(90deg,var(--orange-light),var(--orange-dark));box-shadow:0 2px 8px rgba(168,72,0,0.28)}
+.meter-fill.resil-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark));box-shadow:0 2px 8px rgba(10,128,80,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,64,64,0.09);border:1.5px solid rgba(160,8,8,0.22)}
+.outcome-box.ok{background:rgba(200,144,0,0.10);border:1.5px solid rgba(128,88,0,0.22)}
+.outcome-box.best{background:rgba(24,200,120,0.09);border:1.5px solid rgba(10,128,80,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* AMINA SCENARIO */
+.amina-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.amina-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(60,40,200,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.amina-btn:hover{border-color:var(--indigo);transform:translateX(3px)}
+.amina-btn .ab-icon{font-size:24px;flex-shrink:0}
+.amina-btn .ab-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.amina-btn .ab-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.amina-btn.am-correct{border-color:var(--green-dark);background:rgba(24,200,120,0.10);animation:correctPop 0.4s ease}
+.amina-btn.am-incorrect{border-color:var(--red-dark);background:rgba(224,64,64,0.08);animation:wrongShake 0.4s ease}
+
+/* BREAK SORT */
+.break-sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;padding:14px 16px;background:rgba(60,40,200,0.06);border:2px dashed rgba(60,40,200,0.26);border-radius:var(--radius-sm);min-height:52px}
+.break-chip{background:#fff;border:2px solid rgba(60,40,200,0.22);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.break-chip:hover{border-color:var(--indigo-dark);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.break-chip.placed{opacity:0.38;pointer-events:none;border-style:dashed}
+.break-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.break-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.break-zone.zone-helpful{border-color:rgba(10,128,80,0.30);background:rgba(24,200,120,0.07)}
+.break-zone.zone-leak{border-color:rgba(168,72,0,0.30);background:rgba(232,120,32,0.07)}
+.break-zone .bz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.break-zone.zone-helpful .bz-title{color:var(--green-dark)}
+.break-zone.zone-leak .bz-title{color:var(--orange-dark)}
+.break-zone .bz-items{display:flex;flex-wrap:wrap;gap:6px;min-height:28px}
+.bz-item{background:#fff;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:4px}
+.bz-remove{cursor:pointer;font-size:13px;color:var(--text-soft);transition:color 0.2s}
+.bz-remove:hover{color:var(--red-dark)}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(60,40,200,0.08),rgba(152,64,200,0.07),rgba(24,200,120,0.06));border:2px solid rgba(60,40,200,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(60,40,200,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,200,120,0.10),rgba(40,104,216,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--indigo-dark);padding:2px 0}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(60,40,200,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--indigo);background:rgba(60,40,200,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--green-dark);background:rgba(24,200,120,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--red-dark);background:rgba(224,64,64,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--green-dark);background:rgba(24,200,120,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(24,200,120,0.16);color:#0a5030}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,64,64,0.12);color:#800808}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(24,200,120,0.13);color:#0a5030;border:1.5px solid rgba(10,128,80,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(232,120,32,0.10);color:#804000;border:1.5px solid rgba(168,72,0,0.22)}
+.feedback-msg.info-msg{background:rgba(92,8,144,0.08);color:var(--violet-dark);border:1.5px solid rgba(92,8,144,0.20)}
+.feedback-msg.indigo-msg{background:rgba(28,8,152,0.08);color:var(--indigo-dark);border:1.5px solid rgba(28,8,152,0.22)}
+.feedback-msg.gold-msg{background:rgba(128,88,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(128,88,0,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(60,40,200,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(48,40,72,0.38)}
+.reflection-input:focus{border-color:var(--indigo-dark);box-shadow:0 0 0 3px rgba(28,8,152,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--green-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--indigo-dark),var(--blue-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(28,8,152,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(28,8,152,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(60,40,200,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(60,40,200,0.08);border-color:var(--indigo-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(60,40,200,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--indigo-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(60,40,200,0.18);border-radius:999px}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(200,144,0,0.14),rgba(152,64,200,0.11));border:1.5px solid rgba(200,144,0,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(60,40,200,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(242,240,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(60,40,200,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(60,40,200,0.06),rgba(152,64,200,0.05),rgba(24,200,120,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .dist-columns{grid-template-columns:1fr}
+  .dual-bars{grid-template-columns:1fr}
+  .switch-cost-grid{grid-template-columns:1fr}
+  .break-zones{grid-template-columns:1fr}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🟣 Attention Lab</div>
+    <h1>The <span>Focus and Distraction</span> Trainer</h1>
+    <p>Understand attention - Spot distractions - Strengthen mental control</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🧠</div>
+    <h2>Focus Mastery Unlocked!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now understand attention as a trainable skill - and you have the tools to strengthen it every day.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Distraction Detective</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🏋️</span><div class="b-title">Focus Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🧠</span><div class="b-title">Attention Trainer</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let distSel      = {};
+let distOk       = false;
+let dualLevel    = 78;
+let leakChoice   = null;
+let leakLocked   = false;
+let plan1Id      = null;
+let plan1Locked  = false;
+let recov1Id     = null;
+let recov1Locked = false;
+let focusText    = '';
+let focusValid   = false;
+let reflectText  = '';
+let reflectValid = false;
+let aminaDistDone = false;
+let aminaStratDone = false;
+let aminaOutDone  = false;
+let aminaDistCount = 0;
+let breakSortPlac = {};
+let breakSortSel  = null;
+let quizAnswers   = {};
+
+const distData = [
+  {id:'noise',    icon:'🔊', text:'Noise outside',         zone:'external'},
+  {id:'phone',    icon:'📱', text:'Phone notification',    zone:'external'},
+  {id:'sibling',  icon:'👦', text:'Sibling talking nearby', zone:'external'},
+  {id:'hunger',   icon:'🍔', text:'Hungry stomach',        zone:'external'},
+  {id:'dream',    icon:'💭', text:'Daydreaming',           zone:'internal'},
+  {id:'worry',    icon:'😰', text:'Worrying',              zone:'internal'},
+  {id:'boredom',  icon:'😑', text:'Boredom',               zone:'internal'},
+  {id:'random',   icon:'🎲', text:'Random thoughts',       zone:'internal'}
+];
+
+const dualStates = [
+  {range:[0,18],   fLabel:'Peak Focus', dLabel:'Minimal', fMood:'Deep work zone. Full attention on one task. Thinking is fluid and fast. This is the state where the best work happens.', dMood:'Distractions barely registering. The mind has set aside competing inputs and is fully absorbed in the task.'},
+  {range:[19,38],  fLabel:'Good Focus', dLabel:'Low', fMood:'Solid concentration. Minor distractions present but manageable. Able to work through them with mild effort.', dMood:'Some background noise in the mind but not dominant. Focus tools would maintain this level well.'},
+  {range:[39,58],  fLabel:'Moderate', dLabel:'Moderate', fMood:'Focus and distraction in roughly equal competition. Quality of work variable - some good, some fragmented.', dMood:'Distractions noticeably present and competing for attention. Regulation tools needed to tip the balance back toward focus.'},
+  {range:[59,78],  fLabel:'Fragmented', dLabel:'High', fMood:'Attention switching frequently between task and distractions. Work quality low. Effort high for output achieved.', dMood:'Distractions dominant. Multiple competing signals pulling attention away. Focus plan or environment change strongly recommended.'},
+  {range:[79,100], fLabel:'Minimal', dLabel:'Maximum', fMood:'Effective focus essentially absent. Attention completely fragmented. Any attempt at deep work is near-impossible in this state.', dMood:'Total distraction dominance. The brain is context-switching continuously, paying the switching cost with every jump.'}
+];
+
+const leakTimeline = [
+  {time:'0:00', action:'Starts homework', focusPct:92, color:'var(--blue-dark)', status:'good'},
+  {time:'4:30', action:'Checks tablet notification', focusPct:58, color:'var(--orange-dark)', status:'drop'},
+  {time:'6:00', action:'Back to homework', focusPct:62, color:'var(--gold-dark)', status:'partial'},
+  {time:'9:20', action:'Looks outside window', focusPct:44, color:'var(--orange-dark)', status:'drop'},
+  {time:'11:00', action:'Back to homework', focusPct:46, color:'var(--gold-dark)', status:'partial'},
+  {time:'14:40', action:'Starts doodling', focusPct:22, color:'var(--red-dark)', status:'drop'},
+  {time:'16:00', action:'Returns to task reluctantly', focusPct:28, color:'var(--orange-dark)', status:'partial'}
+];
+
+const focusPlanOptions = [
+  {
+    id:'notif', icon:'🔴', text:'Study with all notifications turned on', sub:'Receives alerts during every focus block - each one resets attention',
+    quality:'harmful', focusLevel:14, distLevel:88,
+    outcome:{title:'The Notification Trap', body:'Studying with notifications on is equivalent to training at the gym while someone repeatedly taps you on the shoulder. Each notification - even one you choose not to respond to - activates the brain\'s orienting response, which involuntarily shifts attention toward the stimulus. Research shows that even a notification you consciously ignore produces a measurable drop in task performance. The brain cannot simultaneously maintain deep focus and monitor for incoming information.', tip:'Research: A study published in the Journal of Experimental Psychology found that even a phone vibration or notification sound - without the phone being checked - produced cognitive disruption equivalent to answering a call or responding to a text.'}
+  },
+  {
+    id:'text', icon:'🟡', text:'Study while texting occasionally when it feels important', sub:'Mixes communication with deep work - switching cost applied repeatedly',
+    quality:'ok', focusLevel:38, distLevel:54,
+    outcome:{title:'The Occasional Switch', body:'Texting occasionally during study feels manageable - and it is certainly better than constant notification monitoring. But each text exchange involves two switching costs: one when moving from task to phone, and one when moving back. Additionally, the anticipation of possible texts between exchanges creates what researchers call "background vigilance" - part of the mind is allocated to watching for incoming messages even between checks. This background monitoring reduces available cognitive resources for the primary task.', tip:'Principle: "Occasional" texting consistently underestimates how many switches actually occur and how long true re-engagement with the task takes after each one. Studies suggest it takes an average of 23 minutes to return to a task after a significant distraction.'}
+  },
+  {
+    id:'silence', icon:'🟢', text:'Phone silenced and away, 15-minute timer set for one specific task', sub:'Removes the distraction source and creates bounded, achievable focus commitment',
+    quality:'best', focusLevel:84, distLevel:16,
+    outcome:{title:'The Structured Focus Block', body:'A silenced phone removes the primary external distraction. A 15-minute timer creates a bounded commitment - the brain finds it significantly easier to commit to "I will focus for 15 minutes" than to "I will focus until this is done." The specific single task removes decision-making during the block. Together these three elements - distraction removal, time boundary, task clarity - create the conditions for genuine deep focus and the accumulation of real "attention stamina."', tip:'Research: The Pomodoro Technique and similar time-boxing methods are among the most empirically supported focus strategies. Bounded focus intervals allow the brain to fully commit to a task, knowing rest is guaranteed and defined.'}
+  }
+];
+
+const recoveryOptions = [
+  {
+    id:'giveup', icon:'🔴', text:'Give up on the session entirely', sub:'Distraction wins - the brain learns that distraction ends work',
+    quality:'harmful', focusLevel:8, resilLevel:6,
+    outcome:{title:'Distraction Wins the Session', body:'Giving up when distracted teaches the brain a powerful lesson: "When a distraction arrives during work, the work stops." This is the opposite of focus training. Every time distraction successfully terminates a work session, its power grows. The brain learns that distraction is an effective exit strategy - and this learning makes future distraction responses more automatic and harder to override.', tip:'Principle: The ability to return attention after distraction is a trainable skill. Every time you return - even imperfectly, even after losing several minutes - you strengthen the neural pathway for attention recovery. Giving up provides no training stimulus.'}
+  },
+  {
+    id:'scroll', icon:'🟡', text:'Check phone briefly for "just a few minutes"', sub:'Distraction extended - the brief check reliably becomes longer',
+    quality:'ok', focusLevel:30, resilLevel:28,
+    outcome:{title:'The Brief Check That Is Not Brief', body:'"Just a few minutes" is one of the most common and most optimistic predictions the distracted brain makes - and one of the least accurate. Social media, messaging, and video platforms are specifically engineered to convert brief checks into extended engagement. The switching cost of returning to the task after even a brief phone check is significant. And the dopamine hit from the brief check makes the dry cognitive work of returning to the task feel even less appealing by comparison.', tip:'Research: Variable reward schedules - the mechanism used by social media algorithms - are among the most powerful known methods for extending engagement. The brain cannot accurately predict how long "brief" will be when variable rewards are involved.'}
+  },
+  {
+    id:'return', icon:'🟢', text:'Notice the distraction, take one breath, gently return to the task', sub:'Attention recovery - the single most important focus skill',
+    quality:'best', focusLevel:78, resilLevel:88,
+    outcome:{title:'The Recovery Skill', body:'Noticing that you have been distracted without judgment, taking a breath, and gently returning to the task is the most important focus skill that can be practised. The "gently" is essential - self-criticism after distraction ("I am so bad at focusing") activates emotional processing that further competes with the primary task. The return itself is the training. Every time you notice distraction and return, you strengthen the neural circuit for intentional attention direction. This is literally how focus improves.', tip:'Research: Mindfulness-based attention training - of which the distraction-notice-return cycle is the core practice - has been shown to produce measurable changes in the prefrontal cortex over time. The practice of returning attention is the exercise. The distraction is the resistance that makes the muscle stronger.'}
+  }
+];
+
+const breakBehaviours = [
+  {id:'walk',    text:'5-minute walk outside', zone:'helpful'},
+  {id:'scroll2', text:'20 minutes of social media', zone:'leak'},
+  {id:'water',   text:'Get a drink of water', zone:'helpful'},
+  {id:'episode', text:'Start a TV episode', zone:'leak'},
+  {id:'stretch', text:'Body stretching for 3 minutes', zone:'helpful'},
+  {id:'gaming',  text:'One quick gaming session', zone:'leak'},
+  {id:'breathe', text:'Slow breathing for 2 minutes', zone:'helpful'},
+  {id:'chat',    text:'Long chat that spirals for 40 minutes', zone:'leak'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is the task-switching cost, and why does it reduce focus quality?',
+    options:[
+      {icon:'⚡', text:'Each time the brain switches between tasks, it pays a cognitive cost - a period of reduced performance while it reconfigures for the new context', correct:true},
+      {icon:'🏋️', text:'Task-switching strengthens the brain by forcing it to work harder across multiple contexts simultaneously', correct:false},
+      {icon:'⏱️', text:'Task-switching cost only applies when switching between very different types of tasks, not between similar ones', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. The task-switching cost - sometimes called "attention residue" - refers to the measurable drop in performance quality that occurs every time the brain shifts from one task to another. The previous task leaves a cognitive trace that occupies working memory resources needed for the new task. The more frequent the switches, the higher the total cost paid - which is why fragmented work sessions feel exhausting but produce little.',
+      incorrect:'Not quite. Task-switching carries a genuine cognitive cost regardless of the task similarity. Each switch requires the brain to save the context of the previous task, load the context of the new one, and re-establish the cognitive mode appropriate for the new context. This takes time and cognitive resources - resources that are then unavailable for the primary task itself.'
+    }
+  },
+  {
+    q:'Question 2: Why are distractions so powerful - why can\'t we simply ignore them?',
+    options:[
+      {icon:'😤', text:'Distractions are powerful only for people with weak willpower - those with strong willpower find them easy to ignore', correct:false},
+      {icon:'🧠', text:'The brain has a hardwired orienting response that automatically redirects attention toward novel or unpredictable stimuli - this response cannot simply be overridden by willpower', correct:true},
+      {icon:'📚', text:'Distractions are only powerful when the primary task is boring - engaging tasks automatically eliminate distraction', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. The orienting response is one of the most fundamental attention mechanisms in the human nervous system - it automatically directs awareness toward novel, unexpected, or socially relevant stimuli. This is why phone notifications, sudden sounds, and movement in the periphery are so compelling: they bypass conscious attention and directly activate the orienting system. This is not a willpower failure - it is the brain\'s threat detection system doing its job.',
+      incorrect:'Not quite. Distractions are powerful because of a hardwired neurological mechanism called the orienting response - the automatic redirection of attention toward novel or unexpected stimuli. This mechanism cannot be overridden through willpower alone because it activates before conscious decision-making can intervene. The most effective approach is environmental management - removing the distraction source - rather than relying on willpower to resist something the brain is designed to respond to.'
+    }
+  },
+  {
+    q:'Question 3: How does practising focus - specifically, the cycle of noticing distraction and returning attention - make focus stronger over time?',
+    options:[
+      {icon:'😴', text:'Repeated focus practice does not actually change the brain - some people are simply born with better attention than others', correct:false},
+      {icon:'🌱', text:'Each time you notice distraction and intentionally return attention to the task, you strengthen the neural circuits responsible for directed attention - producing measurable brain changes over time', correct:true},
+      {icon:'📅', text:'Focus improves automatically with age - practising it during childhood has no measurable effect', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. The brain is neuroplastic - it changes in response to repeated patterns of activation. The cycle of noticing distraction and returning attention without judgment is the exact training stimulus that strengthens the prefrontal cortex\'s capacity for directed attention. Neuroimaging research has shown measurable increases in grey matter density in attention-related brain regions following sustained mindfulness and attention practice. Focus is genuinely trainable - and the training mechanism is the return, not the initial state of focus.',
+      incorrect:'Not quite. Neuroplasticity - the brain\'s capacity to change its structure in response to repeated experience - applies directly to attention training. The distraction-notice-return cycle is the specific mechanism by which focus improves: each return strengthens the neural circuits for intentional attention direction. Research shows measurable brain changes in prefrontal regions following attention practice. Attention capacity is strongly influenced by training, not fixed by genetics.'
+    }
+  }
+];
+
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟣', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getDualState(v) {
+  return dualStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Attention') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #011</div>' +
+    '<h2>Focus Is Not a Talent. It Is a Trainable Skill.</h2>' +
+    '<p>Welcome to the Focus and Distraction Trainer. Attention is arguably the most valuable cognitive resource available to the human brain - more valuable than intelligence, more predictive of achievement, and more directly connected to the quality of our experience. And yet almost nobody receives formal training in how it works, what depletes it, or how to strengthen it deliberately. This lab changes that.</p>' +
+    '<div class="story-box" data-icon="📚">' +
+      '<p><span>Rayyan</span> is ten years old. He sits down at his desk at 4pm with a plan: finish his homework, then have the evening free. But five minutes after opening his books, something has gone wrong. He has checked his tablet twice. Thought extensively about a game he played yesterday. Watched a bird land on the windowsill for three full minutes. And started drawing small shapes in the margin of his notebook. An hour later, the homework is barely started.</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"I just cannot focus. My brain does not work properly. Other people can do this and I cannot. Maybe I am just not good at concentrating."</p></div>' +
+    '<p>Rayyan is wrong about what he is experiencing - and his misunderstanding is making the problem worse. He is not broken. His attention is not defective. He is experiencing what every human brain experiences when placed in a high-distraction environment without a focus structure. His brain is working exactly as designed. The question is: how do we train it to work differently?</p>' +
+    '<div class="feedback-msg info-msg">🧠 <strong>Core concept:</strong> Attention is a finite cognitive resource - like a muscle. It fatigues. It can be drained by distractions. And crucially, it can be strengthened through deliberate practice. The difference between someone who "can focus" and someone who "cannot" is almost always training and environment - not innate capacity. Every tool in this lab is backed by cognitive neuroscience research on how attention actually works.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Start Focus Training</button>' +
+  '</div>';
+}
+
+function s2() {
+  distSel = {}; distOk = false;
+  var extItems = distData.filter(function(d){ return d.zone === 'external'; }).map(function(d) {
+    return '<div class="dist-item" id="di-' + d.id + '" onclick="categorizeItem(\'' + d.id + '\',\'external\',\'external\')">' +
+      '<span class="di-icon">' + d.icon + '</span>' + d.text +
+    '</div>';
+  }).join('');
+  var intItems = distData.filter(function(d){ return d.zone === 'internal'; }).map(function(d) {
+    return '<div class="dist-item" id="di-' + d.id + '" onclick="categorizeItem(\'' + d.id + '\',\'internal\',\'internal\')">' +
+      '<span class="di-icon">' + d.icon + '</span>' + d.text +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Attention') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Spot the Distractions</div>' +
+    '<h2>Two Types of Attention Thief</h2>' +
+    '<p>Not all distractions are the same - and understanding the difference matters enormously for choosing the right response strategy. External distractions come from the environment around us. Internal distractions come from within our own minds. Rayyan is experiencing both types simultaneously, which is why his attention is so thoroughly fragmented.</p>' +
+    '<p>Read each item in both columns and click to confirm or reject whether it belongs in that category. Each item is in its correct column - confirm you understand why by clicking to select each one.</p>' +
+    '<div class="dist-columns">' +
+      '<div class="dist-col ext-col">' +
+        '<div class="dist-col-title">External Distractions</div>' +
+        '<div class="dist-items">' + extItems + '</div>' +
+      '</div>' +
+      '<div class="dist-col int-col">' +
+        '<div class="dist-col-title">Internal Distractions</div>' +
+        '<div class="dist-items">' + intItems + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="distFeedback"></div>' +
+    '<button class="btn-primary" id="distNextBtn" onclick="renderStage(3)" disabled>Next: Attention Meter -></button>' +
+  '</div>';
+}
+
+function s3() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Attention') +
+    backBtn(2,'Back to Distraction Types') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Attention Meter</div>' +
+    '<h2>Where Is Rayyan\'s Attention Right Now?</h2>' +
+    '<p>Focus and distraction exist on an inverse spectrum - as distraction increases, focused attention decreases proportionally. The position on this meter changes in response to environment, chosen tools, and training. Right now, Rayyan is 20 minutes into his study session with no focus structure, surrounded by multiple distractions. Move the slider to estimate where his meter sits.</p>' +
+    '<div class="dual-meter-wrap">' +
+      '<div class="dual-slider-labels"><span>🧠 Peak Focus</span><span>⚖️ Balanced</span><span>🌪️ Full Distraction</span></div>' +
+      '<input type="range" class="dual-slider" id="dualSl" min="0" max="100" value="78" oninput="updateDual(this.value)"/>' +
+      '<div class="dual-bars">' +
+        '<div class="dual-bar-side focus-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🎯</span><span class="dbs-title">Focus Level</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="focFill" style="width:22%"></div></div>' +
+          '<div class="dbs-pct" id="focPct">22%</div>' +
+          '<div class="dbs-mood" id="focMood">Attention essentially absent. Work quality very low.</div>' +
+        '</div>' +
+        '<div class="dual-bar-side dist-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🌪️</span><span class="dbs-title">Distraction Level</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="disFill" style="width:78%"></div></div>' +
+          '<div class="dbs-pct" id="disPct">78%</div>' +
+          '<div class="dbs-mood" id="disMood">Distractions dominant. Focus plan strongly recommended.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg indigo-msg">🎯 <strong>Rayyan\'s realistic state:</strong> Multiple simultaneous distractions (internal + external) with no structure in place typically places the meter in the Fragmented to Minimal Focus range. This is the normal result of attempting deep work in an unmanaged distraction environment - not a reflection of Rayyan\'s intelligence or attention capacity.</div>' +
+    '<button class="btn-primary" onclick="renderStage(4)">Next: Attention Leak Detector -></button>' +
+  '</div>';
+}
+
+function s4() {
+  leakChoice = null; leakLocked = false;
+  var rows = leakTimeline.map(function(ev, i) {
+    var isGood = ev.status === 'good';
+    var bgColor = isGood ? 'rgba(40,104,216,0.08)' : ev.status === 'partial' ? 'rgba(200,144,0,0.08)' : 'rgba(224,64,64,0.08)';
+    var borderColor = isGood ? 'rgba(40,104,216,0.22)' : ev.status === 'partial' ? 'rgba(200,144,0,0.22)' : 'rgba(224,64,64,0.22)';
+    return '<div class="leak-event" style="animation-delay:' + (i*0.09) + 's;background:' + bgColor + ';border-color:' + borderColor + ';">' +
+      '<div class="le-time">' + ev.time + '</div>' +
+      '<div class="le-action">' + ev.action + '</div>' +
+      '<div class="le-bar" id="lb-' + i + '" style="width:0%;background:' + ev.color + '">' + '</div>' +
+      '<div class="le-pct" style="color:' + ev.color + '">' + ev.focusPct + '%</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Attention') +
+    backBtn(3,'Back to Attention Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Attention Leak Detector</div>' +
+    '<h2>The Attention Leak in Action</h2>' +
+    '<p>Rayyan studies for twenty minutes but checks his phone or otherwise disengages six times. Watch what happens to his focus level with each switch. This timeline is a precise recreation of what cognitive research shows happens to attention during fragmented work sessions.</p>' +
+    '<div class="attention-leak-visual">' +
+      '<div class="leak-header">Focus Level Over 16 Minutes</div>' +
+      '<div class="leak-timeline">' + rows + '</div>' +
+    '</div>' +
+    '<p style="margin-top:4px">Notice the pattern: each interruption causes a significant drop in focus level, and the recovery after each interruption never quite reaches the previous peak. What causes this pattern?</p>' +
+    '<div class="plan-options" id="leakOptions">' +
+      '<button class="plan-btn" id="lo-reset" onclick="chooseLeakAns(\'reset\')">' +
+        '<span class="pb-icon">🔴</span>' +
+        '<div><div class="pb-text">It resets and loses momentum - each switch requires re-engagement that starts below the previous peak</div><div class="pb-sub">The switching cost accumulates over time</div></div>' +
+      '</button>' +
+      '<button class="plan-btn" id="lo-improve" onclick="chooseLeakAns(\'improve\')">' +
+        '<span class="pb-icon">🟡</span>' +
+        '<div><div class="pb-text">It improves - the brief breaks actually refresh attention capacity</div><div class="pb-sub">Rest restores focus, making switches beneficial</div></div>' +
+      '</button>' +
+      '<button class="plan-btn" id="lo-same" onclick="chooseLeakAns(\'same\')">' +
+        '<span class="pb-icon">🟢</span>' +
+        '<div><div class="pb-text">It stays at the same level - distraction checks have no lasting impact on focus</div><div class="pb-sub">Focus level is maintained regardless of interruptions</div></div>' +
+      '</button>' +
+    '</div>' +
+    '<div id="leakFeedback"></div>' +
+    '<button class="btn-primary" id="leakNextBtn" onclick="renderStage(5)" disabled>Next: The Switching Cost -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Attention') +
+    backBtn(4,'Back to Attention Leak') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Brain Switching Cost</div>' +
+    '<h2>Every Switch Has a Price Tag</h2>' +
+    '<p>What Rayyan is experiencing has a name in cognitive neuroscience: the task-switching cost, sometimes called "attention residue." When the brain moves from one task to another - even briefly - it does not simply pause and resume. It has to save the cognitive context of the previous task, load the context of the new task, and then re-establish the mental state appropriate for the original task on return. This process is not instantaneous. It is measurable, and it costs real cognitive resources.</p>' +
+    '<div class="switch-cost-grid">' +
+      '<div class="sc-card sc-task" style="animation-delay:0.1s"><span class="scc-icon">📖</span><div class="scc-title">Rayyan reads homework</div><div class="scc-desc">Full cognitive context loaded. Focus building toward deep engagement. Neural circuits for this task fully active.</div></div>' +
+      '<div class="sc-arrow">→</div>' +
+      '<div class="sc-card sc-result" style="animation-delay:0.2s"><span class="scc-icon">📱</span><div class="scc-title">Checks phone notification</div><div class="scc-desc">Brain interrupts homework context to process new input. Homework context partially lost. Social processing circuits activate.</div></div>' +
+    '</div>' +
+    '<div class="switch-cost-grid" style="margin-top:0">' +
+      '<div class="sc-card sc-task" style="animation-delay:0.3s"><span class="scc-icon">🔄</span><div class="scc-title">Tries to return to homework</div><div class="scc-desc">Must reload homework context from memory. Previous flow state is gone. New engagement phase required - starts from below baseline.</div></div>' +
+      '<div class="sc-arrow">→</div>' +
+      '<div class="sc-card sc-result" style="animation-delay:0.4s"><span class="scc-icon">📉</span><div class="scc-title">Reduced quality for 20+ minutes</div><div class="scc-desc">Research shows it takes an average of 23 minutes to return to full engagement after a significant distraction. Each switch pays this price in full.</div></div>' +
+    '</div>' +
+    '<div class="feedback-msg indigo-msg">⚡ <strong>The accumulation effect:</strong> Six interruptions over 20 minutes, each costing up to 23 minutes of reduced performance quality, creates a situation where Rayyan could spend two hours "studying" and accumulate less than 30 minutes of genuinely effective cognitive work. The homework takes four times longer to finish than necessary, and feels exhausting throughout because of the constant context-switching overhead.</div>' +
+    '<div class="feedback-msg gold-msg">🏅 <strong>Badge Progress:</strong> Distraction Detective Level 1 - almost earned! Continue to Act 2 to build your focus plan...</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Focus Formula -></button>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {icon:'🚫', title:'Remove the Distraction Source', desc:'Phone in another room, not just face-down on the desk. Notifications off, not silenced. The goal is environmental management - removing the trigger, not relying on willpower to resist it.'},
+    {icon:'⏱️', title:'Set a Small Time Goal', desc:'15 minutes of focused work. Not "until it is finished" - a specific, bounded interval. The brain commits more fully to a defined time block than an open-ended session. Small wins compound into large ones.'},
+    {icon:'🎯', title:'Work on One Task Deeply', desc:'One task. One goal. No browser tabs, no second book, no background TV. Deep engagement with a single task produces dramatically more output per unit of time than multitasking - and feels less exhausting.'},
+    {icon:'☕', title:'Take a Real Break', desc:'A genuine break - ideally without screens. Walking, stretching, a drink of water, slow breathing. Not a "brief" phone check that becomes 20 minutes. The break restores the attention resource. The phone depletes it further.'}
+  ];
+  var rows = steps.map(function(s, i) {
+    return '<div class="formula-row" style="animation-delay:' + (i*0.09) + 's"><span class="fr-icon">' + s.icon + '</span><div><div class="fr-title">' + s.title + '</div><div class="fr-desc">' + s.desc + '</div></div></div>';
+  }).join('<div class="formula-arrow">↓</div>');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Attention') +
+    backBtn(5,'Back to Switching Cost') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - Focus Formula</div>' +
+    '<h2>The Four-Step Focus Formula</h2>' +
+    '<p>The Focus Formula is not a magic solution - it is a practical framework backed by cognitive research on what actually enables sustained attention. Each step addresses a specific mechanism in the attention system. Together they create the conditions in which genuine focus becomes possible.</p>' +
+    '<div class="formula-box">' + rows + '<div class="formula-row formula-result" style="margin-top:12px"><span class="fr-icon">🧠</span><div><div class="fr-title">Attention Stamina Builds</div><div class="fr-desc">Each completed focused interval - even a short one - strengthens the neural circuit for sustained attention. Just like muscle training, the capacity grows through regular use under appropriate conditions. The first 15-minute block may feel difficult. The tenth will feel natural. The hundredth will feel like home.</div></div></div>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Strengthening Focus -></button>' +
+  '</div>';
+}
+
+function s7() {
+  plan1Id = null; plan1Locked = false;
+  var btns = focusPlanOptions.map(function(p) {
+    return '<button class="plan-btn" id="p1-' + p.id + '" onclick="choosePlan1(\'' + p.id + '\')">' +
+      '<span class="pb-icon">' + p.icon + '</span>' +
+      '<div><div class="pb-text">' + p.text + '</div><div class="pb-sub">' + p.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Strengthening Focus') +
+    backBtn(6,'Back to Focus Formula') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Choose Focus Plan</div>' +
+    '<h2>How Should Rayyan Set Up His Study Session?</h2>' +
+    '<p>Rayyan has finished school and has 45 minutes before dinner to work on his project. Three approaches are available. Each will have a fundamentally different impact on how much focused work he actually achieves - and on what his brain learns about its own capacity to concentrate. Choose the approach you believe will produce the best outcome and watch the meters respond.</p>' +
+    '<div class="plan-options">' + btns + '</div>' +
+    '<div id="p1Outcome"></div>' +
+    '<div id="p1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Build Your Focus Block -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  focusValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Strengthening Focus') +
+    backBtn(7,'Back to Focus Plan') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Build a Focus Block</div>' +
+    '<h2>Design Your Next Focus Session</h2>' +
+    '<p>A focus block is a deliberately designed unit of concentrated work. The more specifically it is planned in advance, the more likely it is to be successfully executed - because the planning brain does the decision-making work before the distracted brain has a chance to negotiate. Write your next focus block below with the precision of a training plan.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your focus block should specify three things:<br/>' +
+      '<strong>Time length:</strong> How many minutes exactly? (Recommend 15-25 minutes to start)<br/>' +
+      '<strong>Distraction removal:</strong> Specifically what will you remove or put away?<br/>' +
+      '<strong>Task goal:</strong> The single specific thing you will work on during this block' +
+    '</div>' +
+    '<label class="input-label">My next focus block will look like...</label>' +
+    '<textarea class="reflection-input" id="focusInput" oninput="checkFocus(this.value)" placeholder="For example: I will work for 20 minutes on my science homework - specifically the three questions about the water cycle. Before starting I will put my phone in the kitchen drawer and close all browser tabs except the ones I need. I will set a timer. When it rings I will take a 5-minute walk before deciding whether to do another block..." rows="5"></textarea>' +
+    '<div class="char-counter" id="focusCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">⏱️ <strong>Why specificity matters:</strong> Vague intentions ("I will try to focus more") produce vague results. Specific implementation intentions - "When I sit down at 4pm, I will put my phone in the kitchen and work for 20 minutes on the first three homework questions" - are significantly more likely to be followed. The more specific the plan, the smaller the gap between intention and action.</div>' +
+    '<button class="btn-primary" id="focusNextBtn" onclick="renderStage(9)" disabled>Next: Attention Recovery Practice -></button>' +
+  '</div>';
+}
+
+function s9() {
+  recov1Id = null; recov1Locked = false;
+  var btns = recoveryOptions.map(function(r) {
+    return '<button class="recovery-btn" id="rv-' + r.id + '" onclick="chooseRecovery(\'' + r.id + '\')">' +
+      '<span class="rb-icon">' + r.icon + '</span>' +
+      '<div><div class="rb-text">' + r.text + '</div><div class="rb-sub">' + r.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Strengthening Focus') +
+    backBtn(8,'Back to Focus Block') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Attention Recovery Practice</div>' +
+    '<h2>Rayyan Gets Distracted Mid-Task</h2>' +
+    '<p>Rayyan is 8 minutes into his first proper focus block. Phone in another room. Timer set. Working well. And then a thought about a friend\'s comment from earlier today arrives. He is now daydreaming. He has been staring at the same paragraph for 90 seconds without reading a word. He has noticed he is distracted. What he does in the next ten seconds will determine whether this block succeeds or fails. Three options are available.</p>' +
+    '<div class="recovery-options">' + btns + '</div>' +
+    '<div id="recovOutcome"></div>' +
+    '<div id="recovNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(10)">Next: Reflect on Focus Training -></button></div>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Strengthening Focus') +
+    backBtn(9,'Back to Attention Recovery') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Practising Focus Make It Stronger?</h2>' +
+    '<p>The answer to this question is in the neuroscience of neuroplasticity - the brain\'s ability to change its physical structure in response to repeated experience. Understanding the mechanism is not just intellectually interesting: it is motivating. When you know why the practice works, you are more likely to keep practising through the difficult early stages when progress is not yet visible.</p>' +
+    '<p>Answer all three questions with depth and specificity:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. What specifically happens in the brain when you practise the cycle of noticing distraction and returning attention? Why is the return itself the training, not the initial state of focus?<br/>' +
+      '2. Why is removing distraction sources from the environment more effective than relying on willpower to resist them?<br/>' +
+      '3. Think of one area of your own life where distraction regularly disrupts your focus. What would one structured focus block look like in that specific context?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about neuroplasticity, the orienting response, why willpower alone is an unreliable strategy, and a specific real situation in your own life..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🏅 <strong>Badge Progress:</strong> Focus Builder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Real-World Transfer -></button>' +
+  '</div>';
+}
+
+function s11() {
+  aminaDistDone = false; aminaStratDone = false; aminaOutDone = false; aminaDistCount = 0;
+  var distOpts = [
+    {id:'tv',     icon:'📺', text:'TV audio and visual stimulation drawing eyes and attention', correct:true},
+    {id:'convo',  icon:'💬', text:'Overhearing conversations from TV characters', correct:true},
+    {id:'bored2', icon:'😑', text:'Increasing boredom as reading becomes harder to follow', correct:true},
+    {id:'light',  icon:'💡', text:'Good reading light and a comfortable chair', correct:false}
+  ];
+  var stratOpts = [
+    {id:'ignore', icon:'🤞', text:'Try harder to focus by using willpower to block out the TV', correct:false},
+    {id:'both',   icon:'🎭', text:'Accept that reading while the TV is on is impossible and give up', correct:false},
+    {id:'change', icon:'✅', text:'Move to a different room or negotiate turning the TV off', correct:true}
+  ];
+  var outOpts = [
+    {id:'tired',  icon:'😓', text:'She finishes the chapter exhausted, having retained very little of it', correct:false},
+    {id:'focus',  icon:'📖', text:'Her focus improves significantly and she retains much more of what she reads', correct:true},
+    {id:'same',   icon:'➡️', text:'Her reading quality stays exactly the same regardless of environment', correct:false}
+  ];
+  var dBtns = distOpts.map(function(d) {
+    return '<button class="amina-btn" id="ad-' + d.id + '" onclick="selectAminaDist(\'' + d.id + '\',' + d.correct + ')">' +
+      '<span class="ab-icon">' + d.icon + '</span>' +
+      '<div><div class="ab-text">' + d.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var sBtns = stratOpts.map(function(s) {
+    return '<button class="amina-btn" id="as-' + s.id + '" onclick="selectAminaStrat(\'' + s.id + '\',' + s.correct + ')">' +
+      '<span class="ab-icon">' + s.icon + '</span>' +
+      '<div><div class="ab-text">' + s.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var oBtns = outOpts.map(function(o) {
+    return '<button class="amina-btn" id="ao-' + o.id + '" onclick="selectAminaOut(\'' + o.id + '\',' + o.correct + ')">' +
+      '<span class="ab-icon">' + o.icon + '</span>' +
+      '<div><div class="ab-text">' + o.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Real-World Transfer') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Amina Tries to Read</h2>' +
+    '<div class="story-box" data-icon="📺">' +
+      '<p><span class="gold">Amina</span> is eleven years old. She has a reading assignment for English class - a chapter to read and summarise by tomorrow. She settles on the sofa in the living room, book open. The TV is on at moderate volume - a programme she has already seen. She tells herself it will not bother her. Twelve minutes later, she realises she has read the same page twice and cannot remember a word of it.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify the distraction types</div>' +
+    '<p>Select all three sources of distraction that are affecting Amina\'s reading. One option is not a distraction.</p>' +
+    '<div class="amina-options">' + dBtns + '</div>' +
+    '<div id="aminaDistFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Choose the focus strategy</div>' +
+    '<div id="aminaStratWrap" style="opacity:0.4;pointer-events:none"><div class="amina-options">' + sBtns + '</div></div>' +
+    '<div id="aminaStratFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Predict the outcome</div>' +
+    '<div id="aminaOutWrap" style="opacity:0.4;pointer-events:none"><div class="amina-options">' + oBtns + '</div></div>' +
+    '<div id="aminaOutFeedback"></div>' +
+    '<button class="btn-primary" id="aminaNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Distraction Sorting Challenge -></button>' +
+  '</div>';
+}
+
+function s12() {
+  breakSortPlac = {}; breakSortSel = null;
+  var chips = breakBehaviours.map(function(b) {
+    return '<div class="break-chip" id="bc-' + b.id + '" onclick="handleBreakClick(\'' + b.id + '\')">' + b.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Real-World Transfer') +
+    backBtn(11,'Back to Amina\'s Scenario') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 12 - Distraction Sorting Challenge</div>' +
+    '<h2>Helpful Break or Attention Leak?</h2>' +
+    '<p>Not all breaks are created equal. A genuine break - one that allows the attention resource to actually rest and restore - involves stepping away from stimulating input and allowing the default mode network to activate. An attention leak masquerading as a break involves switching to a different high-stimulation input (usually a screen) that provides dopamine but drains the cognitive resources needed for the next focus block.</p>' +
+    '<p>Sort each activity into the correct category. Some will feel like breaks but function as leaks.</p>' +
+    '<div class="break-sort-bank" id="breakSortBank">' + chips + '</div>' +
+    '<div id="breakSortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click an activity, then click a zone to place it</div>' +
+    '<div class="break-zones">' +
+      '<div class="break-zone zone-helpful" onclick="placeBreakSort(\'helpful\')">' +
+        '<div class="bz-title">Helpful Break</div>' +
+        '<div class="bz-items" id="zone-helpful"></div>' +
+      '</div>' +
+      '<div class="break-zone zone-leak" onclick="placeBreakSort(\'leak\')">' +
+        '<div class="bz-title">Attention Leak</div>' +
+        '<div class="bz-items" id="zone-leak"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="breakSortFeedback"></div>' +
+    '<button class="btn-primary" id="breakSortNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Real-World Transfer') +
+    backBtn(12,'Back to Break Sorting') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Focus and Distraction Trainer with real depth. Let\'s see how clearly the core concepts have settled. Answer all three questions carefully - draw on everything you have explored today about attention, distraction, and the neuroscience of focus training.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Attention Trainer!</h2>' +
+    '<p>You completed the full Focus and Distraction Trainer - all 3 Acts, 14 stages, and a genuine exploration of how attention works and how to strengthen it. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Distraction Detective</div><div class="b-sub">Spotted the leaks</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🏋️</span><div class="b-title">Focus Builder</div><div class="b-sub">Designed focus blocks</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🧠</span><div class="b-title">Attention Trainer</div><div class="b-sub">Built recovery skills</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🔍</span><div><div class="sk-title">Two Types of Distraction</div><div class="sk-desc">External distractions come from the environment and can be managed through environment design. Internal distractions come from within the mind and are addressed through the distraction-notice-return practice. Both types drain the same finite attention resource. The most effective approach addresses external distractions through removal and internal distractions through gentle, non-judgmental attention redirection.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🏋️</span><div><div class="sk-title">The Switching Cost</div><div class="sk-desc">Every task switch pays a cognitive cost - a period of reduced performance quality while the brain reconfigures. Six interruptions over 20 minutes can turn 45 minutes of intended work into less than 15 minutes of genuinely effective engagement. Structured focus blocks - with distraction removal, time boundaries, and single-task clarity - are the primary tool for reducing switching costs and building genuine "attention stamina."</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🧠</span><div><div class="sk-title">The Return Is the Training</div><div class="sk-desc">The most important focus skill is not achieving an initial state of concentration - it is the ability to notice when attention has drifted and gently return it to the task. This return, practised repeatedly, is the specific mechanism by which focus improves neurologically. The distraction provides the resistance. The return is the repetition. Over time, the muscle gets stronger - and what once required deliberate effort becomes increasingly automatic and natural.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="📚" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Rayyan is not broken. His attention is not defective. He simply had not yet learned what you now know: that focus is a trainable skill, distraction is the resistance, and every return is a repetition. The next time you sit down to do something that requires concentration, you now have a plan - remove the distraction, set the timer, define the task, and when your mind wanders (because it will), simply notice it, take one breath, and gently come back. That is the practice. That is the training. That is how the muscle grows. 🧠' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--indigo-dark),var(--blue-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ===== POST RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    Object.keys(distSel).forEach(function(id) {
+      var el = document.getElementById('di-' + id);
+      if (el && distSel[id]) el.classList.add('di-correct');
+    });
+    checkDistAll();
+  }
+  if (n === 3) updateDual(dualLevel);
+  if (n === 4) {
+    animateLeakBars();
+    if (leakChoice) {
+      var el = document.getElementById('lo-' + leakChoice);
+      if (el) el.classList.add(leakChoice === 'reset' ? 'sel-best' : 'sel-harmful');
+      var nb = document.getElementById('leakNextBtn');
+      if (nb) nb.disabled = false;
+    }
+  }
+  if (n === 8 && focusText) {
+    var ta = document.getElementById('focusInput');
+    if (ta) ta.value = focusText;
+    checkFocus(focusText);
+  }
+  if (n === 10 && reflectText) {
+    var ta2 = document.getElementById('reflectInput');
+    if (ta2) ta2.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (aminaDistDone) {
+        var sw = document.getElementById('aminaStratWrap');
+        if (sw) { sw.style.opacity = '1'; sw.style.pointerEvents = 'auto'; }
+      }
+      if (aminaStratDone) {
+        var ow = document.getElementById('aminaOutWrap');
+        if (ow) { ow.style.opacity = '1'; ow.style.pointerEvents = 'auto'; }
+      }
+      checkAminaComplete();
+    }, 60);
+  }
+  if (n === 12) restoreBreakSort();
+}
+
+/* ACT 1 */
+function categorizeItem(id, selectedZone, correctZone) {
+  if (distSel[id]) return;
+  distSel[id] = true;
+  var el = document.getElementById('di-' + id);
+  if (el) el.classList.add('di-correct');
+  checkDistAll();
+}
+
+function checkDistAll() {
+  var confirmed = Object.keys(distSel).length;
+  var total = distData.length;
+  var fb = document.getElementById('distFeedback');
+  var nb = document.getElementById('distNextBtn');
+  if (confirmed >= total) {
+    distOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All 8 distractions confirmed and categorised. External distractions come from the environment: sound, visual movement, social interruption, and body signals like hunger. Internal distractions come from the mind: the default mode network generating thoughts, memories, worries, and associative ideas when not actively suppressed by focused engagement. Crucially, both types draw from the same attention resource - which is why the combination of external noise and internal mental chatter is so particularly devastating for concentration.</div>';
+    if (nb) nb.disabled = false;
+  } else if (confirmed > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg indigo-msg">' + confirmed + ' of 8 confirmed. Click remaining items to confirm your understanding of each one.</div>';
+  }
+}
+
+function updateDual(val) {
+  dualLevel = parseInt(val);
+  var distVal = dualLevel;
+  var focVal = 100 - dualLevel;
+  var state = getDualState(dualLevel);
+  if (!state) return;
+  var ff = document.getElementById('focFill');
+  var df = document.getElementById('disFill');
+  var fp = document.getElementById('focPct');
+  var dp = document.getElementById('disPct');
+  var fm = document.getElementById('focMood');
+  var dm = document.getElementById('disMood');
+  var sl = document.getElementById('dualSl');
+  if (ff) ff.style.width = focVal + '%';
+  if (df) df.style.width = distVal + '%';
+  if (fp) fp.textContent = focVal + '%';
+  if (dp) dp.textContent = distVal + '%';
+  if (fm) fm.textContent = state.fMood;
+  if (dm) dm.textContent = state.dMood;
+  if (sl) {
+    var g1 = 'rgba(232,120,32,' + (0.30 + distVal/190) + ')';
+    var g2 = 'rgba(40,104,216,' + (0.30 + focVal/190) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+function animateLeakBars() {
+  leakTimeline.forEach(function(ev, i) {
+    setTimeout(function() {
+      var bar = document.getElementById('lb-' + i);
+      if (bar) bar.style.width = (ev.focusPct * 0.7) + 'px';
+    }, i * 180);
+  });
+}
+
+function chooseLeakAns(choice) {
+  if (leakLocked) return;
+  leakLocked = true; leakChoice = choice;
+  var correct = choice === 'reset';
+  var el = document.getElementById('lo-' + choice);
+  if (el) el.classList.add(correct ? 'sel-best' : 'sel-harmful');
+  document.querySelectorAll('#leakOptions .plan-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  if (choice === 'improve') {
+    var c2 = document.getElementById('lo-reset');
+    if (c2) c2.classList.add('sel-ok');
+  }
+  var fb = document.getElementById('leakFeedback');
+  var nb = document.getElementById('leakNextBtn');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correct. Each task switch resets the attention-build that was accumulating before the switch. Focus is not a flat line - it builds gradually from initial engagement into a flow state of increasingly efficient processing. Each interruption collapses this build-up, and the restart from a lower baseline is why fragmented work sessions feel exhausting despite producing little. Researchers call the attentional trace left by a previous task "attention residue" - it occupies working memory that would otherwise be available for the primary task.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not quite. Interruptions reset focus rather than improving it. Brief breaks on screens further drain the attention resource rather than restoring it. The correct answer is highlighted: each switch causes a focus reset, and the cumulative switching cost means that heavily interrupted work produces a fraction of the output of the same time spent in focused, uninterrupted engagement.</div>';
+  }
+  if (nb) nb.disabled = false;
+}
+
+/* ACT 2 */
+function choosePlan1(id) {
+  if (plan1Locked) return;
+  plan1Locked = true; plan1Id = id;
+  var chosen = focusPlanOptions.find(function(p){ return p.id === id; });
+  focusPlanOptions.forEach(function(p) {
+    var el = document.getElementById('p1-' + p.id);
+    if (el) { if (p.id === id) el.classList.add('sel-' + p.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('p1Outcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🎯 Focus Level</span><span id="p1FL">0%</span></div><div class="meter-track"><div class="meter-fill focus-fill" id="p1FF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🌪️ Distraction Level</span><span id="p1DL">0%</span></div><div class="meter-track"><div class="meter-fill dist-fill" id="p1DF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var ff = document.getElementById('p1FF'), df = document.getElementById('p1DF');
+    var fl = document.getElementById('p1FL'), dl = document.getElementById('p1DL');
+    if (ff) ff.style.width = chosen.focusLevel + '%';
+    if (df) df.style.width = chosen.distLevel + '%';
+    if (fl) fl.textContent = chosen.focusLevel + '%';
+    if (dl) dl.textContent = chosen.distLevel + '%';
+  }, 150);
+  var nw = document.getElementById('p1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function chooseRecovery(id) {
+  if (recov1Locked) return;
+  recov1Locked = true; recov1Id = id;
+  var chosen = recoveryOptions.find(function(r){ return r.id === id; });
+  recoveryOptions.forEach(function(r) {
+    var el = document.getElementById('rv-' + r.id);
+    if (el) { if (r.id === id) el.classList.add('sel-' + r.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('recovOutcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>🎯 Focus Level</span><span id="rvFL">0%</span></div><div class="meter-track"><div class="meter-fill focus-fill" id="rvFF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💪 Resilience Level</span><span id="rvRL">0%</span></div><div class="meter-track"><div class="meter-fill resil-fill" id="rvRF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var ff = document.getElementById('rvFF'), rf = document.getElementById('rvRF');
+    var fl = document.getElementById('rvFL'), rl = document.getElementById('rvRL');
+    if (ff) ff.style.width = chosen.focusLevel + '%';
+    if (rf) rf.style.width = chosen.resilLevel + '%';
+    if (fl) fl.textContent = chosen.focusLevel + '%';
+    if (rl) rl.textContent = chosen.resilLevel + '%';
+  }, 150);
+  var nw = document.getElementById('recovNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkFocus(val) {
+  focusText = val;
+  var len = val.trim().length;
+  focusValid = len >= 40;
+  var c = document.getElementById('focusCounter');
+  var b = document.getElementById('focusNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (focusValid ? ' met' : ''); }
+  if (b) b.disabled = !focusValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ACT 3 */
+var aminaDCount = 0;
+var aminaDCorrect = 0;
+
+function selectAminaDist(id, correct) {
+  var el = document.getElementById('ad-' + id);
+  if (el && (el.classList.contains('am-correct') || el.classList.contains('am-incorrect'))) return;
+  if (el) el.classList.add(correct ? 'am-correct' : 'am-incorrect');
+  aminaDCount++;
+  if (correct) aminaDCorrect++;
+  if (aminaDCount >= 4) {
+    aminaDistDone = true;
+    var fb = document.getElementById('aminaDistFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correctly identified. The TV provides three distinct distraction streams simultaneously: visual movement that activates the orienting response, audio that competes with the internal reading voice, and the general cognitive load of maintaining reading comprehension while ignoring an engaging secondary source. The reading light and comfortable chair are neutral factors that support focus rather than disrupting it.</div>';
+    var sw = document.getElementById('aminaStratWrap');
+    if (sw) { sw.style.opacity = '1'; sw.style.pointerEvents = 'auto'; }
+    checkAminaComplete();
+  }
+}
+
+function selectAminaStrat(id, correct) {
+  if (aminaStratDone) return;
+  aminaStratDone = true;
+  document.querySelectorAll('#aminaStratWrap .amina-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('as-' + id);
+  if (el) el.classList.add(correct ? 'am-correct' : 'am-incorrect');
+  var fb = document.getElementById('aminaStratFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The most effective strategy. Environmental management - removing or leaving the distraction source - is consistently more effective than willpower-based resistance. The orienting response cannot be overridden by willpower alone because it activates before conscious decision-making. Removing the TV from the environment eliminates the continuous stream of involuntary attention captures and allows genuine reading focus to develop.</div>';
+  } else if (id === 'ignore') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Willpower-based attention management is the least reliable strategy - because the orienting response that keeps pulling Amina toward the TV operates below the level of conscious control. The correct approach - environment management - removes the need for willpower entirely. The correct strategy is highlighted.</div>';
+    var c2 = document.getElementById('as-change');
+    if (c2) c2.classList.add('am-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Giving up is not necessary - the distraction is manageable if the environment is changed. The correct strategy is highlighted.</div>';
+    var c3 = document.getElementById('as-change');
+    if (c3) c3.classList.add('am-correct');
+  }
+  var ow = document.getElementById('aminaOutWrap');
+  if (ow) { ow.style.opacity = '1'; ow.style.pointerEvents = 'auto'; }
+  checkAminaComplete();
+}
+
+function selectAminaOut(id, correct) {
+  if (aminaOutDone) return;
+  aminaOutDone = true;
+  document.querySelectorAll('#aminaOutWrap .amina-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('ao-' + id);
+  if (el) el.classList.add(correct ? 'am-correct' : 'am-incorrect');
+  var fb = document.getElementById('aminaOutFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Accurate prediction. Removing the primary distraction source allows the orienting response to quiet, the focus-build to begin, and deep reading engagement to develop. Research on reading comprehension consistently shows that distraction-free environments produce significantly higher retention rates - often two to three times higher - compared to equivalent reading time in high-distraction conditions. The same time, dramatically different results.</div>';
+  } else if (id === 'tired') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">That would be the outcome if she stayed in the distracting environment. But the scenario specifies she changes rooms - which changes everything. The correct outcome is highlighted.</div>';
+    var c2 = document.getElementById('ao-focus');
+    if (c2) c2.classList.add('am-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Environment has a substantial and measurable effect on reading quality and comprehension. The correct outcome is highlighted.</div>';
+    var c3 = document.getElementById('ao-focus');
+    if (c3) c3.classList.add('am-correct');
+  }
+  checkAminaComplete();
+}
+
+function checkAminaComplete() {
+  if (aminaDistDone && aminaStratDone && aminaOutDone) {
+    var b = document.getElementById('aminaNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function handleBreakClick(id) {
+  if (breakSortPlac[id]) return;
+  breakSortSel = id;
+  document.querySelectorAll('#breakSortBank .break-chip').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('bc-' + id);
+  if (el) el.style.outline = '3px solid var(--indigo-dark)';
+  var hint = document.getElementById('breakSortHint');
+  var item = breakBehaviours.find(function(b){ return b.id === id; });
+  if (hint && item) hint.textContent = 'Click a zone: "' + item.text + '"';
+}
+
+function placeBreakSort(zone) {
+  if (!breakSortSel) return;
+  var item = breakBehaviours.find(function(b){ return b.id === breakSortSel; });
+  if (!item) return;
+  breakSortPlac[breakSortSel] = zone;
+  var el = document.getElementById('bc-' + breakSortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="bz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="bz-remove" onclick="removeBreakSort(\'' + breakSortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  breakSortSel = null;
+  var hint = document.getElementById('breakSortHint');
+  if (hint) hint.textContent = 'Click another activity to continue';
+  checkBreakSort();
+}
+
+function removeBreakSort(id, zone) {
+  delete breakSortPlac[id];
+  var el = document.getElementById('bc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = breakBehaviours.find(function(b){ return b.id === id; }).text;
+    zoneEl.querySelectorAll('.bz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkBreakSort();
+}
+
+function restoreBreakSort() {
+  Object.keys(breakSortPlac).forEach(function(id) {
+    var zone = breakSortPlac[id];
+    var item = breakBehaviours.find(function(b){ return b.id === id; });
+    var el = document.getElementById('bc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="bz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="bz-remove" onclick="removeBreakSort(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkBreakSort();
+}
+
+function checkBreakSort() {
+  var total = Object.keys(breakSortPlac).length;
+  var correct = breakBehaviours.filter(function(b){ return breakSortPlac[b.id] === b.zone; }).length;
+  var fb = document.getElementById('breakSortFeedback');
+  var nb = document.getElementById('breakSortNextBtn');
+  if (total < breakBehaviours.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg indigo-msg">' + total + ' of 8 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === breakBehaviours.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. Helpful breaks (walking, stretching, water, breathing) restore cognitive resources without adding new stimulation demands. Attention leaks (social media, TV episodes, gaming, extended chats) switch the brain to a different high-stimulation mode rather than allowing genuine rest - they often feel enjoyable but leave the attention resource more depleted than a genuine break would. The test: after this "break", will I be more or less ready to focus than before?</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 8). Remove incorrect items. Ask: does this break involve high-stimulation screen-based content? If yes, it is likely an attention leak. Does it involve low-stimulation physical or breathing activity? If yes, it is likely a helpful break that genuinely restores the attention resource.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  distSel = {}; distOk = false;
+  dualLevel = 78;
+  leakChoice = null; leakLocked = false;
+  plan1Id = null; plan1Locked = false;
+  recov1Id = null; recov1Locked = false;
+  focusText = ''; focusValid = false;
+  reflectText = ''; reflectValid = false;
+  aminaDistDone = false; aminaStratDone = false; aminaOutDone = false;
+  aminaDistCount = 0; aminaDCount = 0; aminaDCorrect = 0;
+  breakSortPlac = {}; breakSortSel = null;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#3c28c8','#2868d8','#18c878','#e87820','#9840c8','#c89000','#b0a8f8','#a0f0c0'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

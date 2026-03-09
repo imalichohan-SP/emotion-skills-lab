@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Thought Trap Lab - Upgrade Your Inner Voice</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ============================================= VARIABLES & RESET ============================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f0ff;--card:#ffffff;
+  --violet:#b09fdf;--violet-dark:#7c5cbf;--violet-mid:#9575cd;
+  --rose:#f4a0b0;--rose-dark:#d45f7a;
+  --mint:#9de0c8;--mint-dark:#3fa87d;
+  --amber:#ffd27a;--amber-dark:#d4920a;
+  --sky:#8fc8f0;--sky-dark:#3a7dbf;
+  --coral:#ffb090;--coral-dark:#d4602a;
+  --text:#2a3050;--text-soft:#6470a0;
+  --shadow-sm:0 4px 16px rgba(80,60,160,0.12);
+  --shadow-md:0 8px 32px rgba(80,60,160,0.16);
+  --shadow-lg:0 16px 48px rgba(80,60,160,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 12% 18%,rgba(176,159,223,0.28) 0%,transparent 48%),
+    radial-gradient(circle at 88% 72%,rgba(157,224,200,0.22) 0%,transparent 48%),
+    radial-gradient(circle at 52% 48%,rgba(244,160,176,0.14) 0%,transparent 55%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* ============================================= HEADER ============================================= */
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--violet-dark),var(--rose-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--violet-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+/* ============================================= ACT BANNER ============================================= */
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(124,92,191,0.10);color:var(--violet-dark);border:1.5px solid rgba(124,92,191,0.28)}
+.act-banner.act2{background:rgba(212,95,122,0.10);color:var(--rose-dark);border:1.5px solid rgba(212,95,122,0.28)}
+.act-banner.act3{background:rgba(63,168,125,0.10);color:var(--mint-dark);border:1.5px solid rgba(63,168,125,0.28)}
+.act-banner .act-icon{font-size:19px}
+
+/* ============================================= PROGRESS ============================================= */
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(124,92,191,0.15);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet-dark),var(--rose-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(124,92,191,0.4)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(124,92,191,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--violet-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--mint-dark)}
+
+/* ============================================= STAGE CARD ============================================= */
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(124,92,191,0.14);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(176,159,223,0.14),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--violet-dark);background:rgba(124,92,191,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.rose{color:var(--rose-dark);background:rgba(212,95,122,0.10)}
+.stage-label.mint{color:var(--mint-dark);background:rgba(63,168,125,0.10)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+/* ============================================= STORY BOX ============================================= */
+.story-box{background:linear-gradient(135deg,rgba(176,159,223,0.12),rgba(157,224,200,0.10));border:1.5px solid rgba(176,159,223,0.3);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--violet-dark);font-style:normal}
+.story-box p span.rose{color:var(--rose-dark)}
+.story-box p span.mint{color:var(--mint-dark)}
+
+/* ============================================= THOUGHT BUBBLE (story highlight) ============================================= */
+.thought-highlight{background:linear-gradient(135deg,rgba(244,160,176,0.18),rgba(176,159,223,0.14));border:2px solid rgba(212,95,122,0.3);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-highlight::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-highlight p{font-size:15px;font-weight:900;color:var(--rose-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* ============================================= CLUE GRID ============================================= */
+.clue-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0 28px}
+.clue-card{background:var(--bg);border:2px solid rgba(124,92,191,0.22);border-radius:var(--radius-sm);padding:18px 16px;cursor:pointer;transition:var(--t);text-align:center;position:relative;overflow:hidden}
+.clue-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(176,159,223,0.15),rgba(157,224,200,0.10));opacity:0;transition:var(--t)}
+.clue-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.clue-card:hover::after{opacity:1}
+.clue-card.selected{border-color:var(--violet-dark);background:linear-gradient(135deg,rgba(176,159,223,0.22),rgba(244,160,176,0.14));box-shadow:0 0 0 3px rgba(124,92,191,0.18),var(--shadow-sm);transform:translateY(-2px)}
+.clue-card.selected::after{opacity:1}
+.clue-icon{font-size:28px;margin-bottom:8px;display:block;transition:transform 0.3s ease}
+.clue-card:hover .clue-icon,.clue-card.selected .clue-icon{transform:scale(1.2)}
+.clue-text{font-size:13.5px;font-weight:800;color:var(--text);line-height:1.35;position:relative;z-index:1}
+.clue-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--violet-dark);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.clue-card.selected .clue-check{opacity:1;transform:scale(1)}
+.clue-hint{font-size:13px;color:var(--text-soft);font-weight:700;text-align:center;margin-top:-8px;margin-bottom:20px}
+
+/* ============================================= EMOTION BUTTONS ============================================= */
+.emotion-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;margin:22px 0 28px}
+.emotion-btn{background:var(--bg);border:2px solid rgba(124,92,191,0.20);border-radius:var(--radius-sm);padding:16px 10px;cursor:pointer;transition:var(--t);text-align:center;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:8px}
+.emotion-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.emotion-btn .e-icon{font-size:30px;transition:transform 0.3s ease}
+.emotion-btn:hover .e-icon{transform:scale(1.18)}
+.emotion-btn.correct{border-color:var(--mint-dark);background:linear-gradient(135deg,rgba(157,224,200,0.28),rgba(63,168,125,0.12));box-shadow:0 0 0 3px rgba(63,168,125,0.22),var(--shadow-sm);animation:correctPop 0.4s ease}
+.emotion-btn.incorrect{border-color:var(--coral-dark);background:linear-gradient(135deg,rgba(255,176,144,0.25),rgba(212,96,42,0.10));box-shadow:0 0 0 3px rgba(212,96,42,0.18);animation:wrongShake 0.4s ease}
+
+/* ============================================= TRAP CARDS ============================================= */
+.trap-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 28px}
+.trap-card{background:var(--bg);border:2px solid rgba(124,92,191,0.22);border-radius:var(--radius-sm);padding:18px 16px;cursor:pointer;transition:var(--t);text-align:center;position:relative;overflow:hidden}
+.trap-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.trap-card .trap-icon{font-size:30px;display:block;margin-bottom:10px;transition:transform 0.3s ease}
+.trap-card:hover .trap-icon{transform:scale(1.15)}
+.trap-card .trap-name{font-size:13.5px;font-weight:900;color:var(--text);line-height:1.3;margin-bottom:6px}
+.trap-card .trap-desc{font-size:12px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.trap-card.trap-correct{border-color:var(--mint-dark);background:linear-gradient(135deg,rgba(157,224,200,0.25),rgba(63,168,125,0.10));box-shadow:0 0 0 3px rgba(63,168,125,0.22);animation:correctPop 0.4s ease}
+.trap-card.trap-incorrect{border-color:var(--coral-dark);background:rgba(255,176,144,0.18);animation:wrongShake 0.4s ease}
+
+/* ============================================= FEEDBACK MESSAGES ============================================= */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(157,224,200,0.3);color:#2a7a58;border:1.5px solid rgba(63,168,125,0.3)}
+.feedback-msg.incorrect-msg{background:rgba(255,176,144,0.3);color:#a03020;border:1.5px solid rgba(212,96,42,0.3)}
+.feedback-msg.info-msg{background:rgba(124,92,191,0.10);color:var(--violet-dark);border:1.5px solid rgba(124,92,191,0.28)}
+.feedback-msg.rose-msg{background:rgba(212,95,122,0.10);color:var(--rose-dark);border:1.5px solid rgba(212,95,122,0.28)}
+.feedback-msg.mint-msg{background:rgba(63,168,125,0.10);color:var(--mint-dark);border:1.5px solid rgba(63,168,125,0.28)}
+
+/* ============================================= SLIDER ============================================= */
+.slider-wrap{margin:24px 0 10px}
+.slider-labels{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12.5px;font-weight:800;color:var(--text-soft)}
+.intensity-slider{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:999px;outline:none;cursor:pointer}
+.intensity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--violet-dark);box-shadow:0 3px 12px rgba(124,92,191,0.38);cursor:pointer;transition:transform 0.2s ease}
+.intensity-slider::-webkit-slider-thumb:hover,.intensity-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.intensity-slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--violet-dark);cursor:pointer}
+.intensity-display{margin-top:20px;text-align:center;padding:16px;background:linear-gradient(135deg,rgba(176,159,223,0.15),rgba(244,160,176,0.10));border-radius:var(--radius-sm);border:1.5px solid rgba(176,159,223,0.25)}
+.intensity-display .int-emoji{font-size:36px;display:block;margin-bottom:6px}
+.intensity-display .int-label{font-size:16px;font-weight:900;color:var(--text)}
+
+/* ============================================= INNER VOICE CARDS ============================================= */
+.voice-grid{display:flex;flex-direction:column;gap:14px;margin:20px 0 24px}
+.voice-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(124,92,191,0.22);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.voice-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.voice-btn .v-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease;margin-top:2px}
+.voice-btn:hover .v-icon{transform:scale(1.12)}
+.voice-btn .v-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.voice-btn .v-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.voice-btn.sel-harmful{border-color:var(--coral-dark);background:rgba(255,176,144,0.15);animation:wrongShake 0.4s ease}
+.voice-btn.sel-ok{border-color:var(--amber-dark);background:rgba(255,210,122,0.18);animation:correctPop 0.4s ease}
+.voice-btn.sel-best{border-color:var(--mint-dark);background:rgba(157,224,200,0.22);animation:correctPop 0.4s ease}
+
+/* ============================================= OUTCOME METERS ============================================= */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(124,92,191,0.12);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.discouraged{background:linear-gradient(90deg,var(--rose),var(--rose-dark));box-shadow:0 2px 8px rgba(212,95,122,0.3)}
+.meter-fill.confident{background:linear-gradient(90deg,var(--mint),var(--mint-dark));box-shadow:0 2px 8px rgba(63,168,125,0.3)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(255,176,144,0.18);border:1.5px solid rgba(212,96,42,0.3)}
+.outcome-box.ok{background:rgba(255,210,122,0.18);border:1.5px solid rgba(212,146,10,0.3)}
+.outcome-box.best{background:rgba(157,224,200,0.20);border:1.5px solid rgba(63,168,125,0.3)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* ============================================= INPUTS ============================================= */
+.reflection-input,.short-input{width:100%;background:var(--bg);border:2px solid rgba(124,92,191,0.28);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px}
+.reflection-input{min-height:110px}
+.short-input{min-height:76px}
+.reflection-input::placeholder,.short-input::placeholder{color:rgba(100,112,160,0.5)}
+.reflection-input:focus,.short-input:focus{border-color:var(--violet-dark);box-shadow:0 0 0 3px rgba(124,92,191,0.15);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--mint-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* ============================================= BUTTONS ============================================= */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--violet-dark),var(--rose-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(124,92,191,0.32);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,92,191,0.42)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(124,92,191,0.3);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(124,92,191,0.08);border-color:var(--violet-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(124,92,191,0.28);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--violet-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* ============================================= SECTION DIVIDER ============================================= */
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(124,92,191,0.2);border-radius:999px}
+
+/* ============================================= MOOD CHIPS ============================================= */
+.mood-chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.mood-chip{background:var(--bg);border:2px solid rgba(124,92,191,0.22);border-radius:999px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.mood-chip:hover{border-color:var(--violet-dark);color:var(--text);background:rgba(124,92,191,0.08)}
+.mood-chip.selected{background:linear-gradient(135deg,var(--violet-dark),var(--rose-dark));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,92,191,0.32)}
+
+/* ============================================= QUIZ ============================================= */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(124,92,191,0.22);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--violet);background:rgba(124,92,191,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--mint-dark);background:rgba(157,224,200,0.22);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(255,176,144,0.18);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--mint-dark);background:rgba(157,224,200,0.14);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(157,224,200,0.3);color:#2a7a58}
+.quiz-feedback.q-fb-incorrect{background:rgba(255,176,144,0.3);color:#a03020}
+
+/* ============================================= BADGE GRID ============================================= */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(255,210,122,0.18),rgba(244,160,176,0.14));border:1.5px solid rgba(255,210,122,0.4);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+/* ============================================= SKILLS SUMMARY ============================================= */
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(124,92,191,0.18);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+/* ============================================= CELEBRATION ============================================= */
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,236,255,0.92);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(124,92,191,0.2);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(176,159,223,0.08),rgba(157,224,200,0.07),rgba(255,210,122,0.06));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+
+/* ============================================= CONFETTI ============================================= */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* ============================================= ANIMATIONS ============================================= */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+/* ============================================= RESPONSIVE ============================================= */
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .clue-grid,.trap-grid{gap:10px}
+  .emotion-grid{grid-template-columns:repeat(3,1fr)}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+  .badge-item{padding:14px 8px}
+  .badge-item .b-icon{font-size:28px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🧠 Thought Trap Lab</div>
+    <h1>The <span>Thought Trap</span> Lab</h1>
+    <p>Catch unhelpful thoughts • Rewire your thinking • Build real confidence</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🎉</div>
+    <h2>Lab Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. Your inner voice is getting stronger every day!</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Thought Detective</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🔄</span><div class="b-title">Reframe Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💪</span><div class="b-title">Confidence Grower</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">↩ Start the Lab Again</button>
+  </div>
+</div>
+
+<script>
+/* =============================================
+   CONSTANTS & STATE
+============================================= */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+// Act 1 state
+let selectedMayaClues = new Set();
+let reasoningText    = '';
+let emotionAnswered  = false;
+let emotionCorrect   = false;
+let trapAnswered     = false;
+let trapCorrect      = false;
+
+// Act 2 state
+let voiceChoice      = null;
+let voiceLocked      = false;
+let tryVoice         = null;
+let reframingValid   = false;
+let reframingText    = '';
+let act2ReflValid    = false;
+
+// Act 3 state
+let leoTrapChosen    = null;
+let leoEmotionDone   = false;
+let leoEmotionCorrect= false;
+let leoVoiceChosen   = null;
+let personalChips    = new Set();
+let quizAnswers      = {};
+
+/* =============================================
+   DATA - ACT 1
+============================================= */
+const mayaClues = [
+  {id:'head',   icon:'😤', text:'Forehead creased, jaw tight'},
+  {id:'sink',   icon:'😞', text:'Her whole body sinks in the chair'},
+  {id:'look',   icon:'👀', text:'Scared to look around the class'},
+  {id:'stomach',icon:'😣', text:'Heavy, sick feeling in her stomach'}
+];
+
+const mayaEmotions = [
+  {id:'discouraged', icon:'😔', label:'Discouraged', correct:true},
+  {id:'angry',       icon:'😠', label:'Angry',       correct:false},
+  {id:'ashamed',     icon:'😳', label:'Ashamed',     correct:true},
+  {id:'frustrated',  icon:'😤', label:'Frustrated',  correct:true},
+  {id:'bored',       icon:'😑', label:'Bored',       correct:false}
+];
+
+const trapCards = [
+  {id:'allornone',    icon:'⚖️',  name:'All-or-Nothing', desc:'Seeing things as totally perfect or a complete failure - with nothing in between.',correct:true},
+  {id:'catastrophize',icon:'🌪️', name:'Catastrophizing', desc:'Assuming the absolute worst will happen - turning small problems into disasters.',correct:false},
+  {id:'mindread',     icon:'🔮', name:'Mind Reading',     desc:'Believing you know what others are thinking without any real evidence.',correct:false},
+  {id:'overgen',      icon:'🔁',  name:'Overgeneralizing',desc:'Taking one event and applying it to everything else - words like "always" and "never."',correct:false}
+];
+
+const intensityLevels = [
+  {range:[0,20],   emoji:'😌', label:'Just a Little Discouraged'},
+  {range:[21,40],  emoji:'😕', label:'Somewhat Discouraged'},
+  {range:[41,60],  emoji:'😔', label:'Noticeably Discouraged'},
+  {range:[61,80],  emoji:'😞', label:'Very Discouraged'},
+  {range:[81,100], emoji:'😢', label:'Deeply Discouraged'}
+];
+
+/* =============================================
+   DATA - ACT 2
+============================================= */
+const innerVoices = [
+  {
+    id:'harmful', icon:'🔴', text:'"See? I always mess up. I\'m just bad at math."',
+    sub:'Repeating the thought trap - making it worse',
+    quality:'harmful', discLevel:90, confLevel:8,
+    outcome:{
+      title:'💔 Reinforcing the Trap',
+      body:'When Maya repeats "I always mess up," she is feeding the All-or-Nothing trap more fuel. One wrong answer expands into a complete story about who she is. The discouragement deepens. Her brain starts to associate math with shame and failure, making future learning harder - not easier.',
+      tip:'💡 Research shows: Repeating negative self-judgements after a setback strengthens neural pathways that make those thoughts feel more automatic and true over time.'
+    }
+  },
+  {
+    id:'ok', icon:'🟡', text:'"It\'s okay, everyone makes mistakes sometimes."',
+    sub:'Neutral comfort - a small step forward',
+    quality:'ok', discLevel:45, confLevel:52,
+    outcome:{
+      title:'👍 Gentle Comfort',
+      body:'This thought offers some relief - it normalises the experience and reduces shame. Maya\'s body softens a little. It\'s a step in the right direction, though it\'s quite general and doesn\'t actively build confidence or create a growth plan. It stops the spiral, but doesn\'t fuel progress.',
+      tip:'💡 Tip: General reassurance ("everyone makes mistakes") is more soothing than motivating. Specific, honest self-talk is more powerful for building confidence.'
+    }
+  },
+  {
+    id:'best', icon:'🟢', text:'"It was just one question. I know a lot. I can practise this specific part."',
+    sub:'Accurate, specific, and growth-focused',
+    quality:'best', discLevel:28, confLevel:78,
+    outcome:{
+      title:'✅ The Growth Voice',
+      body:'This thought directly challenges the All-or-Nothing trap with evidence and specificity. Maya acknowledges what happened without catastrophising it. She reminds herself of genuine strengths. She creates a clear, realistic action. Her brain shifts from "I am a failure" to "there is something I can work on" - and that opens a door.',
+      tip:'💡 Science says: Growth-focused self-talk activates the brain\'s problem-solving regions, replacing the shame response with curiosity and motivation.'
+    }
+  }
+];
+
+/* =============================================
+   DATA - ACT 3
+============================================= */
+const leoTrapCards = [
+  {id:'allornone',    icon:'⚖️',  name:'All-or-Nothing',  desc:'Perfect or total failure, nothing between.',correct:false},
+  {id:'catastrophize',icon:'🌪️', name:'Catastrophizing', desc:'One mistake becomes a disaster.',correct:true},
+  {id:'mindread',     icon:'🔮', name:'Mind Reading',     desc:'Assuming you know what others think.',correct:false},
+  {id:'overgen',      icon:'🔁',  name:'Overgeneralizing',desc:'One event means everything always goes wrong.',correct:false}
+];
+
+const leoEmotions = [
+  {id:'embarrassed', icon:'😳', label:'Embarrassed', correct:true},
+  {id:'nervous',     icon:'😰', label:'Nervous',     correct:false},
+  {id:'angry',       icon:'😠', label:'Angry',       correct:false},
+  {id:'sad',         icon:'😢', label:'Sad',         correct:false},
+  {id:'confused',    icon:'😕', label:'Confused',    correct:false}
+];
+
+const leoVoices = [
+  {id:'trap',    icon:'🔴', text:'"This is a disaster. Everyone will remember this forever. My whole performance is ruined."', quality:'harmful'},
+  {id:'neutral', icon:'🟡', text:'"That was bad but it\'s over now. I\'ll try to remember next time."', quality:'ok'},
+  {id:'growth',  icon:'🟢', text:'"I forgot one line in a rehearsal. That\'s what rehearsals are for - this is how I learn them."', quality:'best'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: Which thought is an example of Catastrophizing?',
+    options:[
+      {icon:'🔁', text:'"I never get anything right in sports."',  correct:false},
+      {icon:'🌪️', text:'"I got one question wrong - this will ruin my entire grade forever."', correct:true},
+      {icon:'⚖️', text:'"Either I win or I\'m a total loser."', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right! Catastrophizing turns a small event into a catastrophe - "one wrong question" becomes "my entire grade forever." This kind of thinking dramatically overestimates how bad and permanent the outcome will be.',
+      incorrect:'Not quite. Catastrophizing means turning a small event into a catastrophe - like assuming one mistake will permanently destroy everything. Look for the thought that leaps from a single event to a worst-case permanent outcome.'
+    }
+  },
+  {
+    q:'Question 2: Which thought is an example of Mind Reading?',
+    options:[
+      {icon:'🔮', text:'"I can tell everyone thinks I\'m weird for answering that way."', correct:true},
+      {icon:'🔁', text:'"I always say the wrong thing in discussions."', correct:false},
+      {icon:'🌪️', text:'"If I mess this up, everyone will hate me forever."', correct:false}
+    ],
+    feedback:{
+      correct:'Correct! Mind Reading means believing you know what others are thinking without any evidence. "I can tell everyone thinks I\'m weird" is a guess dressed up as a fact - and our guesses about what others think are almost always wrong.',
+      incorrect:'Not this one. Mind Reading means believing you know what other people are thinking without any actual evidence - as if you have a psychic ability to read their minds. The correct answer is the one where someone claims to know others\' thoughts with certainty.'
+    }
+  },
+  {
+    q:'Question 3: Why do our thoughts so strongly affect how we feel?',
+    options:[
+      {icon:'🧠', text:'The brain treats imagined threats almost the same as real ones - thoughts activate real emotional responses.', correct:true},
+      {icon:'😊', text:'Feelings come first and then thoughts follow - thoughts don\'t actually cause feelings.', correct:false},
+      {icon:'🤷', text:'Thoughts and feelings are completely separate systems in the brain and don\'t interact.', correct:false}
+    ],
+    feedback:{
+      correct:'Spot on! The brain is remarkably literal - it activates stress hormones and emotional responses in response to thoughts, even when the threat is imagined. This is why thought traps are so powerful, and also why reframing them creates genuine emotional change.',
+      incorrect:'Not quite. The brain treats imagined threats almost as real as actual ones - it activates real stress hormones and emotional responses based on our thoughts. This is why changing a thought genuinely changes the emotion that follows it.'
+    }
+  }
+];
+
+/* =============================================
+   UTILITIES
+============================================= */
+function backBtn(stage, label) {
+  return `<div class="stage-nav"><button class="btn-back" onclick="renderStage(${stage})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>${label}</button></div>`;
+}
+function actBanner(act, text) {
+  const icons={1:'🔵',2:'🟣',3:'🟡'};
+  return `<div class="act-banner act${act}"><span class="act-icon">${icons[act]}</span> ${text}</div>`;
+}
+
+/* =============================================
+   PROGRESS
+============================================= */
+function updateProgress(stage) {
+  const pct = Math.round(((stage-1)/TOTAL_STAGES)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('stageLabel').textContent   = `Stage ${stage} of ${TOTAL_STAGES}`;
+  document.getElementById('stagePercent').textContent = pct+'%';
+  const dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for(let i=1;i<=TOTAL_STAGES;i++){
+    const d=document.createElement('div');
+    d.className='stage-dot'+(i<stage?' done':i===stage?' active':'');
+    dots.appendChild(d);
+  }
+}
+
+/* =============================================
+   RENDER ROUTER
+============================================= */
+function renderStage(n) {
+  currentStage=n;
+  updateProgress(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+  const fns=[null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML=fns[n]();
+  postRender(n);
+}
+
+/* =============================================
+   ACT 1 - STAGES 1-6
+============================================= */
+
+function s1(){return `<div class="stage-card">
+  ${actBanner(1,'Act 1 - Spot the Thought Trap')}
+  <div class="stage-label"><span class="dot"></span> Case File #002</div>
+  <h2>A Thought That Grew Too Big</h2>
+  <p>Welcome to the Thought Trap Lab. Today you will learn one of the most important skills a person can develop: the ability to catch the thoughts that make you feel worse than you need to - and change them. Every mind has thought traps. Even brilliant, kind, capable people fall into them. The difference is knowing how to recognise them.</p>
+  <p>Your first case has just arrived. Read carefully.</p>
+  <div class="story-box" data-icon="📚">
+    <p><span>Maya</span> is eleven years old and genuinely loves school - especially science. But today, in the middle of a maths lesson, she answers a question confidently. The teacher shakes her head gently: "Not quite, Maya. Let's look at this together." Maya feels her face go hot. Her jaw tightens. She slides lower in her chair. Her stomach drops with a heavy, sickly feeling. She stares at her desk and hopes desperately that no one is looking at her. And then - without even realising it - a thought appears in her mind, quiet but powerful:</p>
+  </div>
+  <div class="thought-highlight">
+    <p>"I'm terrible at maths. I'll never actually understand this. I'm just not a maths person."</p>
+  </div>
+  <p>Maya studied hard last night. She usually does well. But right now, that one thought has taken over everything. Your mission: investigate what Maya is experiencing, identify the thought trap - and help her find a better path forward.</p>
+  <button class="btn-primary" onclick="renderStage(2)">🔍 Begin Investigation</button>
+</div>`;}
+
+function s2(){
+  const cards=mayaClues.map(c=>`
+    <div class="clue-card" id="clue-${c.id}" onclick="toggleMayaClue('${c.id}')">
+      <div class="clue-check">✓</div>
+      <span class="clue-icon">${c.icon}</span>
+      <div class="clue-text">${c.text}</div>
+    </div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 - Spot the Thought Trap')}
+    ${backBtn(1,'Back to Story')}
+    <div class="stage-label"><span class="dot"></span> Stage 2 - Gather Evidence</div>
+    <h2>What Clues Do You Notice?</h2>
+    <p>Before we can help Maya, we need to understand what is actually happening to her - in her body, her behaviour, and the situation she's in. Each physical or situational detail is a clue about her emotional state. Tap every clue that reveals important evidence about how Maya is feeling right now.</p>
+    <div class="clue-hint">👆 Tap each card to collect it as evidence</div>
+    <div class="clue-grid">${cards}</div>
+    <button class="btn-primary" id="clueNextBtn" onclick="renderStage(3)" disabled>Next: Explain Your Reasoning →</button>
+  </div>`;}
+
+function s3(){return `<div class="stage-card">
+  ${actBanner(1,'Act 1 - Spot the Thought Trap')}
+  ${backBtn(2,'Back to Clues')}
+  <div class="stage-label"><span class="dot"></span> Stage 3 - Reasoning</div>
+  <h2>Explain What the Clues Tell You</h2>
+  <p>Collecting evidence is only the first step - the most important skill is explaining what it means. Based on the clues you've collected, write 2-3 sentences explaining what Maya's body and situation reveal about her emotional state. What do these physical signals usually indicate? What do they have in common?</p>
+  <textarea class="reflection-input" id="reasoningInput" oninput="checkReasoning(this.value)"
+    placeholder="For example: 'Maya's face going hot and her jaw tightening are physical signs of stress and shame. Sliding lower in the chair shows she wants to hide or disappear. The heavy stomach feeling suggests she is embarrassed and discouraged - her body is reacting as if something threatening just happened...'"
+    rows="5"></textarea>
+  <div class="char-counter" id="reasoningCounter">0 / 20 minimum characters</div>
+  <button class="btn-primary" id="reasoningNextBtn" onclick="renderStage(4)" disabled>Next: Name the Emotion →</button>
+</div>`;}
+
+function s4(){
+  emotionAnswered=false;
+  const btns=mayaEmotions.map(e=>`
+    <button class="emotion-btn" id="emotion-${e.id}" onclick="selectMayaEmotion('${e.id}',${e.correct})">
+      <span class="e-icon">${e.icon}</span>${e.label}
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 - Spot the Thought Trap')}
+    ${backBtn(3,'Back to Reasoning')}
+    <div class="stage-label"><span class="dot"></span> Stage 4 - Name the Emotion</div>
+    <h2>How Is Maya Feeling?</h2>
+    <p>You have gathered the evidence and explained what it means. Now make your official conclusion. Based on everything you have observed - the physical signals, Maya's behaviour, and the thought she had - which emotion or emotions are most likely present? <strong>More than one answer can be correct.</strong></p>
+    <div class="emotion-grid">${btns}</div>
+    <div id="emotionFeedback"></div>
+    <button class="btn-primary" id="emotionNextBtn" onclick="renderStage(5)" disabled>Next: Identify the Thought Trap →</button>
+  </div>`;}
+
+function s5(){
+  trapAnswered=false;
+  const cards=trapCards.map(t=>`
+    <div class="trap-card" id="trap-${t.id}" onclick="selectTrap('${t.id}',${t.correct})">
+      <span class="trap-icon">${t.icon}</span>
+      <div class="trap-name">${t.name}</div>
+      <div class="trap-desc">${t.desc}</div>
+    </div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(1,'Act 1 - Spot the Thought Trap')}
+    ${backBtn(4,'Back to Emotion')}
+    <div class="stage-label"><span class="dot"></span> Stage 5 - Identify the Trap</div>
+    <h2>Which Thought Trap Did Maya Fall Into?</h2>
+    <p>Maya's thought was: <strong>"I'm terrible at maths. I'll never understand this."</strong> This thought contains a specific kind of error in thinking. Look at the four Thought Traps below and choose the one that best matches what Maya's mind is doing.</p>
+    <div class="feedback-msg info-msg" style="margin-bottom:18px">
+      💡 <strong>Remember:</strong> Thought traps are not lies - they feel completely real and true in the moment. That's what makes them so powerful. The skill is learning to spot them.
+    </div>
+    <div class="trap-grid">${cards}</div>
+    <div id="trapFeedback"></div>
+    <button class="btn-primary" id="trapNextBtn" onclick="renderStage(6)" disabled>Next: Measure the Intensity →</button>
+  </div>`;}
+
+function s6(){return `<div class="stage-card">
+  ${actBanner(1,'Act 1 - Spot the Thought Trap')}
+  ${backBtn(5,'Back to Thought Trap')}
+  <div class="stage-label"><span class="dot"></span> Stage 6 - Measure Intensity</div>
+  <h2>How Discouraged Is Maya?</h2>
+  <p>Emotions exist on a spectrum from barely noticeable to completely overwhelming. The thought trap Maya fell into didn't just change what she was thinking - it amplified how she was feeling. Use the slider to estimate the level of discouragement that a thought like <em>"I'll never understand this"</em> would create in someone who genuinely cares about doing well.</p>
+  <div class="slider-wrap">
+    <div class="slider-labels"><span>😌 A Little Discouraged</span><span>😢 Deeply Discouraged</span></div>
+    <input type="range" class="intensity-slider" id="intensitySlider" min="0" max="100" value="50" oninput="updateIntensity(this.value)"/>
+  </div>
+  <div class="intensity-display">
+    <span class="int-emoji" id="intEmoji">😔</span>
+    <div class="int-label" id="intLabel">You chose: Noticeably Discouraged</div>
+  </div>
+  <br/>
+  <button class="btn-primary" onclick="renderStage(7)">➡️ Continue to Act 2: Compare Thought Paths</button>
+</div>`;}
+
+/* =============================================
+   ACT 2 - STAGES 7-10
+============================================= */
+
+function s7(){
+  voiceLocked=false; voiceChoice=null;
+  const cards=innerVoices.map(v=>`
+    <button class="voice-btn" id="voice-${v.id}" onclick="chooseVoice('${v.id}')">
+      <span class="v-icon">${v.icon}</span>
+      <div><div class="v-text">${v.text}</div><div class="v-sub">${v.sub}</div></div>
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 - Compare Thought Paths')}
+    ${backBtn(6,'Back to Act 1')}
+    <div class="stage-label rose"><span class="dot"></span> Stage 7 - Choose an Inner Voice</div>
+    <h2>What Does Maya Say to Herself Next?</h2>
+    <p>After getting the answer wrong, Maya has a choice - though it doesn't always feel like one. The next thought she has will either deepen the discouragement or begin to shift it. Three possible inner voices are shown below. Which one would you choose for Maya, and what do you think would happen?</p>
+    <div class="voice-grid" id="voiceGrid">${cards}</div>
+    <div id="voiceOutcome"></div>
+    <div id="voiceNextWrap" style="display:none">
+      <button class="btn-primary" onclick="renderStage(8)">➡️ Try Another Path &amp; Compare</button>
+    </div>
+  </div>`;}
+
+function s8(){
+  tryVoice=null;
+  const first=innerVoices.find(v=>v.id===voiceChoice);
+  const remaining=innerVoices.filter(v=>v.id!==voiceChoice);
+  const cards=remaining.map(v=>`
+    <button class="voice-btn" id="try-${v.id}" onclick="tryVoiceFn('${v.id}')">
+      <span class="v-icon">${v.icon}</span>
+      <div><div class="v-text">${v.text}</div><div class="v-sub">${v.sub}</div></div>
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 - Compare Thought Paths')}
+    ${backBtn(7,'Back to Voice Selection')}
+    <div class="stage-label rose"><span class="dot"></span> Stage 8 - Compare Side by Side</div>
+    <h2>See What Changes</h2>
+    <p>You chose <strong>${first.icon} ${first.text}</strong> for Maya. Now try one of the other inner voices and compare the results. Watching the emotional impact change based on a single thought is one of the most powerful ways to understand why the thoughts we choose actually matter.</p>
+    <div class="section-divider">Try another inner voice</div>
+    <div class="voice-grid" id="tryGrid">${cards}</div>
+    <div id="tryOutcome"></div>
+    <div id="act2NextWrap" style="display:none">
+      <button class="btn-primary" onclick="renderStage(9)">➡️ Build a Reframed Thought</button>
+    </div>
+  </div>`;}
+
+function s9(){
+  reframingValid=false;
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 - Compare Thought Paths')}
+    ${backBtn(8,'Back to Comparison')}
+    <div class="stage-label rose"><span class="dot"></span> Stage 9 - Reframing Builder</div>
+    <h2>Rewrite Maya's Thought</h2>
+    <p>Now it's time to practise the most important skill in this lab: <strong>cognitive reframing</strong>. This means taking an unhelpful, distorted thought and replacing it with something that is honest, balanced, and actually useful.</p>
+    <div class="thought-highlight" style="margin-bottom:20px">
+      <p>Original thought: "I'm terrible at maths. I'll never understand this."</p>
+    </div>
+    <p>A good reframed thought should be:</p>
+    <div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">
+      ✅ <strong>Honest</strong> - don't pretend nothing went wrong<br/>
+      ✅ <strong>Specific</strong> - focused on this moment, not all of life<br/>
+      ✅ <strong>Evidence-based</strong> - using what Maya actually knows to be true<br/>
+      ✅ <strong>Forward-looking</strong> - pointing toward what she can do next
+    </div>
+    <label class="input-label">✏️ Write a reframed version of Maya's thought in the box below:</label>
+    <textarea class="reflection-input" id="reframingInput" oninput="checkReframing(this.value)"
+      placeholder="Write your reframed thought here... For example: 'I got this one question wrong, but I studied and I understand most of the material. This specific type of problem is something I can practise. One wrong answer does not define my ability...'"
+      rows="5"></textarea>
+    <div class="char-counter" id="reframingCounter">0 / 40 minimum characters</div>
+    <div class="feedback-msg info-msg" style="margin-bottom:16px">
+      🧠 <strong>Did you know?</strong> Actively writing a reframed thought creates stronger neural change than just thinking it. The act of articulating it in words makes the new pathway more concrete in the brain.
+    </div>
+    <button class="btn-primary" id="reframingNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on the Change →</button>
+  </div>`;}
+
+function s10(){
+  act2ReflValid=false;
+  return `<div class="stage-card">
+    ${actBanner(2,'Act 2 - Compare Thought Paths')}
+    ${backBtn(9,'Back to Reframing Builder')}
+    <div class="stage-label rose"><span class="dot"></span> Stage 10 - Reflect</div>
+    <h2>What Changed When the Thought Changed?</h2>
+    <p>You have now compared different inner voices and practised reframing. The most important question in this whole act is this: <strong>when the thought changed, what happened to the feeling?</strong></p>
+    <p>Answer all three prompts in your response below:</p>
+    <p style="font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.65">
+      1️⃣ When Maya used the All-or-Nothing thought, how did it affect her feelings?<br/>
+      2️⃣ When she shifted to the specific, growth-focused thought, what changed emotionally?<br/>
+      3️⃣ Why do you think one single sentence inside someone's head can make such a big difference to how they feel?
+    </p>
+    <textarea class="reflection-input" id="act2Reflection" oninput="checkAct2Refl(this.value)"
+      placeholder="Write your reflections here... Think about what you noticed in the emotion meters, what you felt yourself as you read the different options, and what this tells you about the connection between thinking and feeling..."
+      rows="5"></textarea>
+    <div class="char-counter" id="act2ReflCounter">0 / 40 minimum characters</div>
+    <div class="feedback-msg rose-msg" style="margin-bottom:16px">
+      🔄 <strong>Badge Progress:</strong> Reframe Builder Level 1 - almost earned! One final act to go…
+    </div>
+    <button class="btn-primary" id="act2ReflNextBtn" onclick="renderStage(11)" disabled>➡️ Continue to Act 3: Transfer the Skill</button>
+  </div>`;}
+
+/* =============================================
+   ACT 3 - STAGES 11-14
+============================================= */
+
+function s11(){
+  leoTrapChosen=null; leoEmotionDone=false; leoEmotionCorrect=false; leoVoiceChosen=null;
+  const trapCds=leoTrapCards.map(t=>`
+    <div class="trap-card" id="leo-trap-${t.id}" onclick="selectLeoTrap('${t.id}',${t.correct})">
+      <span class="trap-icon">${t.icon}</span>
+      <div class="trap-name">${t.name}</div>
+      <div class="trap-desc">${t.desc}</div>
+    </div>`).join('');
+  const emoBtns=leoEmotions.map(e=>`
+    <button class="emotion-btn" id="leo-emotion-${e.id}" onclick="selectLeoEmotion('${e.id}',${e.correct})">
+      <span class="e-icon">${e.icon}</span>${e.label}
+    </button>`).join('');
+  const voiceCds=leoVoices.map(v=>`
+    <button class="voice-btn" id="leo-voice-${v.id}" onclick="selectLeoVoice('${v.id}','${v.quality}')">
+      <span class="v-icon">${v.id==='trap'?'🔴':v.id==='neutral'?'🟡':'🟢'}</span>
+      <div><div class="v-text">${v.text}</div></div>
+    </button>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 - Transfer the Skill')}
+    ${backBtn(10,'Back to Act 2')}
+    <div class="stage-label mint"><span class="dot"></span> Stage 11 - New Case File</div>
+    <h2>A Brand New Case!</h2>
+    <p>Everything you learned in Acts 1 and 2 now needs to be applied to a completely different situation with a new character. This is where the skill becomes real - when you can use it beyond where you first learned it.</p>
+    <div class="story-box" data-icon="🎭">
+      <p><span class="mint">Leo</span> is ten years old and has spent two weeks memorising his lines for the school play. He loves performing - or he did, until tonight's rehearsal. Halfway through his biggest scene, his mind goes completely blank. The words he has said perfectly in his bedroom a hundred times simply vanish. He looks out at his classmates. He looks at his teacher. The silence feels enormous. Someone snickers. Leo's face burns. He walks off stage thinking:</p>
+    </div>
+    <div class="thought-highlight">
+      <p>"I just ruined everything. Everyone is going to remember this. The whole performance is destroyed because of me."</p>
+    </div>
+
+    <div class="section-divider">Step 1 of 3 - Identify the Thought Trap</div>
+    <p>Which Thought Trap is Leo's mind using?</p>
+    <div class="trap-grid">${trapCds}</div>
+    <div id="leoTrapFeedback"></div>
+
+    <div class="section-divider">Step 2 of 3 - Name the Emotion</div>
+    <p>What is Leo most likely feeling right now?</p>
+    <div class="emotion-grid">${emoBtns}</div>
+    <div id="leoEmotionFeedback"></div>
+
+    <div class="section-divider">Step 3 of 3 - Choose Leo's Inner Voice</div>
+    <p>Which inner voice should Leo choose to move forward in a healthier way?</p>
+    <div class="voice-grid" id="leoVoiceGrid">${voiceCds}</div>
+    <div id="leoVoiceFeedback"></div>
+    <button class="btn-primary" id="leoNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Your Personal Reflection →</button>
+  </div>`;}
+
+function s12(){
+  const chipLabels=['Before tests','In sports','When I make mistakes','Around new people','On stage or performing','When I compare myself to others'];
+  const chips=chipLabels.map(m=>`<div class="mood-chip" id="chip-${m.replace(/\s/g,'_')}" onclick="toggleChip('${m}')">${m}</div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 - Transfer the Skill')}
+    ${backBtn(11,'Back to Leo\'s Story')}
+    <div class="stage-label mint"><span class="dot"></span> Stage 12 - Your Experience</div>
+    <h2>Now It's About You</h2>
+    <p>Maya fell into All-or-Nothing thinking. Leo fell into Catastrophizing. Both of them are human - and both of those traps are incredibly common. Almost everyone falls into thought traps. The difference is whether you notice them.</p>
+    <div class="section-divider">Which situations trigger thought traps for you? (choose any)</div>
+    <div class="mood-chips" id="moodChips">${chips}</div>
+    <div class="section-divider">What will you do when you notice a thought trap?</div>
+    <label class="input-label">✏️ Complete this sentence in detail:</label>
+    <textarea class="reflection-input" id="personalReflection"
+      placeholder="When I fall into a thought trap, I can... (For example: 'When I fall into a thought trap, I can pause and ask myself: is this thought 100% true? Is there evidence against it? What would I say to a friend in this situation? Then I can try to reframe it with something more honest and specific...')"
+      rows="4"></textarea>
+    <button class="btn-primary" onclick="renderStage(13)" style="margin-top:8px">Next: Quick Skill Check →</button>
+  </div>`;}
+
+function s13(){
+  quizAnswers={};
+  const qs=quizData.map((q,i)=>`
+    <div class="quiz-question" id="quiz-q-${i}" style="animation-delay:${i*0.1}s">
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt,j)=>`
+          <button class="quiz-option" id="quiz-opt-${i}-${j}" onclick="answerQuiz(${i},${j},${opt.correct})">
+            <span class="q-icon">${opt.icon}</span>${opt.text}
+          </button>`).join('')}
+      </div>
+      <div id="quiz-feedback-${i}" class="quiz-feedback"></div>
+    </div>`).join('');
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 - Transfer the Skill')}
+    ${backBtn(12,'Back to Reflection')}
+    <div class="stage-label mint"><span class="dot"></span> Stage 13 - Skill Check</div>
+    <h2>Quick Knowledge Check</h2>
+    <p>You have worked through this entire lab with real focus and depth. Let's see how much has genuinely settled in. Answer all three questions - your responses show how deeply you've understood the core ideas. Take your time; there is no rushing.</p>
+    ${qs}
+    <button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">🏅 Claim Your Badges &amp; Complete the Lab!</button>
+  </div>`;}
+
+function s14(){
+  setTimeout(()=>{
+    document.getElementById('progressFill').style.width='100%';
+    document.getElementById('stageLabel').textContent='Lab Complete!';
+    document.getElementById('stagePercent').textContent='100%';
+    document.querySelectorAll('.stage-dot').forEach(d=>{d.classList.remove('active');d.classList.add('done');});
+    launchConfetti();
+  },300);
+  return `<div class="stage-card">
+    ${actBanner(3,'Act 3 - Lab Complete!')}
+    <div class="stage-label mint"><span class="dot"></span> Stage 14 - Badges Earned</div>
+    <h2>🎉 Outstanding Work, Scientist!</h2>
+    <p>You completed the full Thought Trap Lab - all 3 Acts, 14 stages, and a genuine journey into how your thinking shapes your feelings. Here are the three badges you've earned:</p>
+    <div class="badge-grid">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Thought Detective</div><div class="b-sub">Spotted 4 types of traps</div></div>
+      <div class="badge-item"><span class="b-icon">🔄</span><div class="b-title">Reframe Builder</div><div class="b-sub">Rewired unhelpful thoughts</div></div>
+      <div class="badge-item"><span class="b-icon">💪</span><div class="b-title">Confidence Grower</div><div class="b-sub">Applied skills to new scenarios</div></div>
+    </div>
+    <div class="section-divider">What You Learned Today</div>
+    <div class="skills-summary">
+      <div class="skill-row">
+        <span class="sk-icon">🔍</span>
+        <div>
+          <div class="sk-title">Recognising Thought Traps</div>
+          <div class="sk-desc">You can now identify four common thinking errors - All-or-Nothing, Catastrophizing, Mind Reading, and Overgeneralizing - and understand why they feel so convincing even when they're distorted.</div>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="sk-icon">🔄</span>
+        <div>
+          <div class="sk-title">Cognitive Reframing</div>
+          <div class="sk-desc">You practised rewriting unhelpful thoughts into honest, specific, evidence-based alternatives - and you saw firsthand how a single changed sentence can shift the emotional outcome significantly.</div>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="sk-icon">💬</span>
+        <div>
+          <div class="sk-title">The Inner Voice Effect</div>
+          <div class="sk-desc">You compared different inner voices side by side and understood why the brain responds to thoughts almost as powerfully as it responds to real events - making the quality of your self-talk one of the most important mental habits you can build.</div>
+        </div>
+      </div>
+    </div>
+    <div class="story-box" data-icon="⭐" style="margin-bottom:24px">
+      <p style="font-style:normal;font-size:14.5px;line-height:1.9">
+        <strong>A message for you:</strong><br/>
+        Every thought you have is not a fact. It is a story your brain is telling - and stories can be edited. The next time a thought trap appears, you don't have to believe it immediately. You can pause, notice it, name it, and choose a different path. That pause - that moment of awareness before the thought takes over - is one of the most powerful things a human mind can learn to do. You are already doing it. Keep going. 🌟
+      </p>
+    </div>
+    <button class="btn-primary" onclick="document.getElementById('celebrationOverlay').classList.add('active')" style="background:linear-gradient(135deg,var(--mint-dark),var(--violet-dark));margin-bottom:12px">🎊 See Your Certificate</button>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">↩ Start the Lab Again</button>
+  </div>`;}
+
+/* =============================================
+   POST-RENDER STATE RESTORE
+============================================= */
+function postRender(n){
+  if(n===2){
+    const clueSet=new Set(Array.from(document.querySelectorAll('[id^="clue-"]'))
+      .filter(el=>el.classList.contains('selected')).map(el=>el.id.replace('clue-','')));
+    // Restore from module-level set
+    
+    selectedMayaClues.forEach(id=>{const e=document.getElementById('clue-'+id);if(e)e.classList.add('selected');});
+    const b=document.getElementById('clueNextBtn');if(b)b.disabled=(selectedMayaClues.size)===0;
+  }
+  if(n===3&&reasoningText){
+    const ta=document.getElementById('reasoningInput');if(ta)ta.value=reasoningText;
+    checkReasoning(reasoningText);
+  }
+  if(n===4&&emotionAnswered){
+    setTimeout(()=>{
+      mayaEmotions.filter(e=>e.correct).forEach(e=>{const el=document.getElementById('emotion-'+e.id);if(el)el.classList.add('correct');});
+      const fb=document.getElementById('emotionFeedback');
+      if(fb)fb.innerHTML=`<div class="feedback-msg correct-msg">✅ Correct - discouraged, ashamed, and frustrated can all be present at once. Emotions often travel in groups.</div>`;
+      const nb=document.getElementById('emotionNextBtn');if(nb)nb.disabled=false;
+    },50);
+  }
+  if(n===5){
+    if(trapAnswered){
+      setTimeout(()=>{
+        const c=document.getElementById('trap-allornone');if(c)c.classList.add('trap-correct');
+        const fb=document.getElementById('trapFeedback');
+        if(fb)fb.innerHTML=buildTrapFeedback(trapCorrect);
+        const nb=document.getElementById('trapNextBtn');if(nb)nb.disabled=false;
+      },50);
+    }
+  }
+  if(n===6)updateIntensity(50);
+  if(n===9&&reframingValid){
+    const ta=document.getElementById('reframingInput');if(ta&&reframingText)ta.value=reframingText;
+  }
+  if(n===11){
+    setTimeout(()=>{
+      if(leoTrapChosen){
+        const el=document.getElementById('leo-trap-'+leoTrapChosen);
+        if(el)el.classList.add(leoTrapCards.find(t=>t.id===leoTrapChosen)?.correct?'trap-correct':'trap-incorrect');
+        const fb=document.getElementById('leoTrapFeedback');
+        if(fb&&leoTrapCards.find(t=>t.id===leoTrapChosen)?.correct)
+          fb.innerHTML=`<div class="feedback-msg correct-msg">✅ Correct!</div>`;
+      }
+      if(leoEmotionDone){
+        const c=document.getElementById('leo-emotion-embarrassed');if(c)c.classList.add('correct');
+        const fb=document.getElementById('leoEmotionFeedback');
+        if(fb)fb.innerHTML=`<div class="feedback-msg correct-msg">✅ Correct - embarrassment is the primary emotion here.</div>`;
+      }
+      if(leoVoiceChosen){
+        const v=leoVoices.find(x=>x.id===leoVoiceChosen);
+        const el=document.getElementById('leo-voice-'+leoVoiceChosen);
+        if(el)el.classList.add(v.quality==='best'?'sel-best':v.quality==='ok'?'sel-ok':'sel-harmful');
+        const fb=document.getElementById('leoVoiceFeedback');
+        if(fb)fb.innerHTML=buildLeoVoiceFeedback(v);
+      }
+      checkLeoComplete();
+    },60);
+  }
+  if(n===12){
+    setTimeout(()=>{
+      
+      personalChips.forEach(m=>{const el=document.getElementById('chip-'+m.replace(/\s/g,'_'));if(el)el.classList.add('selected');});
+    },50);
+  }
+}
+
+/* =============================================
+   ACT 1 INTERACTIONS
+============================================= */
+
+
+function toggleMayaClue(id){
+  
+  const el=document.getElementById('clue-'+id);
+  if(selectedMayaClues.has(id)){selectedMayaClues.delete(id);el.classList.remove('selected');}
+  else{selectedMayaClues.add(id);el.classList.add('selected');}
+  const b=document.getElementById('clueNextBtn');if(b)b.disabled=selectedMayaClues.size===0;
+}
+
+function checkReasoning(val){
+  reasoningText=val;
+  const len=val.trim().length;
+  const c=document.getElementById('reasoningCounter');
+  const b=document.getElementById('reasoningNextBtn');
+  if(c){c.textContent=`${len} / 20 minimum characters`;c.className='char-counter'+(len>=20?' met':'');}
+  if(b)b.disabled=len<20;
+}
+
+function selectMayaEmotion(id,isCorrect){
+  if(emotionAnswered)return;
+  emotionAnswered=true;emotionCorrect=isCorrect;
+  const btn=document.getElementById('emotion-'+id);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect)setTimeout(()=>{mayaEmotions.filter(e=>e.correct).forEach(e=>{const el=document.getElementById('emotion-'+e.id);if(el)el.classList.add('correct');});},700);
+  const fb=document.getElementById('emotionFeedback');
+  fb.innerHTML=isCorrect
+    ?`<div class="feedback-msg correct-msg">✅ Correct! Discouraged, ashamed, and frustrated can all be present simultaneously - emotions frequently travel in groups, especially when a thought trap amplifies them.</div>`
+    :`<div class="feedback-msg incorrect-msg">🔍 Not quite. Maya is most likely feeling a combination of <strong>discouraged</strong>, <strong>ashamed</strong>, and <strong>frustrated</strong> - the correct answers are now highlighted.</div>`;
+  document.getElementById('emotionNextBtn').disabled=false;
+}
+
+function buildTrapFeedback(isCorrect){
+  return isCorrect
+    ?`<div class="feedback-msg correct-msg">✅ Exactly right! <strong>All-or-Nothing Thinking</strong> means seeing things in extremes - either perfect or a total failure. When Maya says "I'm terrible at maths" and "I'll never understand this," she is taking one wrong answer and turning it into a permanent, total verdict on her entire ability. There is no middle ground, no nuance, no acknowledgement of everything she got right. This is the trap in action.</div>`
+    :`<div class="feedback-msg incorrect-msg">🔍 Not quite. The correct answer is <strong>All-or-Nothing Thinking</strong>. When Maya says "I'm terrible" and "I'll never understand," she is turning one wrong answer into a total, permanent verdict. There's no middle ground in her thought - it's all failure, with no acknowledgement of her real strengths. The correct card is now highlighted.</div>`;
+}
+
+function selectTrap(id,isCorrect){
+  if(trapAnswered)return;
+  trapAnswered=true;trapCorrect=isCorrect;
+  const el=document.getElementById('trap-'+id);
+  el.classList.add(isCorrect?'trap-correct':'trap-incorrect');
+  if(!isCorrect)setTimeout(()=>{const c=document.getElementById('trap-allornone');if(c)c.classList.add('trap-correct');},700);
+  const fb=document.getElementById('trapFeedback');
+  fb.innerHTML=buildTrapFeedback(isCorrect);
+  document.getElementById('trapNextBtn').disabled=false;
+}
+
+function updateIntensity(value){
+  const v=parseInt(value);
+  const level=intensityLevels.find(l=>v>=l.range[0]&&v<=l.range[1]);
+  if(level){document.getElementById('intEmoji').textContent=level.emoji;document.getElementById('intLabel').textContent='You chose: '+level.label;}
+  document.getElementById('intensitySlider').style.background=
+    `linear-gradient(90deg,var(--violet-dark) ${v}%,rgba(176,159,223,0.3) ${v}%)`;
+}
+
+/* =============================================
+   ACT 2 INTERACTIONS
+============================================= */
+function buildMeters(v){
+  return `<div class="meters-wrap">
+    <div class="meter-row"><div class="meter-label-row"><span>😔 Discouragement</span><span id="dLvl">0%</span></div><div class="meter-track"><div class="meter-fill discouraged" id="dFill"></div></div></div>
+    <div class="meter-row"><div class="meter-label-row"><span>💪 Confidence</span><span id="cLvl">0%</span></div><div class="meter-track"><div class="meter-fill confident" id="cFill"></div></div></div>
+  </div>
+  <div class="outcome-box ${v.quality}"><div class="outcome-title">${v.outcome.title}</div>${v.outcome.body}<div class="outcome-tip">${v.outcome.tip}</div></div>`;
+}
+
+function animateMeters(dId,cId,dLvlId,cLvlId,dVal,cVal){
+  setTimeout(()=>{
+    const df=document.getElementById(dId),cf=document.getElementById(cId);
+    const dl=document.getElementById(dLvlId),cl=document.getElementById(cLvlId);
+    if(df){df.style.width=dVal+'%';}if(dl)dl.textContent=dVal+'%';
+    if(cf){cf.style.width=cVal+'%';}if(cl)cl.textContent=cVal+'%';
+  },150);
+}
+
+function chooseVoice(id){
+  if(voiceLocked)return;
+  voiceLocked=true;voiceChoice=id;
+  const chosen=innerVoices.find(v=>v.id===id);
+  innerVoices.forEach(v=>{const el=document.getElementById('voice-'+v.id);if(el){if(v.id===id)el.classList.add('sel-'+v.quality);el.style.cursor='default';}});
+  const out=document.getElementById('voiceOutcome');
+  out.innerHTML=buildMeters(chosen);
+  animateMeters('dFill','cFill','dLvl','cLvl',chosen.discLevel,chosen.confLevel);
+  document.getElementById('voiceNextWrap').style.display='block';
+}
+
+function tryVoiceFn(id){
+  if(tryVoice)return;
+  tryVoice=id;
+  const chosen=innerVoices.find(v=>v.id===id);
+  const first=innerVoices.find(v=>v.id===voiceChoice);
+  const el=document.getElementById('try-'+id);if(el)el.classList.add('sel-'+chosen.quality);
+  innerVoices.filter(v=>v.id!==voiceChoice).forEach(v=>{const e=document.getElementById('try-'+v.id);if(e)e.style.cursor='default';});
+  const out=document.getElementById('tryOutcome');
+  out.innerHTML=`<div class="meters-wrap">
+    <div class="section-divider">Your first choice: ${first.icon}</div>
+    <div class="meter-row"><div class="meter-label-row"><span>😔 Discouragement</span><span>${first.discLevel}%</span></div><div class="meter-track"><div class="meter-fill discouraged" style="width:${first.discLevel}%"></div></div></div>
+    <div class="meter-row"><div class="meter-label-row"><span>💪 Confidence</span><span>${first.confLevel}%</span></div><div class="meter-track"><div class="meter-fill confident" style="width:${first.confLevel}%"></div></div></div>
+    <div class="section-divider">This choice: ${chosen.icon}</div>
+    <div class="meter-row"><div class="meter-label-row"><span>😔 Discouragement</span><span>${chosen.discLevel}%</span></div><div class="meter-track"><div class="meter-fill discouraged" id="td2"></div></div></div>
+    <div class="meter-row"><div class="meter-label-row"><span>💪 Confidence</span><span>${chosen.confLevel}%</span></div><div class="meter-track"><div class="meter-fill confident" id="tc2"></div></div></div>
+  </div>
+  <div class="outcome-box ${chosen.quality}"><div class="outcome-title">${chosen.outcome.title}</div>${chosen.outcome.body}<div class="outcome-tip">${chosen.outcome.tip}</div></div>`;
+  setTimeout(()=>{const d=document.getElementById('td2');const c=document.getElementById('tc2');if(d)d.style.width=chosen.discLevel+'%';if(c)c.style.width=chosen.confLevel+'%';},150);
+  document.getElementById('act2NextWrap').style.display='block';
+}
+
+function checkReframing(val){
+  reframingText=val;
+  const len=val.trim().length;
+  const c=document.getElementById('reframingCounter');
+  const b=document.getElementById('reframingNextBtn');
+  reframingValid=len>=40;
+  if(c){c.textContent=`${len} / 40 minimum characters`;c.className='char-counter'+(reframingValid?' met':'');}
+  if(b)b.disabled=!reframingValid;
+}
+
+function checkAct2Refl(val){
+  const len=val.trim().length;
+  act2ReflValid=len>=40;
+  const c=document.getElementById('act2ReflCounter');
+  const b=document.getElementById('act2ReflNextBtn');
+  if(c){c.textContent=`${len} / 40 minimum characters`;c.className='char-counter'+(act2ReflValid?' met':'');}
+  if(b)b.disabled=!act2ReflValid;
+}
+
+/* =============================================
+   ACT 3 INTERACTIONS
+============================================= */
+function selectLeoTrap(id,isCorrect){
+  if(leoTrapChosen)return;
+  leoTrapChosen=id;
+  const el=document.getElementById('leo-trap-'+id);
+  if(el)el.classList.add(isCorrect?'trap-correct':'trap-incorrect');
+  if(!isCorrect)setTimeout(()=>{const c=document.getElementById('leo-trap-catastrophize');if(c)c.classList.add('trap-correct');},700);
+  const fb=document.getElementById('leoTrapFeedback');
+  fb.innerHTML=isCorrect
+    ?`<div class="feedback-msg correct-msg">✅ Exactly right! Leo is Catastrophizing - taking one forgotten line in a rehearsal and expanding it into "the whole performance is destroyed forever." One small moment becomes a total, permanent catastrophe.</div>`
+    :`<div class="feedback-msg incorrect-msg">🔍 Not quite. The correct answer is <strong>Catastrophizing</strong> - Leo turns one forgotten line into "everything is ruined forever." The correct card is now highlighted.</div>`;
+  checkLeoComplete();
+}
+
+function selectLeoEmotion(id,isCorrect){
+  if(leoEmotionDone)return;
+  leoEmotionDone=true;leoEmotionCorrect=isCorrect;
+  document.getElementById('leo-emotion-'+id).classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect)setTimeout(()=>{const c=document.getElementById('leo-emotion-embarrassed');if(c)c.classList.add('correct');},700);
+  const fb=document.getElementById('leoEmotionFeedback');
+  fb.innerHTML=isCorrect
+    ?`<div class="feedback-msg correct-msg">✅ Correct! Embarrassment is the primary emotion here - Leo is acutely aware of being seen making a mistake in front of others.</div>`
+    :`<div class="feedback-msg incorrect-msg">🔍 Not quite. The correct answer is <strong>Embarrassed</strong> - Leo is acutely aware of being seen failing publicly.</div>`;
+  checkLeoComplete();
+}
+
+function buildLeoVoiceFeedback(v){
+  const msgs={
+    trap:`<div class="outcome-box harmful"><div class="outcome-title">🔴 This Deepens the Trap</div>This thought catastrophizes a rehearsal mistake into a permanent disaster. It turns a learnable moment into a defining failure. Leo will feel worse, not better - and may begin to fear performing altogether.</div>`,
+    neutral:`<div class="outcome-box ok"><div class="outcome-title">🟡 A Small Step Forward</div>This thought acknowledges it's over without making it bigger. It's gentle and reasonable. It could be stronger - it doesn't fully challenge the catastrophe framing - but it stops the spiral.</div>`,
+    growth:`<div class="outcome-box best"><div class="outcome-title">✅ The Growth Voice</div>This is the most accurate and useful response. It names what actually happened (one forgotten line), where it happened (a rehearsal - literally the place designed for mistakes), and what it means (a learning opportunity). Leo's confidence can begin to rebuild.</div>`
+  };
+  return msgs[v.id]||'';
+}
+
+function selectLeoVoice(id,quality){
+  if(leoVoiceChosen)return;
+  leoVoiceChosen=id;
+  const v=leoVoices.find(x=>x.id===id);
+  leoVoices.forEach(x=>{const el=document.getElementById('leo-voice-'+x.id);if(el)el.style.cursor='default';});
+  const el=document.getElementById('leo-voice-'+id);
+  if(el)el.classList.add(quality==='best'?'sel-best':quality==='ok'?'sel-ok':'sel-harmful');
+  const fb=document.getElementById('leoVoiceFeedback');
+  fb.innerHTML=buildLeoVoiceFeedback(v);
+  checkLeoComplete();
+}
+
+function checkLeoComplete(){
+  if(leoTrapChosen&&leoEmotionDone&&leoVoiceChosen){
+    const b=document.getElementById('leoNextBtn');if(b)b.disabled=false;
+  }
+}
+
+
+function toggleChip(mood){
+  
+  const key=mood.replace(/\s/g,'_');
+  const el=document.getElementById('chip-'+key);
+  if(personalChips.has(mood)){personalChips.delete(mood);el.classList.remove('selected');}
+  else{personalChips.add(mood);el.classList.add('selected');}
+}
+
+/* =============================================
+   QUIZ
+============================================= */
+function answerQuiz(qIndex,optIndex,isCorrect){
+  if(quizAnswers[qIndex]!==undefined)return;
+  quizAnswers[qIndex]=isCorrect;
+  const q=quizData[qIndex];
+  q.options.forEach((_,j)=>{
+    const el=document.getElementById(`quiz-opt-${qIndex}-${j}`);
+    if(!el)return;
+    el.style.cursor='default';
+    if(j===optIndex)el.classList.add(isCorrect?'q-correct':'q-incorrect');
+    else if(q.options[j].correct)el.classList.add('q-reveal');
+  });
+  const fb=document.getElementById(`quiz-feedback-${qIndex}`);
+  if(fb){fb.style.display='block';fb.className='quiz-feedback '+(isCorrect?'q-fb-correct':'q-fb-incorrect');fb.textContent=isCorrect?q.feedback.correct:q.feedback.incorrect;}
+  if(Object.keys(quizAnswers).length===quizData.length){const b=document.getElementById('quizNextBtn');if(b)b.disabled=false;}
+}
+
+/* =============================================
+   RESTART
+============================================= */
+function restartLab(){
+  selectedMayaClues=new Set();
+  reasoningText='';emotionAnswered=false;emotionCorrect=false;trapAnswered=false;trapCorrect=false;
+  voiceChoice=null;voiceLocked=false;tryVoice=null;reframingValid=false;act2ReflValid=false;
+  reframingText='';
+  leoTrapChosen=null;leoEmotionDone=false;leoEmotionCorrect=false;leoVoiceChosen=null;
+  personalChips=new Set();quizAnswers={};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+/* =============================================
+   CONFETTI
+============================================= */
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const colors=['#b09fdf','#9de0c8','#f4a0b0','#ffd27a','#8fc8f0','#7c5cbf','#3fa87d','#d45f7a'];
+  const pieces=Array.from({length:160},()=>({
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,
+    w:Math.random()*12+5,h:Math.random()*6+3,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    rot:Math.random()*360,rotSpeed:(Math.random()-0.5)*6,
+    speed:Math.random()*3+1.5,drift:(Math.random()-0.5)*1.5,opacity:Math.random()*0.5+0.5
+  }));
+  let frame=0;const maxFrames=280;
+  (function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();ctx.globalAlpha=p.opacity*Math.max(0,1-frame/maxFrames);
+      ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
+      p.y+=p.speed;p.x+=p.drift;p.rot+=p.rotSpeed;
+    });
+    frame++;
+    if(frame<maxFrames)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  })();
+}
+
+/* =============================================
+   INIT
+============================================= */
+renderStage(1);
+window.addEventListener('resize',()=>{const c=document.getElementById('confetti-canvas');c.width=window.innerWidth;c.height=window.innerHeight;});
+</script>
+</body>
+</html>

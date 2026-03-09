@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Social Confidence Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0faf8;
+  --card:#ffffff;
+  --teal:#189888;--teal-dark:#0a6058;--teal-light:#98e0d8;
+  --gold:#d89820;--gold-dark:#906000;--gold-light:#fce0a0;
+  --violet:#7040c8;--violet-dark:#481090;--violet-light:#c8a8f0;
+  --green:#18c870;--green-dark:#0a8048;--green-light:#a0f0c8;
+  --orange:#e87820;--orange-dark:#a84800;--orange-light:#f8c8a0;
+  --coral:#e04858;--coral-dark:#a01828;
+  --sky:#2878d0;--sky-dark:#0848a0;
+  --text:#0c1c18;--text-soft:#284840;
+  --shadow-sm:0 4px 16px rgba(10,96,88,0.12);
+  --shadow-md:0 8px 32px rgba(10,96,88,0.16);
+  --shadow-lg:0 16px 48px rgba(10,96,88,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 7% 12%,rgba(24,152,136,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 93% 80%,rgba(112,64,200,0.15) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(24,200,112,0.10) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--teal-dark),var(--violet-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--teal-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(10,96,88,0.09);color:var(--teal-dark);border:1.5px solid rgba(10,96,88,0.24)}
+.act-banner.act2{background:rgba(72,16,144,0.09);color:var(--violet-dark);border:1.5px solid rgba(72,16,144,0.24)}
+.act-banner.act3{background:rgba(144,96,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(144,96,0,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(24,152,136,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal-dark),var(--green-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(10,96,88,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(24,152,136,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--teal-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(24,152,136,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(24,152,136,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--teal-dark);background:rgba(24,152,136,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(72,16,144,0.09)}
+.stage-label.gold{color:var(--gold-dark);background:rgba(144,96,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(24,152,136,0.09),rgba(112,64,200,0.07));border:1.5px solid rgba(24,152,136,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--teal-dark);font-style:normal}
+.story-box p span.gold{color:var(--gold-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(232,120,32,0.10),rgba(112,64,200,0.09));border:2px solid rgba(232,120,32,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--orange-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* BODY SIGNAL CARDS */
+.signal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 26px}
+.signal-card{background:var(--bg);border:2px solid rgba(24,152,136,0.20);border-radius:var(--radius-sm);padding:16px 12px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.signal-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--teal)}
+.signal-card.sc-nervous{border-color:var(--orange-dark);background:linear-gradient(135deg,rgba(232,120,32,0.12),rgba(224,72,88,0.09));box-shadow:0 0 0 3px rgba(168,72,0,0.14),var(--shadow-sm);transform:translateY(-2px)}
+.signal-card.sc-confident{border-color:var(--green-dark);background:linear-gradient(135deg,rgba(24,200,112,0.12),rgba(24,152,136,0.09));box-shadow:0 0 0 3px rgba(10,128,72,0.14),var(--shadow-sm);transform:translateY(-2px)}
+.signal-card.sc-wrong{border-color:var(--coral-dark);background:rgba(224,72,88,0.07);animation:wrongShake 0.4s ease}
+.signal-card .sc-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.signal-card:hover .sc-icon{transform:scale(1.14)}
+.signal-card.sc-nervous .sc-icon,.signal-card.sc-confident .sc-icon{transform:scale(1.14)}
+.signal-card .sc-text{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.3}
+.sc-check{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.signal-card.sc-nervous .sc-check{opacity:1;transform:scale(1);background:var(--orange-dark)}
+.signal-card.sc-confident .sc-check{opacity:1;transform:scale(1);background:var(--green-dark)}
+
+/* SORT */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;min-height:52px;padding:12px 14px;background:rgba(24,152,136,0.06);border:2px dashed rgba(24,152,136,0.26);border-radius:var(--radius-sm)}
+.sort-card-item{background:#fff;border:2px solid rgba(24,152,136,0.24);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-card-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--teal)}
+.sort-card-item.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:12px 12px 10px;min-height:90px;border:2px solid}
+.sort-zone.zone-anxious{border-color:rgba(168,72,0,0.32);background:rgba(232,120,32,0.07)}
+.sort-zone.zone-balanced{border-color:rgba(10,128,72,0.30);background:rgba(24,200,112,0.07)}
+.sort-zone.zone-confident{border-color:rgba(10,96,88,0.30);background:rgba(24,152,136,0.07)}
+.sort-zone.zone-aggressive{border-color:rgba(160,24,40,0.30);background:rgba(224,72,88,0.07)}
+.sort-zone.zone-passive{border-color:rgba(144,96,0,0.28);background:rgba(216,152,32,0.07)}
+.sort-zone .sz-title{font-size:11.5px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:8px}
+.sort-zone.zone-anxious .sz-title{color:var(--orange-dark)}
+.sort-zone.zone-balanced .sz-title{color:var(--green-dark)}
+.sort-zone.zone-confident .sz-title{color:var(--teal-dark)}
+.sort-zone.zone-aggressive .sz-title{color:var(--coral-dark)}
+.sort-zone.zone-passive .sz-title{color:var(--gold-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:6px;min-height:28px}
+.sz-item{background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:4px}
+.sz-remove{cursor:pointer;font-size:13px;color:var(--text-soft);transition:color 0.2s}
+.sz-remove:hover{color:var(--coral-dark)}
+
+/* DUAL ANXIETY/CONFIDENCE METER */
+.dual-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(24,152,136,0.07),rgba(24,200,112,0.06));border:1.5px solid rgba(24,152,136,0.20);border-radius:var(--radius-sm);padding:24px}
+.dual-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.dual-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.dual-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--teal-dark);box-shadow:0 3px 14px rgba(10,96,88,0.36);cursor:pointer;transition:transform 0.2s ease}
+.dual-slider::-webkit-slider-thumb:hover,.dual-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.dual-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--teal-dark);cursor:pointer}
+.dual-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dual-bar-side{padding:16px;border-radius:var(--radius-sm);transition:background 0.5s ease;border:2px solid}
+.dual-bar-side.anxiety-side{border-color:rgba(168,72,0,0.28);background:rgba(232,120,32,0.07)}
+.dual-bar-side.conf-side{border-color:rgba(10,128,72,0.28);background:rgba(24,200,112,0.07)}
+.dbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.dbs-emoji{font-size:24px}
+.dbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.dbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.dbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.anxiety-side .dbs-fill{background:linear-gradient(90deg,var(--orange-light),var(--orange-dark));box-shadow:0 2px 6px rgba(168,72,0,0.28)}
+.conf-side .dbs-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark));box-shadow:0 2px 6px rgba(10,128,72,0.28)}
+.dbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.anxiety-side .dbs-pct{color:var(--orange-dark)}
+.conf-side .dbs-pct{color:var(--green-dark)}
+.dbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:36px}
+
+/* SCENARIO BUTTONS */
+.scenario-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.scenario-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(24,152,136,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.scenario-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--teal)}
+.scenario-btn .sb-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease}
+.scenario-btn:hover .sb-icon{transform:scale(1.10)}
+.scenario-btn .sb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.scenario-btn .sb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.scenario-btn.sel-harmful{border-color:var(--coral-dark);background:rgba(224,72,88,0.08);animation:wrongShake 0.4s ease}
+.scenario-btn.sel-ok{border-color:var(--gold-dark);background:rgba(216,152,32,0.09);animation:correctPop 0.4s ease}
+.scenario-btn.sel-best{border-color:var(--green-dark);background:rgba(24,200,112,0.09);animation:correctPop 0.4s ease}
+
+/* ANIMATED METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(24,152,136,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.anxiety-fill{background:linear-gradient(90deg,var(--orange-light),var(--orange-dark));box-shadow:0 2px 8px rgba(168,72,0,0.28)}
+.meter-fill.conf-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark));box-shadow:0 2px 8px rgba(10,128,72,0.28)}
+.meter-fill.resil-fill{background:linear-gradient(90deg,var(--teal-light),var(--teal-dark));box-shadow:0 2px 8px rgba(10,96,88,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,72,88,0.09);border:1.5px solid rgba(160,24,40,0.22)}
+.outcome-box.ok{background:rgba(216,152,32,0.10);border:1.5px solid rgba(144,96,0,0.22)}
+.outcome-box.best{background:rgba(24,200,112,0.09);border:1.5px solid rgba(10,128,72,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(24,152,136,0.08),rgba(112,64,200,0.07),rgba(24,200,112,0.06));border:2px solid rgba(24,152,136,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(24,152,136,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,200,112,0.10),rgba(24,152,136,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--teal-dark);padding:2px 0}
+
+/* SARA SCENARIO */
+.sara-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.sara-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(24,152,136,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.sara-btn:hover{border-color:var(--teal);transform:translateX(3px)}
+.sara-btn .srb-icon{font-size:24px;flex-shrink:0}
+.sara-btn .srb-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.sara-btn .srb-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.sara-btn.sb-correct{border-color:var(--green-dark);background:rgba(24,200,112,0.10);animation:correctPop 0.4s ease}
+.sara-btn.sb-incorrect{border-color:var(--coral-dark);background:rgba(224,72,88,0.08);animation:wrongShake 0.4s ease}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(24,152,136,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--teal);background:rgba(24,152,136,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--green-dark);background:rgba(24,200,112,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(224,72,88,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--green-dark);background:rgba(24,200,112,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(24,200,112,0.16);color:#0a5830}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,72,88,0.12);color:#800c18}
+
+/* BODY LANGUAGE DISPLAY */
+.body-lang-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 24px}
+.bl-card{background:var(--bg);border:2px solid rgba(24,152,136,0.18);border-radius:var(--radius-sm);padding:18px 16px;cursor:pointer;transition:var(--t);text-align:center}
+.bl-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--teal)}
+.bl-card .blc-icon{font-size:32px;display:block;margin-bottom:10px;transition:transform 0.3s ease}
+.bl-card:hover .blc-icon{transform:scale(1.12)}
+.bl-card .blc-title{font-size:13px;font-weight:900;color:var(--text);margin-bottom:4px}
+.bl-card .blc-desc{font-size:12px;font-weight:600;color:var(--text-soft);line-height:1.4}
+.bl-card.blc-confident{border-color:var(--green-dark);background:rgba(24,200,112,0.10);animation:correctPop 0.4s ease}
+.bl-card.blc-anxious{border-color:var(--orange-dark);background:rgba(232,120,32,0.09);animation:wrongShake 0.4s ease}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(24,200,112,0.13);color:#0a5830;border:1.5px solid rgba(10,128,72,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(232,120,32,0.10);color:#804000;border:1.5px solid rgba(168,72,0,0.22)}
+.feedback-msg.info-msg{background:rgba(72,16,144,0.08);color:var(--violet-dark);border:1.5px solid rgba(72,16,144,0.20)}
+.feedback-msg.teal-msg{background:rgba(10,96,88,0.09);color:var(--teal-dark);border:1.5px solid rgba(10,96,88,0.22)}
+.feedback-msg.gold-msg{background:rgba(144,96,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(144,96,0,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(24,152,136,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(40,72,64,0.38)}
+.reflection-input:focus{border-color:var(--teal-dark);box-shadow:0 0 0 3px rgba(10,96,88,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--green-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--teal-dark),var(--green-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(10,96,88,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(10,96,88,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(24,152,136,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(24,152,136,0.08);border-color:var(--teal-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(24,152,136,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--teal-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(24,152,136,0.18);border-radius:999px}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(216,152,32,0.14),rgba(112,64,200,0.11));border:1.5px solid rgba(216,152,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(24,152,136,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,250,248,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(24,152,136,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(24,152,136,0.06),rgba(112,64,200,0.05),rgba(24,200,112,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .signal-grid{grid-template-columns:repeat(2,1fr)}
+  .sort-zones{grid-template-columns:1fr}
+  .dual-bars{grid-template-columns:1fr}
+  .body-lang-grid{grid-template-columns:1fr}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🟢 Confidence Simulator</div>
+    <h1>The <span>Social Confidence</span> Simulator</h1>
+    <p>Handle awkward moments - Start conversations - Respond with confidence</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌟</div>
+    <h2>Social Confidence Unlocked!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now know that confidence is not the absence of nerves - it is the decision to act anyway.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🚀</span><div class="b-title">Social Starter</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">😌</span><div class="b-title">Calm Responder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💪</span><div class="b-title">Confidence Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Simulator</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let signalSel     = new Set();
+let signalOk      = false;
+let sortPlac      = {};
+let sortSel       = null;
+let dualLevel     = 72;
+let starterChoice = null;
+let starterLocked = false;
+let joinChoice    = null;
+let joinLocked    = false;
+let teasChoice    = null;
+let teasLocked    = false;
+let confText      = '';
+let confValid     = false;
+let reflectText   = '';
+let reflectValid  = false;
+let saraThinkDone = false;
+let saraBLDone    = false;
+let saraReqDone   = false;
+let saraThinkCount= 0;
+let skillSortPlac = {};
+let skillSortSel  = null;
+let quizAnswers   = {};
+
+const signalData = [
+  {id:'lookdown',  icon:'👇', text:'Looking at the ground',  mode:'nervous'},
+  {id:'quiet',     icon:'🤫', text:'Very quiet voice',        mode:'nervous'},
+  {id:'eyeavoid',  icon:'👀', text:'Avoiding eye contact',   mode:'nervous'},
+  {id:'smile',     icon:'😊', text:'Smiling with ease',      mode:'confident'},
+  {id:'tight',     icon:'😬', text:'Shoulders tight and raised', mode:'nervous'},
+  {id:'posture',   icon:'🧍', text:'Open upright posture',   mode:'confident'}
+];
+
+const thoughtCards = [
+  {id:'wontlike',   text:'They won\'t like me.',              zone:'anxious'},
+  {id:'might',      text:'They might say yes.',               zone:'balanced'},
+  {id:'awkward',    text:'I will look stupid.',               zone:'anxious'},
+  {id:'tryit',      text:'It is worth trying.',               zone:'balanced'},
+  {id:'rejected',   text:'They will reject me for sure.',     zone:'anxious'},
+  {id:'nervous',    text:'I feel nervous, and that is okay.', zone:'balanced'}
+];
+
+const dualStates = [
+  {range:[0,18],   aLabel:'Very Low', cLabel:'Very High', aMood:'Almost no social anxiety. Calm, grounded, fully comfortable in this moment.', cMood:'Peak confidence access. Full presence. Words come easily. Body language open and natural.'},
+  {range:[19,38],  aLabel:'Low', cLabel:'Good', aMood:'Slight unease. Manageable and familiar. Confidence still fully accessible with intention.', cMood:'Good access to confident thinking. Able to choose responses deliberately rather than reactively.'},
+  {range:[39,58],  aLabel:'Moderate', cLabel:'Reduced', aMood:'Clear nervousness. Thoughts beginning to spiral slightly. Regulation and action tools helpful here.', cMood:'Confidence reduced but reachable. Social confidence skills become the bridge from here.'},
+  {range:[59,78],  aLabel:'High', cLabel:'Low', aMood:'Strong social anxiety. Avoidance impulse powerful. The anxious story ("they won\'t like me") feels very true right now.', cMood:'Low confidence access. Social skills training is most powerful here - acting before the anxiety makes the decision.'},
+  {range:[79,100], aLabel:'Maximum', cLabel:'Minimal', aMood:'Overwhelming social anxiety. Body fully activated. Avoidance feels like the only option.', cMood:'Minimal confidence accessible. One small action - any action - is the most powerful tool available right now.'}
+];
+
+const starterOptions = [
+  {
+    id:'mumble', icon:'🔴', text:'"Can I play?" (mumbled, looking at the ground)', sub:'Technically correct words, completely undermined by body language and tone',
+    quality:'harmful', anxLevel:85, confLevel:12,
+    outcome:{title:'The Words Say Yes, the Body Says No', body:'Mumbling while looking down sends two conflicting messages simultaneously - the words request inclusion but the body language broadcasts social withdrawal and low confidence. Research on communication shows that body language and tone carry far more social meaning than the words themselves. The group receives the signal of low confidence and may interpret the request as half-hearted or lacking genuine interest.', tip:'Science: Communication studies consistently show that tone and body language account for the vast majority of social impression - often 70-90% of perceived meaning. Words alone are a minor component of how we come across.'}
+  },
+  {
+    id:'hey', icon:'🟡', text:'"Hey..." (uncertain, trailing off without completing the request)', sub:'Initiates contact but loses confidence before completing the full request',
+    quality:'ok', anxLevel:55, confLevel:38,
+    outcome:{title:'Initiating But Incomplete', body:'Starting a conversation is genuinely difficult when anxiety is high, and beginning with "Hey..." shows real courage. But trailing off without completing the request leaves the group uncertain about what is being asked and may produce an awkward silence that feels worse than not having tried. A complete, clear sentence - even if delivered imperfectly - is significantly more effective than an incomplete one.', tip:'Principle: Beginning an interaction is the hardest step. But completing it is what creates the full social learning. An incomplete attempt still provides partial evidence, but a complete one - however nervously delivered - provides much stronger evidence that it was survivable.'}
+  },
+  {
+    id:'hi', icon:'🟢', text:'"Hi! Can I join the game?" (direct, eye contact, clear voice)', sub:'Complete request, confident delivery, respectful and direct',
+    quality:'best', anxLevel:24, confLevel:82,
+    outcome:{title:'The Confident Opener', body:'A direct, clear, complete request with eye contact and a natural tone is the gold standard for joining a social group. It signals confidence without arrogance, genuine interest without desperation, and social awareness without excessive caution. The person asking might still be nervous internally - but the confident delivery dramatically increases the likelihood of a positive response and, crucially, demonstrates to Zain\'s own brain that he can do this.', tip:'Research: Self-efficacy (the belief that you can handle a situation) is built through successful actions, not just through feeling confident first. Acting confidently before feeling confident trains the brain to associate social situations with capability rather than threat.'}
+  }
+];
+
+const joinOptions = [
+  {
+    id:'walk', icon:'🔴', text:'Walk away without saying anything', sub:'Silent retreat - avoidance confirms the anxious prediction',
+    quality:'harmful', confLevel:12, resilLevel:8,
+    outcome:{title:'Silent Withdrawal Strengthens the Fear', body:'Walking away without responding confirms the anxious brain\'s worst prediction: "If I try and it does not work, I cannot handle it." The brain files this experience as evidence that rejection is overwhelming and must be avoided at all costs. The anxiety around social rejection grows stronger. Every future "no" becomes slightly more threatening as a result of this silent withdrawal.', tip:'Research: How we respond to setbacks determines whether rejection becomes a learning experience or a reinforcement of avoidance. Silent withdrawal sends the brain a message of incapability. A brief gracious response sends a completely different message.'}
+  },
+  {
+    id:'okleave', icon:'🟡', text:'"Okay..." and leave looking visibly upset', sub:'Verbal acknowledgement with emotional overwhelm visible',
+    quality:'ok', confLevel:38, resilLevel:32,
+    outcome:{title:'Acknowledged But Unresolved', body:'Saying "okay" before leaving is better than silent withdrawal - it demonstrates that Zain can produce a response under pressure. But leaving visibly upset sends the group the signal that rejection was catastrophic, which may affect how they interact with Zain in future moments. It also leaves Zain\'s own nervous system with an incomplete, distressing experience that reinforces social anxiety.', tip:'Principle: The goal is not to suppress genuine feelings, but to develop the capacity to respond to setbacks without being completely overwhelmed by them. Partial responses build partial resilience.'}
+  },
+  {
+    id:'nextround', icon:'🟢', text:'"No worries! Maybe next round?" (light tone, relaxed)', sub:'Gracious acceptance with a forward-looking door left open',
+    quality:'best', confLevel:80, resilLevel:86,
+    outcome:{title:'The Resilient Response', body:'"No worries, maybe next round?" accomplishes multiple things simultaneously: it demonstrates that Zain can handle a "no" without collapsing, it leaves a positive impression on the group, and it keeps the door open for future connection. Most importantly, it provides Zain\'s own brain with powerful evidence: "I tried, it did not work out exactly as I hoped, and I handled it with grace. I can do this." This is resilience in action.', tip:'Research: Social resilience - the capacity to recover quickly from social setbacks - is built specifically through graceful responses to rejection or disappointment. Each instance of responding calmly to a "no" reduces the intensity of the anxiety response to future social risk-taking.'}
+  }
+];
+
+const teasingOptions = [
+  {
+    id:'shutup', icon:'🔴', text:'"Shut up!" (defensive, heated)', sub:'Escalation response - hands control of the situation to the teaser',
+    quality:'harmful', anxLevel:88, confLevel:10,
+    outcome:{title:'Escalation Loses the Ground', body:'Responding to teasing with "shut up!" instantly escalates the situation and hands power to the person doing the teasing - because it demonstrates that their words have successfully destabilised Zain. The teaser receives confirmation that this strategy works, making future teasing more likely. Zain\'s emotional regulation resources are now depleted, and the interaction has made him feel worse, not better.', tip:'Principle: Reactive defensiveness is a predictable and easily manipulated response. A calm, non-reactive response is both harder to predict and more socially powerful. It demonstrates that Zain\'s confidence does not depend on others\' opinions.'}
+  },
+  {
+    id:'nothing', icon:'🟡', text:'Say nothing, look away', sub:'Silence - not engaging, but also not responding with dignity',
+    quality:'ok', anxLevel:52, confLevel:40,
+    outcome:{title:'Disengagement Without Dignity', body:'Saying nothing and looking away prevents escalation, which is genuinely valuable. But complete silence in response to teasing can also signal to the teaser that their comment landed and caused significant discomfort - just enough to try again. A brief, calm verbal response is more socially powerful than complete silence, because it demonstrates that Zain has the capacity to respond without being destabilised.', tip:'Principle: Social silence has ambiguous meaning - it can signal zen-like indifference or profound discomfort. A brief, calm verbal response removes ambiguity and demonstrates genuine equanimity rather than suppressed distress.'}
+  },
+  {
+    id:'learning', icon:'🟢', text:'"I\'m still learning - it is part of the process." (calm, matter-of-fact)', sub:'Ownership without shame - neither defensive nor submissive',
+    quality:'best', anxLevel:20, confLevel:84,
+    outcome:{title:'The Grounded Response', body:'"I\'m still learning" is one of the most socially sophisticated responses available. It acknowledges the reality (he is indeed still learning) without treating it as an attack or a verdict. It demonstrates self-awareness and self-acceptance simultaneously. It provides no fuel for escalation. And it models something remarkable: a person who is secure enough in their own self-concept that external criticism does not destabilise them. This kind of response is genuinely difficult - and deeply impressive.', tip:'Research: Non-defensive acknowledgement of valid criticism - or even of unkind criticism - is one of the strongest signals of genuine self-confidence. It demonstrates that self-worth is not contingent on others\' approval or on being perfect.'}
+  }
+];
+
+const skillBehaviours = [
+  {id:'eyec',    text:'Making steady eye contact while speaking', zone:'confident'},
+  {id:'shout',   text:'Talking over others to make your point', zone:'aggressive'},
+  {id:'mumble2', text:'Agreeing with everything to avoid conflict', zone:'passive'},
+  {id:'clear',   text:'Expressing a different opinion calmly', zone:'confident'},
+  {id:'snatch',  text:'Taking something without asking', zone:'aggressive'},
+  {id:'silent',  text:'Not saying anything when something bothers you', zone:'passive'},
+  {id:'listen',  text:'Waiting your turn to speak', zone:'confident'},
+  {id:'dismiss', text:'Rolling your eyes when someone disagrees', zone:'aggressive'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is the most accurate description of genuine social confidence?',
+    options:[
+      {icon:'😌', text:'Never feeling nervous or anxious in social situations - being naturally at ease', correct:false},
+      {icon:'💪', text:'Choosing to act and engage despite feeling nervous - courage in the presence of anxiety', correct:true},
+      {icon:'🎭', text:'Pretending to feel confident even when you are not - performing ease to convince others', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. Genuine confidence is not the absence of nerves - it is the decision to act despite them. Almost every socially confident person feels nervous in challenging situations. The difference is that they do not wait until the nerves disappear before acting - because the nerves rarely disappear in advance. Action comes first; the evidence of capability follows. Confidence is built by doing, not by feeling confident first.',
+      incorrect:'Not quite. True social confidence is not about never feeling nervous, nor is it about performing ease that is not felt. Genuine confidence is the capacity to act despite nervousness - to choose engagement even when the anxious brain is recommending avoidance. The nervous feeling may not go away before the action, but the action itself provides evidence that the situation is manageable.'
+    }
+  },
+  {
+    q:'Question 2: What most consistently increases social confidence over time?',
+    options:[
+      {icon:'📚', text:'Reading and studying social situations carefully before attempting them', correct:false},
+      {icon:'🏃', text:'Repeatedly taking small social actions - starters, conversations, responses to setbacks - and building a personal evidence base', correct:true},
+      {icon:'⏳', text:'Waiting until social situations feel less scary before attempting them', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. Social confidence is built almost exclusively through action - through the accumulated evidence of small social attempts and their survivable outcomes. Reading about social confidence or waiting until it feels less scary are both forms of avoidance that provide no new evidence to the brain. Each small social action, regardless of the outcome, updates the brain\'s assessment: "I tried this, and I handled it." This is the mechanism by which confidence grows.',
+      incorrect:'Not quite. Social confidence grows through action, not through study or through waiting. Reading about social skills provides intellectual knowledge but no experiential evidence. Waiting until situations feel less scary is avoidance - and avoidance never reduces anxiety, it increases it. The brain builds confidence specifically through the accumulated experience of social action and its survivable outcomes.'
+    }
+  },
+  {
+    q:'Question 3: Why does avoiding social situations consistently reduce confidence over time?',
+    options:[
+      {icon:'📉', text:'Because each avoidance teaches the brain that the social situation is genuinely dangerous, making future encounters feel even more threatening', correct:true},
+      {icon:'😴', text:'Because social situations are exhausting, and avoidance simply builds fatigue that reduces overall confidence', correct:false},
+      {icon:'🤷', text:'Avoidance does not really affect confidence - it is a neutral strategy that simply delays the encounter', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. Avoidance is the primary mechanism by which social anxiety grows over time. Each time we avoid a social situation, the brain learns: "That was dangerous, and avoiding it kept me safe." The avoidance brings immediate relief, which reinforces the behaviour. And the next time a similar situation arises, the brain\'s alarm fires louder because it now has additional evidence that the situation was threatening. Confidence requires the opposite: evidence that social situations are survivable, which only comes through engaging with them.',
+      incorrect:'Not quite. Avoidance actively teaches the brain that social situations are dangerous - because the relief of avoiding something feels, neurologically, exactly like escaping a genuine threat. Each avoidance strengthens the alarm signal for similar future situations. Social confidence is built through engagement, not avoidance. The temporary relief of avoidance comes at the long-term cost of escalating social anxiety.'
+    }
+  }
+];
+
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🟢', 2:'🟣', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getDualState(v) {
+  return dualStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Social Anxiety') +
+    '<div class="stage-label"><span class="dot"></span> Simulator Entry - Case File #010</div>' +
+    '<h2>Confidence Is Not the Absence of Nerves</h2>' +
+    '<p>Welcome to the Social Confidence Simulator. Every social skill that feels effortless for confident people was once practiced, awkward, and nervousness-inducing. Social confidence is not a personality trait you either have or you do not. It is a skill - built from repeated small actions in the face of social uncertainty. And the most important truth about social confidence is this: you do not need to feel confident to act confidently.</p>' +
+    '<div class="story-box" data-icon="⚽">' +
+      '<p><span>Zain</span> is ten years old and it is his first day at a new school. At lunch break, he notices a group of students playing football in the yard. He loves football. He has played it for years. But as he walks toward the group, something happens. His pace slows. His stomach tightens. He stops about eight metres away and watches. And then the thoughts arrive:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"What if they say no? What if I look awkward walking over? What if they have already decided they do not want me? Maybe I should just watch for today and try tomorrow." Tomorrow becomes next week. Next week becomes never.</p></div>' +
+    '<p>Zain is not shy. He is not unlikeable. He is not bad at football. He is experiencing the most normal thing in social life: the anxious brain making a risk assessment and recommending the safest option, which is always avoidance. The problem is that avoidance never produces the thing he actually wants: connection, participation, belonging.</p>' +
+    '<div class="feedback-msg info-msg">⚡ <strong>Core insight:</strong> Social confidence is not "never feeling nervous." It is the decision to walk toward the group anyway. It is the voice that is slightly quieter than usual but still speaks. It is the hand that shakes slightly but still waves. Every confident-looking person you have ever admired was, at some point, afraid of exactly the same things Zain is afraid of right now. What separates them is what they did with the fear.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Enter the Simulator</button>' +
+  '</div>';
+}
+
+function s2() {
+  signalSel = new Set(); signalOk = false;
+  var cards = signalData.map(function(s) {
+    return '<div class="signal-card" id="sc-' + s.id + '" onclick="toggleSignal(\'' + s.id + '\',\'' + s.mode + '\')">' +
+      '<div class="sc-check">✓</div>' +
+      '<span class="sc-icon">' + s.icon + '</span>' +
+      '<div class="sc-text">' + s.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Social Anxiety') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Social Body Signals</div>' +
+    '<h2>Which Are Nervousness Signals?</h2>' +
+    '<p>Social anxiety communicates through the body in very specific ways - and these signals are often visible to others before we have even spoken. Understanding them serves two purposes: recognising when our own body is in social anxiety mode (so we can regulate), and developing empathy for others whose body language signals discomfort or nervousness in social situations.</p>' +
+    '<p>Select all cards that represent physical signals of social nervousness. Some cards show confident body language - read carefully.</p>' +
+    '<div class="signal-grid">' + cards + '</div>' +
+    '<div id="signalFeedback"></div>' +
+    '<button class="btn-primary" id="signalNextBtn" onclick="renderStage(3)" disabled>Next: Anxious vs Balanced Thoughts -></button>' +
+  '</div>';
+}
+
+function s3() {
+  sortPlac = {}; sortSel = null;
+  var bank = thoughtCards.map(function(c) {
+    return '<div class="sort-card-item" id="stc-' + c.id + '" onclick="handleSortClick(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Social Anxiety') +
+    backBtn(2,'Back to Body Signals') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Anxious vs Balanced Thoughts</div>' +
+    '<h2>The Stories We Tell Ourselves</h2>' +
+    '<p>Social anxiety is largely maintained by the stories the mind generates before, during, and after social situations. These stories feel like predictions, but they are actually guesses - often highly biased guesses shaped by past difficult experiences and the brain\'s threat detection system. Balanced thoughts are not forced positivity - they are accurate alternatives to catastrophic predictions.</p>' +
+    '<p>Sort each thought into the correct category. Some are anxiety-driven predictions. Others are balanced, realistic alternatives.</p>' +
+    '<div class="sort-bank" id="sortBank">' + bank + '</div>' +
+    '<div id="sortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a thought, then click a zone below to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-anxious" onclick="placeSort(\'anxious\')">' +
+        '<div class="sz-title">Anxious Thought</div>' +
+        '<div class="sz-items" id="zone-anxious"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-balanced" onclick="placeSort(\'balanced\')">' +
+        '<div class="sz-title">Balanced Thought</div>' +
+        '<div class="sz-items" id="zone-balanced"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sortFeedback"></div>' +
+    '<button class="btn-primary" id="sortNextBtn" onclick="renderStage(4)" disabled>Next: Confidence Meter -></button>' +
+  '</div>';
+}
+
+function s4() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Social Anxiety') +
+    backBtn(3,'Back to Thought Sorting') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Confidence Meter</div>' +
+    '<h2>Where Is Zain\'s Meter Right Now?</h2>' +
+    '<p>Social anxiety and social confidence exist on an inverse spectrum - as one rises, the other falls. The position on this meter is not fixed: it changes in response to the thoughts we choose, the actions we take, and the experiences we accumulate. Right now, Zain is standing eight metres from the group, his anxious thoughts running. Move the slider to estimate his current state.</p>' +
+    '<div class="dual-meter-wrap">' +
+      '<div class="dual-slider-labels"><span>💚 Full Confidence</span><span>⚖️ Balanced</span><span>🧊 Full Anxiety</span></div>' +
+      '<input type="range" class="dual-slider" id="dualSl" min="0" max="100" value="72" oninput="updateDual(this.value)"/>' +
+      '<div class="dual-bars">' +
+        '<div class="dual-bar-side anxiety-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">🧊</span><span class="dbs-title">Social Anxiety</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="anxFill" style="width:72%"></div></div>' +
+          '<div class="dbs-pct" id="anxPct">72%</div>' +
+          '<div class="dbs-mood" id="anxMood">High. Avoidance impulse strong.</div>' +
+        '</div>' +
+        '<div class="dual-bar-side conf-side">' +
+          '<div class="dbs-header"><span class="dbs-emoji">💚</span><span class="dbs-title">Social Confidence</span></div>' +
+          '<div class="dbs-track"><div class="dbs-fill" id="conFill" style="width:28%"></div></div>' +
+          '<div class="dbs-pct" id="conPct">28%</div>' +
+          '<div class="dbs-mood" id="conMood">Low. Social action needs deliberate courage.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg teal-msg">🎯 <strong>Zain\'s context:</strong> First day at a new school, wanting to join a group where he knows no one, while experiencing anxious thoughts about rejection - this typically places the meter in the High Anxiety range. This is completely normal. The question is not whether to feel this way, but what to do while feeling this way. That choice is what the next stages are about.</div>' +
+    '<button class="btn-primary" onclick="renderStage(5)">Next: Conversation Starter Builder -></button>' +
+  '</div>';
+}
+
+function s5() {
+  starterChoice = null; starterLocked = false;
+  var btns = starterOptions.map(function(opt) {
+    return '<button class="scenario-btn" id="so-' + opt.id + '" onclick="chooseStarter(\'' + opt.id + '\')">' +
+      '<span class="sb-icon">' + opt.icon + '</span>' +
+      '<div><div class="sb-text">' + opt.text + '</div><div class="sb-sub">' + opt.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Social Anxiety') +
+    backBtn(4,'Back to Confidence Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Conversation Starter</div>' +
+    '<h2>What Does Zain Say When He Gets There?</h2>' +
+    '<p>The conversation starter is the moment everything becomes real. Zain has crossed the eight metres. He is standing at the edge of the group. The words he chooses now - and more importantly, how he delivers them - will shape the interaction\'s trajectory. Three options are available. Each will have a measurably different impact on how the group responds and on what Zain\'s own brain learns from the experience.</p>' +
+    '<div class="scenario-options">' + btns + '</div>' +
+    '<div id="starterOutcome"></div>' +
+    '<div id="starterNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(6)">Learn the Social Confidence Formula -></button></div>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {icon:'👁️', title:'Notice the Nerves', desc:'Recognise the physical signals - tight stomach, faster heartbeat, quieter voice. Name them: "I am nervous right now." This is the first act of social courage.'},
+    {icon:'🧍', title:'Stand Tall', desc:'Before speaking, take a breath and open the body posture. Shoulders back, head up, feet shoulder-width apart. The body sends confidence signals to both others and to your own brain.'},
+    {icon:'💬', title:'Speak Clearly', desc:'Complete sentence. Direct request. Natural eye contact. Voice loud enough to be heard. The words do not need to be perfect. They need to be said.'},
+    {icon:'✅', title:'Accept the Outcome', desc:'Whatever happens, you took the action. A yes means connection was found. A no means you handled it with dignity and kept the door open. Both outcomes are victories over avoidance.'}
+  ];
+  var rows = steps.map(function(s, i) {
+    return '<div class="formula-row" style="animation-delay:' + (i*0.08) + 's"><span class="fr-icon">' + s.icon + '</span><div><div class="fr-title">' + s.title + '</div><div class="fr-desc">' + s.desc + '</div></div></div>';
+  }).join('<div class="formula-arrow">↓</div>');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Social Anxiety') +
+    backBtn(5,'Back to Starter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - Social Confidence Formula</div>' +
+    '<h2>The Four-Step Confidence Formula</h2>' +
+    '<p>Social confidence is not a single action - it is a four-step sequence that can be learned, practised, and made increasingly automatic over time. The sequence works regardless of outcome. It works regardless of how nervous you feel. It works because it is entirely within your control - none of the four steps depends on the other person\'s response.</p>' +
+    '<div class="formula-box">' + rows + '<div class="formula-row formula-result" style="margin-top:12px"><span class="fr-icon">🌟</span><div><div class="fr-title">The Evidence of Courage</div><div class="fr-desc">Each completed cycle of the formula - regardless of whether the outcome was the hoped-for one - builds a new data point in the brain\'s evidence base: "I attempted this. I handled it. I am capable of this." Over repetition, this evidence base rewires the brain\'s social threat assessment and builds genuine, durable social confidence.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg teal-msg">🏅 <strong>Badge Progress:</strong> Social Starter Level 1 - almost earned! Continue to Act 2 to handle real-time social moments...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Real-Time Social Scenarios -></button>' +
+  '</div>';
+}
+
+function s7() {
+  joinChoice = null; joinLocked = false;
+  var btns = joinOptions.map(function(opt) {
+    return '<button class="scenario-btn" id="jo-' + opt.id + '" onclick="chooseJoin(\'' + opt.id + '\')">' +
+      '<span class="sb-icon">' + opt.icon + '</span>' +
+      '<div><div class="sb-text">' + opt.text + '</div><div class="sb-sub">' + opt.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Real-Time Social Scenarios') +
+    backBtn(6,'Back to Formula') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Join the Game Simulation</div>' +
+    '<h2>They Say: "We Already Have Enough Players."</h2>' +
+    '<p>Zain walked over. He said "Hi, can I join?" And someone in the group responds: "Sorry, we already have enough." The anxious brain immediately processes this as confirmation of its worst prediction. But this moment - the response to a setback - is often more important than the initial approach. How Zain responds now determines what he learns, how the group perceives him, and what his brain files as evidence for future social attempts.</p>' +
+    '<div class="scenario-options">' + btns + '</div>' +
+    '<div id="joinOutcome"></div>' +
+    '<div id="joinNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Handle the Teasing Scenario -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  teasChoice = null; teasLocked = false;
+  var btns = teasingOptions.map(function(opt) {
+    return '<button class="scenario-btn" id="to-' + opt.id + '" onclick="chooseTeasing(\'' + opt.id + '\')">' +
+      '<span class="sb-icon">' + opt.icon + '</span>' +
+      '<div><div class="sb-text">' + opt.text + '</div><div class="sb-sub">' + opt.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Real-Time Social Scenarios') +
+    backBtn(7,'Back to Join Scenario') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Teasing Scenario</div>' +
+    '<h2>Someone Says: "You\'re Not Very Good."</h2>' +
+    '<p>Zain is now playing - either in a new game he found or eventually included in the first one. He misses a pass. And a player on the other team says, within earshot: "You\'re not very good at this." This kind of comment sits at the intersection of social pressure and self-esteem. The anxious brain wants to either fight it defensively or collapse under it. There is a third option that neither fights nor collapses - and it is the most powerful one available.</p>' +
+    '<div class="scenario-options">' + btns + '</div>' +
+    '<div id="teasOutcome"></div>' +
+    '<div id="teasNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(9)">Build Your Confidence Statement -></button></div>' +
+  '</div>';
+}
+
+function s9() {
+  confValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Real-Time Social Scenarios') +
+    backBtn(8,'Back to Teasing Scenario') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Confidence Statement</div>' +
+    '<h2>Your Personal Social Confidence Anchor</h2>' +
+    '<p>A confidence statement is a personalised piece of self-talk that you pre-write for the moments when social anxiety is highest. It works because the thinking brain has reduced capacity under social stress - a pre-written, personally meaningful statement is far more accessible than trying to construct one from scratch while your heart is racing.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your statement should include three elements:<br/>' +
+      '<strong>Acceptance of nerves:</strong> Acknowledge the feeling without fighting it<br/>' +
+      '<strong>Strength reminder:</strong> A specific truth about your capability or character<br/>' +
+      '<strong>Action focus:</strong> The one small thing you are going to do next' +
+    '</div>' +
+    '<label class="input-label">When I feel nervous socially, I can remind myself...</label>' +
+    '<textarea class="reflection-input" id="confInput" oninput="checkConf(this.value)" placeholder="For example: I notice I feel nervous right now, and that is completely okay - it means I care about this. I have handled difficult social moments before and I know I can handle this one. My one job right now is not to feel confident - it is simply to take one small action and see what happens..." rows="5"></textarea>' +
+    '<div class="char-counter" id="confCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">💡 <strong>Why this works:</strong> Self-efficacy statements that are specific, personal, and action-focused are significantly more effective than generic positive affirmations. "I have done this before and survived" is neurologically more powerful than "I am great and everything will be fine" - because the brain can verify the first one against actual experience.</div>' +
+    '<button class="btn-primary" id="confNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Body Language -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Real-Time Social Scenarios') +
+    backBtn(9,'Back to Confidence Statement') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Body Language Shape Confidence?</h2>' +
+    '<p>Body language does not just signal confidence to others - it generates it within us. Research in embodied cognition shows that physical posture, facial expression, and breathing patterns have measurable effects on the hormonal and neurological state of the person adopting them. Standing tall does not just communicate confidence - it produces it. This is why the formula begins with body language, not with thought.</p>' +
+    '<p>Answer all three questions thoughtfully:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Explain in your own words how body language affects both how others perceive us AND how we feel from the inside.<br/>' +
+      '2. Why is it useful to adjust body language before you feel confident, rather than waiting until you feel confident first?<br/>' +
+      '3. Describe a specific social situation where deliberately adjusting your body language (posture, eye contact, voice volume) could make a significant difference.' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about how standing tall vs slouched changes your internal state, why the body is a faster route to confidence than thoughts alone, and a specific situation where this could help you..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🏅 <strong>Badge Progress:</strong> Calm Responder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Transfer and Application -></button>' +
+  '</div>';
+}
+
+function s11() {
+  saraThinkDone = false; saraBLDone = false; saraReqDone = false; saraThinkCount = 0;
+  var anxThoughts = [
+    {id:'dumb',    icon:'💭', text:'"She will think I am stupid for not understanding."', correct:true},
+    {id:'hate',    icon:'💭', text:'"The teacher will be annoyed that I am interrupting."', correct:true},
+    {id:'clear',   icon:'💡', text:'"Asking for help is a normal and intelligent thing to do."', correct:false},
+    {id:'manage',  icon:'✅', text:'"It is okay not to understand everything the first time."', correct:false}
+  ];
+  var blOptions = [
+    {id:'eyes',    icon:'🧍', title:'Direct eye contact, upright posture, clear voice', desc:'Signals confidence and genuine request for support', correct:true},
+    {id:'floor',   icon:'😶', title:'Looking at the floor, shoulders rounded, barely audible', desc:'Communicates distress but makes the request hard to hear and respond to', correct:false},
+    {id:'cross',   icon:'😤', title:'Arms crossed, minimal eye contact, terse words', desc:'May communicate frustration rather than genuine request for help', correct:false},
+    {id:'phone',   icon:'📱', title:'Looking at phone, speaking while distracted, rushing', desc:'Signals low investment and makes the teacher less likely to give full attention', correct:false}
+  ];
+  var reqOptions = [
+    {id:'mumble3', icon:'🔴', text:'"I don\'t get it." (mumbled, looking away)', correct:false},
+    {id:'wait',    icon:'🟡', text:'Wait silently hoping the teacher notices something is wrong', correct:false},
+    {id:'clear2',  icon:'🟢', text:'"Excuse me, I am a bit stuck on this part - could you explain it again?" (clear, direct)', correct:true}
+  ];
+  var thinkBtns = anxThoughts.map(function(t) {
+    return '<button class="sara-btn" id="st-' + t.id + '" onclick="selectSaraThink(\'' + t.id + '\',' + t.correct + ')">' +
+      '<span class="srb-icon">' + t.icon + '</span>' +
+      '<div><div class="srb-text">' + t.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var blBtns = blOptions.map(function(b) {
+    return '<div class="bl-card" id="bl-' + b.id + '" onclick="selectSaraBL(\'' + b.id + '\',' + b.correct + ')">' +
+      '<span class="blc-icon">' + b.icon + '</span>' +
+      '<div class="blc-title">' + b.title + '</div>' +
+      '<div class="blc-desc">' + b.desc + '</div>' +
+    '</div>';
+  }).join('');
+  var reqBtns = reqOptions.map(function(r) {
+    return '<button class="sara-btn" id="sr-' + r.id + '" onclick="selectSaraReq(\'' + r.id + '\',' + r.correct + ')">' +
+      '<span class="srb-icon">' + r.icon + '</span>' +
+      '<div><div class="srb-text">' + r.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Real-World Application') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Sara Needs to Ask for Help</h2>' +
+    '<div class="story-box" data-icon="📚">' +
+      '<p><span class="gold">Sara</span> is eleven years old. In the middle of a maths lesson, she realises she does not understand a key part of what the teacher has explained. She needs help. But the familiar thoughts begin: "The teacher will think I am not paying attention. The others will notice I do not get it. Maybe I should just look at someone else\'s work." She stares at the page. The lesson continues. The confusion deepens.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify Sara\'s anxious thoughts</div>' +
+    '<p>Select the two thoughts that represent social anxiety rather than realistic assessment.</p>' +
+    '<div class="sara-options">' + thinkBtns + '</div>' +
+    '<div id="saraThinkFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Choose the confident body language</div>' +
+    '<div id="saraBLWrap" style="opacity:0.4;pointer-events:none"><div class="body-lang-grid">' + blBtns + '</div></div>' +
+    '<div id="saraBLFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose the most effective request</div>' +
+    '<div id="saraReqWrap" style="opacity:0.4;pointer-events:none"><div class="sara-options">' + reqBtns + '</div></div>' +
+    '<div id="saraReqFeedback"></div>' +
+    '<button class="btn-primary" id="saraNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Social Skills Sorting -></button>' +
+  '</div>';
+}
+
+function s12() {
+  skillSortPlac = {}; skillSortSel = null;
+  var bank = skillBehaviours.map(function(b) {
+    return '<div class="sort-card-item" id="skb-' + b.id + '" onclick="handleSkillClick(\'' + b.id + '\')">' + b.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Real-World Application') +
+    backBtn(11,'Back to Sara\'s Scenario') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 12 - Social Skills Sorting</div>' +
+    '<h2>Confident, Aggressive, or Passive?</h2>' +
+    '<p>Social confidence exists in a precise zone between two unhelpful extremes. Passive behaviour - avoiding conflict, agreeing with everything, not expressing your own needs - looks like politeness but is actually a form of self-erasure that consistently reduces confidence over time. Aggressive behaviour - dominating, dismissing, forcing your way - looks like confidence but is actually a form of insecurity that damages relationships. Confident behaviour respects both yourself and others simultaneously.</p>' +
+    '<p>Sort each behaviour into the correct category. Read carefully - some of these can be surprisingly subtle.</p>' +
+    '<div class="sort-bank" id="skillSortBank">' + bank + '</div>' +
+    '<div id="skillSortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a behaviour, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-confident" onclick="placeSkillSort(\'confident\')">' +
+        '<div class="sz-title">Confident</div>' +
+        '<div class="sz-items" id="zone-confident"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-aggressive" onclick="placeSkillSort(\'aggressive\')">' +
+        '<div class="sz-title">Aggressive</div>' +
+        '<div class="sz-items" id="zone-aggressive"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-passive" onclick="placeSkillSort(\'passive\')">' +
+        '<div class="sz-title">Passive</div>' +
+        '<div class="sz-items" id="zone-passive"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="skillSortFeedback"></div>' +
+    '<button class="btn-primary" id="skillSortNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Real-World Application') +
+    backBtn(12,'Back to Skills Sorting') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Social Confidence Simulator with genuine depth and engagement. Let\'s see how clearly the core insights have settled. Answer all three questions carefully - draw on everything you have explored today about social confidence, anxiety, and the actions that build them.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Simulator!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Simulator Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Simulator Complete!') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Confidence Builder!</h2>' +
+    '<p>You completed the full Social Confidence Simulator - all 3 Acts, 14 stages, and a genuine exploration of what social confidence really is and how it is actually built. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🚀</span><div class="b-title">Social Starter</div><div class="b-sub">Initiated connection</div></div>' +
+      '<div class="badge-item"><span class="b-icon">😌</span><div class="b-title">Calm Responder</div><div class="b-sub">Handled setbacks with grace</div></div>' +
+      '<div class="badge-item"><span class="b-icon">💪</span><div class="b-title">Confidence Builder</div><div class="b-sub">Built the evidence base</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🚀</span><div><div class="sk-title">Confidence Is Action, Not Feeling</div><div class="sk-desc">Social confidence is not something you wait to feel before acting. It is the decision to act while feeling nervous. The feeling of confidence typically follows the action - not the other way around. Every small social action you take - even imperfect ones, even ones that do not go as hoped - adds to the brain\'s evidence base: "I attempted this. I handled it. I am capable of this." Confidence is built by doing.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">😌</span><div><div class="sk-title">Handling Setbacks With Grace</div><div class="sk-desc">How you respond to social setbacks - a "no", a rejection, a teasing comment - matters as much as how you initiate. A gracious, non-defensive, forward-looking response to setback demonstrates genuine resilience and often makes a stronger social impression than a perfectly smooth initial approach. "No worries, maybe next round?" is a socially sophisticated response that reflects real confidence. Practice this as much as you practice the initial approach.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">💪</span><div><div class="sk-title">The Confident Zone</div><div class="sk-desc">Confidence exists precisely between passivity (erasing your own needs to avoid conflict) and aggression (forcing your will without regard for others). The confident zone respects both yourself and others simultaneously - expressing your needs clearly, listening genuinely, speaking up when something matters, waiting your turn. Body language is the fastest route to this zone: stand tall, make eye contact, speak clearly. The mind follows the body.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="⚽" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Zain crossed those eight metres. He said the words even though his voice was a little quieter than usual. He handled the "no worries, maybe next round" moment. And something shifted in his brain that day - not a dramatic transformation, but a small, permanent update: "I tried. Something difficult happened. I handled it. I can do this." Every confident person you have ever admired built their confidence one small moment like that at a time. Now it is your turn. One step. Then the next. 🌟' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--teal-dark),var(--green-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Simulator</button>' +
+  '</div>';
+}
+
+/* ===== POST-RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    signalSel.forEach(function(id) {
+      var item = signalData.find(function(i){ return i.id === id; });
+      var el = document.getElementById('sc-' + id);
+      if (el && item) el.classList.add('sc-' + item.mode);
+    });
+    checkSignals();
+  }
+  if (n === 3) restoreSortUI();
+  if (n === 4) updateDual(dualLevel);
+  if (n === 9 && confText) {
+    var ta = document.getElementById('confInput');
+    if (ta) ta.value = confText;
+    checkConf(confText);
+  }
+  if (n === 10 && reflectText) {
+    var ta2 = document.getElementById('reflectInput');
+    if (ta2) ta2.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (saraThinkDone) {
+        var bw = document.getElementById('saraBLWrap');
+        if (bw) { bw.style.opacity = '1'; bw.style.pointerEvents = 'auto'; }
+      }
+      if (saraBLDone) {
+        var rw = document.getElementById('saraReqWrap');
+        if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+      }
+      checkSaraComplete();
+    }, 60);
+  }
+  if (n === 12) restoreSkillSort();
+}
+
+/* ACT 1 */
+function toggleSignal(id, mode) {
+  var el = document.getElementById('sc-' + id);
+  if (signalSel.has(id)) {
+    signalSel.delete(id);
+    el.classList.remove('sc-nervous'); el.classList.remove('sc-confident'); el.classList.remove('sc-wrong');
+  } else {
+    signalSel.add(id);
+    if (mode === 'nervous') el.classList.add('sc-nervous');
+    else el.classList.add('sc-confident');
+  }
+  checkSignals();
+}
+
+function checkSignals() {
+  var nervousCorrect = Array.from(signalSel).filter(function(id) {
+    return signalData.find(function(i){ return i.id === id; }).mode === 'nervous';
+  }).length;
+  var confidentSel = Array.from(signalSel).filter(function(id) {
+    return signalData.find(function(i){ return i.id === id; }).mode === 'confident';
+  }).length;
+  var fb = document.getElementById('signalFeedback');
+  var nb = document.getElementById('signalNextBtn');
+  if (nervousCorrect === 4 && confidentSel === 0) {
+    signalOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All four nervousness signals correctly identified. Looking down, quiet voice, avoiding eye contact, and tight shoulders are all physical manifestations of social anxiety - the body preparing to withdraw or hide from perceived social threat. Smiling with ease and open upright posture are confidence signals - the body broadcasting availability and groundedness rather than retreat.</div>';
+    if (nb) nb.disabled = false;
+  } else if (confidentSel > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Some of your selections are confidence signals, not nervousness signals. Smiling with ease and open upright posture both indicate social comfort, not anxiety. Remove those and look for the four signals that indicate social withdrawal or physical stress.</div>';
+    if (nb) nb.disabled = true; signalOk = false;
+  } else {
+    if (fb && signalSel.size > 0) fb.innerHTML = '<div class="feedback-msg teal-msg">' + nervousCorrect + ' of 4 nervousness signals found. Keep going.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function handleSortClick(id) {
+  if (sortPlac[id]) return;
+  sortSel = id;
+  document.querySelectorAll('#sortBank .sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('stc-' + id);
+  if (el) el.style.outline = '3px solid var(--teal-dark)';
+  var hint = document.getElementById('sortHint');
+  if (hint) hint.textContent = 'Now click a zone to place: "' + thoughtCards.find(function(c){ return c.id === id; }).text + '"';
+}
+
+function placeSort(zone) {
+  if (!sortSel) return;
+  var card = thoughtCards.find(function(c){ return c.id === sortSel; });
+  if (!card) return;
+  sortPlac[sortSel] = zone;
+  var el = document.getElementById('stc-' + sortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = card.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + card.text + '<span class="sz-remove" onclick="removeSortItem(\'' + sortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  var hint = document.getElementById('sortHint');
+  if (hint) hint.textContent = 'Click another thought to continue';
+  sortSel = null;
+  checkSortDone();
+}
+
+function removeSortItem(id, zone) {
+  delete sortPlac[id];
+  var el = document.getElementById('stc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = thoughtCards.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSortDone();
+}
+
+function restoreSortUI() {
+  Object.keys(sortPlac).forEach(function(id) {
+    var zone = sortPlac[id];
+    var card = thoughtCards.find(function(c){ return c.id === id; });
+    var el = document.getElementById('stc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && card) {
+      var correct = card.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + card.text + '<span class="sz-remove" onclick="removeSortItem(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSortDone();
+}
+
+function checkSortDone() {
+  var total = Object.keys(sortPlac).length;
+  var correct = thoughtCards.filter(function(c){ return sortPlac[c.id] === c.zone; }).length;
+  var fb = document.getElementById('sortFeedback');
+  var nb = document.getElementById('sortNextBtn');
+  if (total < thoughtCards.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg teal-msg">' + total + ' of 6 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === thoughtCards.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. The three anxious thoughts ("they won\'t like me", "I will look stupid", "they will reject me for sure") are all predictions stated as facts - the hallmark of anxiety thinking. The three balanced thoughts ("they might say yes", "it is worth trying", "I feel nervous, and that is okay") acknowledge uncertainty without catastrophising, and keep the focus on possibility rather than predicted disaster.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 6). Remove incorrect items. Ask: does this thought state a negative outcome as a certainty, or does it acknowledge that multiple outcomes are possible? Certain negative predictions are anxious. Open, realistic alternatives are balanced.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function updateDual(val) {
+  dualLevel = parseInt(val);
+  var anxVal = dualLevel;
+  var confVal = 100 - dualLevel;
+  var state = getDualState(dualLevel);
+  if (!state) return;
+  var af = document.getElementById('anxFill');
+  var cf = document.getElementById('conFill');
+  var ap = document.getElementById('anxPct');
+  var cp = document.getElementById('conPct');
+  var am = document.getElementById('anxMood');
+  var cm = document.getElementById('conMood');
+  var sl = document.getElementById('dualSl');
+  if (af) af.style.width = anxVal + '%';
+  if (cf) cf.style.width = confVal + '%';
+  if (ap) ap.textContent = anxVal + '%';
+  if (cp) cp.textContent = confVal + '%';
+  if (am) am.textContent = state.aMood;
+  if (cm) cm.textContent = state.cMood;
+  if (sl) {
+    var g1 = 'rgba(232,120,32,' + (0.30 + anxVal/190) + ')';
+    var g2 = 'rgba(24,200,112,' + (0.30 + confVal/190) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+/* ACT 2 SCENARIO BUILDERS */
+function buildMeters(pfx, opt) {
+  return '<div class="meters-wrap">' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🧊 Anxiety Level</span><span id="' + pfx + 'AL">0%</span></div><div class="meter-track"><div class="meter-fill anxiety-fill" id="' + pfx + 'AF"></div></div></div>' +
+    '<div class="meter-row"><div class="meter-label-row"><span>💚 Confidence Level</span><span id="' + pfx + 'CL">0%</span></div><div class="meter-track"><div class="meter-fill conf-fill" id="' + pfx + 'CF"></div></div></div>' +
+    (opt.resilLevel !== undefined ? '<div class="meter-row"><div class="meter-label-row"><span>🌊 Resilience Level</span><span id="' + pfx + 'RL">0%</span></div><div class="meter-track"><div class="meter-fill resil-fill" id="' + pfx + 'RF"></div></div></div>' : '') +
+  '</div>';
+}
+
+function animateMeters(pfx, opt) {
+  setTimeout(function() {
+    var af = document.getElementById(pfx + 'AF'), cf = document.getElementById(pfx + 'CF');
+    var al = document.getElementById(pfx + 'AL'), cl = document.getElementById(pfx + 'CL');
+    if (af) af.style.width = (opt.anxLevel || 0) + '%';
+    if (cf) cf.style.width = opt.confLevel + '%';
+    if (al) al.textContent = (opt.anxLevel || 0) + '%';
+    if (cl) cl.textContent = opt.confLevel + '%';
+    if (opt.resilLevel !== undefined) {
+      var rf = document.getElementById(pfx + 'RF'), rl = document.getElementById(pfx + 'RL');
+      if (rf) rf.style.width = opt.resilLevel + '%';
+      if (rl) rl.textContent = opt.resilLevel + '%';
+    }
+  }, 150);
+}
+
+function chooseStarter(id) {
+  if (starterLocked) return;
+  starterLocked = true;
+  var chosen = starterOptions.find(function(o){ return o.id === id; });
+  starterOptions.forEach(function(o) {
+    var el = document.getElementById('so-' + o.id);
+    if (el) { if (o.id === id) el.classList.add('sel-' + o.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('starterOutcome');
+  if (out) out.innerHTML = buildMeters('st', chosen) + '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  animateMeters('st', chosen);
+  var nw = document.getElementById('starterNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function chooseJoin(id) {
+  if (joinLocked) return;
+  joinLocked = true;
+  var chosen = joinOptions.find(function(o){ return o.id === id; });
+  joinOptions.forEach(function(o) {
+    var el = document.getElementById('jo-' + o.id);
+    if (el) { if (o.id === id) el.classList.add('sel-' + o.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('joinOutcome');
+  if (out) out.innerHTML = buildMeters('jn', chosen) + '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  animateMeters('jn', chosen);
+  var nw = document.getElementById('joinNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function chooseTeasing(id) {
+  if (teasLocked) return;
+  teasLocked = true;
+  var chosen = teasingOptions.find(function(o){ return o.id === id; });
+  teasingOptions.forEach(function(o) {
+    var el = document.getElementById('to-' + o.id);
+    if (el) { if (o.id === id) el.classList.add('sel-' + o.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('teasOutcome');
+  if (out) out.innerHTML = buildMeters('ts', chosen) + '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  animateMeters('ts', chosen);
+  var nw = document.getElementById('teasNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkConf(val) {
+  confText = val;
+  var len = val.trim().length;
+  confValid = len >= 40;
+  var c = document.getElementById('confCounter');
+  var b = document.getElementById('confNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (confValid ? ' met' : ''); }
+  if (b) b.disabled = !confValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ACT 3 */
+var saraThinkCount2 = 0;
+var saraThinkCorrect = 0;
+
+function selectSaraThink(id, correct) {
+  var el = document.getElementById('st-' + id);
+  if (el && (el.classList.contains('sb-correct') || el.classList.contains('sb-incorrect'))) return;
+  if (el) el.classList.add(correct ? 'sb-correct' : 'sb-incorrect');
+  saraThinkCount2++;
+  if (correct) saraThinkCorrect++;
+  if (saraThinkCount2 >= 4) {
+    saraThinkDone = true;
+    var fb = document.getElementById('saraThinkFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Correctly identified. "The teacher will think I am stupid" and "The teacher will be annoyed" are both anxious predictions presented as facts - classic social anxiety thinking. "Asking for help is intelligent" and "It is okay not to understand everything" are realistic, balanced assessments that serve Sara far better. Notice that the anxious thoughts make the teacher\'s inner state a certainty, which is mind-reading - not reality.</div>';
+    var bw = document.getElementById('saraBLWrap');
+    if (bw) { bw.style.opacity = '1'; bw.style.pointerEvents = 'auto'; }
+    checkSaraComplete();
+  }
+}
+
+function selectSaraBL(id, correct) {
+  if (saraBLDone) return;
+  saraBLDone = true;
+  var el = document.getElementById('bl-' + id);
+  if (el) el.classList.add(correct ? 'blc-confident' : 'blc-anxious');
+  document.querySelectorAll('#saraBLWrap .bl-card').forEach(function(c){ c.style.cursor = 'default'; });
+  var fb = document.getElementById('saraBLFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The best body language choice. Direct eye contact signals genuine engagement rather than embarrassment about not knowing. Upright posture signals self-respect. Clear voice ensures the request is heard and responds to fully. Crucially, this body language also affects Sara\'s own internal state - standing and speaking confidently even when nervous activates a more confident mental state through the body-mind feedback loop.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">This body language undermines the request. The correct choice - direct eye contact, upright posture, clear voice - is highlighted. It both communicates genuine need to the teacher and activates a more confident internal state for Sara through the body-mind feedback loop.</div>';
+    var c2 = document.getElementById('bl-eyes');
+    if (c2) c2.classList.add('blc-confident');
+  }
+  var rw = document.getElementById('saraReqWrap');
+  if (rw) { rw.style.opacity = '1'; rw.style.pointerEvents = 'auto'; }
+  checkSaraComplete();
+}
+
+function selectSaraReq(id, correct) {
+  if (saraReqDone) return;
+  saraReqDone = true;
+  document.querySelectorAll('#saraReqWrap .sara-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('sr-' + id);
+  if (el) el.classList.add(correct ? 'sb-correct' : 'sb-incorrect');
+  var fb = document.getElementById('saraReqFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The most effective request. "Excuse me, I am a bit stuck on this part - could you explain it again?" accomplishes everything: it signals polite awareness of the teacher\'s time, provides specific information about the problem, makes a clear request, and frames the difficulty as temporary ("a bit stuck") rather than catastrophic. This is confident communication at its most practical.</div>';
+  } else if (id === 'mumble3') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">"I don\'t get it" without context or direction makes it difficult for the teacher to provide targeted help. The specific, polite request is highlighted.</div>';
+    var c2 = document.getElementById('sr-clear2');
+    if (c2) c2.classList.add('sb-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Silent waiting is passive behaviour - it places the entire burden of recognition on the teacher and is unlikely to produce the help Sara needs. The specific, direct request is highlighted.</div>';
+    var c3 = document.getElementById('sr-clear2');
+    if (c3) c3.classList.add('sb-correct');
+  }
+  checkSaraComplete();
+}
+
+function checkSaraComplete() {
+  if (saraThinkDone && saraBLDone && saraReqDone) {
+    var b = document.getElementById('saraNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function handleSkillClick(id) {
+  if (skillSortPlac[id]) return;
+  skillSortSel = id;
+  document.querySelectorAll('#skillSortBank .sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('skb-' + id);
+  if (el) el.style.outline = '3px solid var(--teal-dark)';
+  var hint = document.getElementById('skillSortHint');
+  if (hint) hint.textContent = 'Now click a zone: "' + skillBehaviours.find(function(b){ return b.id === id; }).text + '"';
+}
+
+function placeSkillSort(zone) {
+  if (!skillSortSel) return;
+  var item = skillBehaviours.find(function(b){ return b.id === skillSortSel; });
+  if (!item) return;
+  skillSortPlac[skillSortSel] = zone;
+  var el = document.getElementById('skb-' + skillSortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSkillSort(\'' + skillSortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  skillSortSel = null;
+  var hint = document.getElementById('skillSortHint');
+  if (hint) hint.textContent = 'Click another behaviour to continue';
+  checkSkillSort();
+}
+
+function removeSkillSort(id, zone) {
+  delete skillSortPlac[id];
+  var el = document.getElementById('skb-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = skillBehaviours.find(function(b){ return b.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkSkillSort();
+}
+
+function restoreSkillSort() {
+  Object.keys(skillSortPlac).forEach(function(id) {
+    var zone = skillSortPlac[id];
+    var item = skillBehaviours.find(function(b){ return b.id === id; });
+    var el = document.getElementById('skb-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSkillSort(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkSkillSort();
+}
+
+function checkSkillSort() {
+  var total = Object.keys(skillSortPlac).length;
+  var correct = skillBehaviours.filter(function(b){ return skillSortPlac[b.id] === b.zone; }).length;
+  var fb = document.getElementById('skillSortFeedback');
+  var nb = document.getElementById('skillSortNextBtn');
+  if (total < skillBehaviours.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg teal-msg">' + total + ' of 8 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === skillBehaviours.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. Confident behaviours (eye contact, calm disagreement, waiting your turn) respect both self and others simultaneously. Aggressive behaviours (talking over others, taking without asking, eye-rolling) prioritise self at the expense of others. Passive behaviours (agreeing with everything, not speaking up) erase the self to accommodate others. Only the confident zone builds genuine social connection over time.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 8). Remove incorrect items. Ask: does this behaviour respect both this person AND others? If both - confident. If self at others\' expense - aggressive. If others at self\'s expense - passive.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  signalSel = new Set(); signalOk = false;
+  sortPlac = {}; sortSel = null;
+  dualLevel = 72;
+  starterChoice = null; starterLocked = false;
+  joinChoice = null; joinLocked = false;
+  teasChoice = null; teasLocked = false;
+  confText = ''; confValid = false;
+  reflectText = ''; reflectValid = false;
+  saraThinkDone = false; saraBLDone = false; saraReqDone = false;
+  saraThinkCount = 0; saraThinkCount2 = 0; saraThinkCorrect = 0;
+  skillSortPlac = {}; skillSortSel = null;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#189888','#d89820','#7040c8','#18c870','#e87820','#0a6058','#fce0a0','#a0f0c8'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

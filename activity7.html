@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Fear Facing Formula</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f2ff;
+  --card:#ffffff;
+  --violet:#7050c8;--violet-dark:#4030a0;--violet-light:#c8b8f0;
+  --blue:#3878d0;--blue-dark:#1850a8;--blue-light:#a8c8f0;
+  --coral:#e06050;--coral-dark:#a82808;--coral-light:#f8c0b8;
+  --gold:#d89820;--gold-dark:#905800;--gold-light:#fce0a0;
+  --navy:#182858;
+  --mint:#28c890;--mint-dark:#0a8060;
+  --rose:#e05878;--rose-dark:#a02848;
+  --text:#181838;--text-soft:#404878;
+  --shadow-sm:0 4px 16px rgba(64,48,160,0.12);
+  --shadow-md:0 8px 32px rgba(64,48,160,0.16);
+  --shadow-lg:0 16px 48px rgba(64,48,160,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 7% 12%,rgba(112,80,200,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 93% 80%,rgba(56,120,208,0.17) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(216,152,32,0.11) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--violet-dark),var(--blue-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--violet-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(64,48,160,0.09);color:var(--violet-dark);border:1.5px solid rgba(64,48,160,0.24)}
+.act-banner.act2{background:rgba(24,80,168,0.09);color:var(--blue-dark);border:1.5px solid rgba(24,80,168,0.24)}
+.act-banner.act3{background:rgba(144,88,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(144,88,0,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(112,80,200,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet-dark),var(--blue-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(64,48,160,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(112,80,200,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--violet-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--gold-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(112,80,200,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(112,80,200,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--violet-dark);background:rgba(112,80,200,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.blue{color:var(--blue-dark);background:rgba(24,80,168,0.09)}
+.stage-label.gold{color:var(--gold-dark);background:rgba(144,88,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(112,80,200,0.09),rgba(56,120,208,0.08));border:1.5px solid rgba(112,80,200,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--violet-dark);font-style:normal}
+.story-box p span.blue{color:var(--blue-dark)}
+.story-box p span.gold{color:var(--gold-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(224,96,80,0.10),rgba(112,80,200,0.09));border:2px solid rgba(224,96,80,0.26);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'⚡';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--coral-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* FEAR METER */
+.fear-meter-wrap{margin:22px 0 28px}
+.fear-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.fear-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer;background:linear-gradient(90deg,rgba(56,120,208,0.55) 0%,rgba(216,152,32,0.65) 50%,rgba(224,96,80,0.80) 75%,rgba(200,0,0,0.85) 100%)}
+.fear-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--violet-dark);box-shadow:0 3px 14px rgba(64,48,160,0.36);cursor:pointer;transition:transform 0.2s ease}
+.fear-slider::-webkit-slider-thumb:hover,.fear-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.fear-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--violet-dark);cursor:pointer}
+.fear-display{margin-top:18px;text-align:center;padding:20px 22px;border-radius:var(--radius-sm);transition:background 0.6s ease,border-color 0.6s ease;border:2px solid rgba(112,80,200,0.24)}
+.fear-display .fd-bar-wrap{height:18px;background:rgba(112,80,200,0.10);border-radius:999px;overflow:hidden;margin-bottom:14px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.fear-display .fd-bar{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1),background 0.7s ease}
+.fear-display .fd-emoji{font-size:40px;display:block;margin-bottom:8px;transition:all 0.4s ease}
+.fear-display .fd-label{font-size:18px;font-weight:900;transition:color 0.5s ease}
+.fear-display .fd-desc{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:6px;line-height:1.55}
+
+/* ANIMATED METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(112,80,200,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.fear-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 8px rgba(168,40,8,0.28)}
+.meter-fill.courage-fill{background:linear-gradient(90deg,var(--gold-light),var(--gold-dark));box-shadow:0 2px 8px rgba(144,88,0,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,96,80,0.09);border:1.5px solid rgba(168,40,8,0.22)}
+.outcome-box.ok{background:rgba(216,152,32,0.10);border:1.5px solid rgba(144,88,0,0.22)}
+.outcome-box.best{background:rgba(40,200,144,0.09);border:1.5px solid rgba(10,128,96,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* SIGN CARDS */
+.sign-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 26px}
+.sign-card{background:var(--bg);border:2px solid rgba(112,80,200,0.20);border-radius:var(--radius-sm);padding:16px 12px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.sign-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.sign-card.sc-fear{border-color:var(--violet-dark);background:linear-gradient(135deg,rgba(112,80,200,0.13),rgba(56,120,208,0.10));box-shadow:0 0 0 3px rgba(64,48,160,0.14),var(--shadow-sm);transform:translateY(-2px)}
+.sign-card.sc-wrong{border-color:var(--rose-dark);background:rgba(224,88,120,0.07);animation:wrongShake 0.4s ease}
+.sign-card .si-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.sign-card:hover .si-icon,.sign-card.sc-fear .si-icon{transform:scale(1.14)}
+.sign-card .si-text{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.3}
+.sign-card .si-check{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;background:var(--violet-dark);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.sign-card.sc-fear .si-check{opacity:1;transform:scale(1)}
+
+/* SORT ACTIVITY */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;min-height:52px;padding:12px 14px;background:rgba(112,80,200,0.06);border:2px dashed rgba(112,80,200,0.26);border-radius:var(--radius-sm)}
+.sort-card-item{background:#fff;border:2px solid rgba(112,80,200,0.26);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-card-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.sort-card-item.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.sort-zone.zone-real{border-color:rgba(168,40,8,0.32);background:rgba(224,96,80,0.07)}
+.sort-zone.zone-false{border-color:rgba(24,80,168,0.30);background:rgba(56,120,208,0.07)}
+.sort-zone.zone-avoid{border-color:rgba(168,40,8,0.32);background:rgba(224,96,80,0.07)}
+.sort-zone.zone-brave{border-color:rgba(10,128,96,0.30);background:rgba(40,200,144,0.07)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-real .sz-title,.sort-zone.zone-avoid .sz-title{color:var(--coral-dark)}
+.sort-zone.zone-false .sz-title{color:var(--blue-dark)}
+.sort-zone.zone-brave .sz-title{color:var(--mint-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:5px}
+.sz-remove{cursor:pointer;font-size:14px;color:var(--text-soft);transition:color 0.2s}
+.sz-remove:hover{color:var(--coral-dark)}
+
+/* AVOIDANCE CHOICE */
+.avoid-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.avoid-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(112,80,200,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.avoid-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.avoid-btn .ab-icon{font-size:28px;flex-shrink:0;margin-top:2px;transition:transform 0.3s ease}
+.avoid-btn:hover .ab-icon{transform:scale(1.10)}
+.avoid-btn .ab-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.avoid-btn .ab-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.avoid-btn.sel-harmful{border-color:var(--coral-dark);background:rgba(224,96,80,0.08);animation:wrongShake 0.4s ease}
+.avoid-btn.sel-ok{border-color:var(--gold-dark);background:rgba(216,152,32,0.09);animation:correctPop 0.4s ease}
+.avoid-btn.sel-best{border-color:var(--mint-dark);background:rgba(40,200,144,0.09);animation:correctPop 0.4s ease}
+
+/* CYCLE STEPS */
+.cycle-match{display:flex;flex-direction:column;gap:10px;margin:18px 0 22px}
+.cycle-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(112,80,200,0.16);border-radius:var(--radius-sm);padding:14px 18px;transition:var(--t)}
+.cycle-row.cr-matched{border-color:var(--violet-dark);background:linear-gradient(135deg,rgba(112,80,200,0.10),rgba(56,120,208,0.08));animation:fadeUp 0.4s ease both}
+.cycle-row .cr-num{width:28px;height:28px;border-radius:50%;background:var(--violet-dark);color:#fff;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cycle-row .cr-step{font-size:14px;font-weight:900;color:var(--text);margin-bottom:3px}
+.cycle-row .cr-def{font-size:13px;font-weight:700;color:var(--text-soft);line-height:1.5}
+.cycle-row .cr-match{font-size:13px;font-weight:800;color:var(--violet-dark);margin-top:3px;font-style:italic}
+
+/* FORMULA BOX */
+.formula-box{background:linear-gradient(135deg,rgba(112,80,200,0.08),rgba(56,120,208,0.07),rgba(216,152,32,0.06));border:2px solid rgba(112,80,200,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(112,80,200,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(40,200,144,0.10),rgba(216,152,32,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--violet-dark);padding:2px 0}
+.formula-equals{text-align:center;font-size:16px;font-weight:900;color:var(--gold-dark);margin:8px 0 4px;letter-spacing:1px}
+
+/* LINA SCENARIO */
+.lina-triggers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 20px}
+.lina-card{background:var(--bg);border:2px solid rgba(112,80,200,0.18);border-radius:var(--radius-sm);padding:16px 14px;cursor:pointer;transition:var(--t);text-align:center}
+.lina-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--violet)}
+.lina-card .lc-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.lina-card:hover .lc-icon{transform:scale(1.13)}
+.lina-card .lc-text{font-size:13px;font-weight:800;color:var(--text);line-height:1.3}
+.lina-card.lc-correct{border-color:var(--violet-dark);background:rgba(112,80,200,0.10);animation:correctPop 0.4s ease}
+.lina-card.lc-wrong{border-color:var(--coral-dark);background:rgba(224,96,80,0.07);animation:wrongShake 0.4s ease}
+.lina-avoidance{display:flex;flex-direction:column;gap:10px;margin:12px 0 20px}
+.lina-thought{display:flex;align-items:flex-start;gap:12px;background:var(--bg);border:2px solid rgba(112,80,200,0.18);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.lina-thought:hover{border-color:var(--violet);transform:translateX(3px)}
+.lina-thought .lt-icon{font-size:22px;flex-shrink:0}
+.lina-thought .lt-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.lina-thought.lt-avoid{border-color:var(--coral-dark);background:rgba(224,96,80,0.08);animation:wrongShake 0.4s ease}
+.lina-thought.lt-courage{border-color:var(--mint-dark);background:rgba(40,200,144,0.09);animation:correctPop 0.35s ease}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(40,200,144,0.13);color:#0a6040;border:1.5px solid rgba(10,128,96,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(224,96,80,0.10);color:#801808;border:1.5px solid rgba(168,40,8,0.22)}
+.feedback-msg.info-msg{background:rgba(64,48,160,0.08);color:var(--violet-dark);border:1.5px solid rgba(64,48,160,0.20)}
+.feedback-msg.gold-msg{background:rgba(216,152,32,0.10);color:var(--gold-dark);border:1.5px solid rgba(144,88,0,0.22)}
+.feedback-msg.blue-msg{background:rgba(24,80,168,0.08);color:var(--blue-dark);border:1.5px solid rgba(24,80,168,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(112,80,200,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(64,72,120,0.42)}
+.reflection-input:focus{border-color:var(--violet-dark);box-shadow:0 0 0 3px rgba(64,48,160,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--mint-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--violet-dark),var(--blue-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(64,48,160,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(64,48,160,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(112,80,200,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(112,80,200,0.08);border-color:var(--violet-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(112,80,200,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--violet-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(112,80,200,0.18);border-radius:999px}
+
+/* LADDER STEPS */
+.ladder-display{margin:16px 0 24px;display:flex;flex-direction:column;gap:10px}
+.ladder-step{display:flex;align-items:center;gap:14px;background:var(--bg);border:1.5px solid rgba(112,80,200,0.16);border-radius:var(--radius-sm);padding:14px 18px;animation:fadeUp 0.4s ease both}
+.ladder-step:nth-child(1){animation-delay:0.05s}
+.ladder-step:nth-child(2){animation-delay:0.1s}
+.ladder-step:nth-child(3){animation-delay:0.15s}
+.ladder-step .ls-num{width:32px;height:32px;border-radius:50%;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ladder-step:nth-child(1) .ls-num{background:var(--blue-dark)}
+.ladder-step:nth-child(2) .ls-num{background:var(--violet-dark)}
+.ladder-step:nth-child(3) .ls-num{background:var(--gold-dark)}
+.ladder-step .ls-text{font-size:14px;font-weight:800;color:var(--text);line-height:1.4}
+.ladder-step .ls-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(112,80,200,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--violet);background:rgba(112,80,200,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--mint-dark);background:rgba(40,200,144,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(224,96,80,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--mint-dark);background:rgba(40,200,144,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(40,200,144,0.16);color:#0a6040}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,96,80,0.12);color:#801808}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(216,152,32,0.14),rgba(112,80,200,0.11));border:1.5px solid rgba(216,152,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(112,80,200,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(244,242,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(112,80,200,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(112,80,200,0.06),rgba(56,120,208,0.05),rgba(216,152,32,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .sign-grid{grid-template-columns:repeat(2,1fr)}
+  .sort-zones{grid-template-columns:1fr}
+  .lina-triggers{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🎯 Courage Lab</div>
+    <h1>The <span>Fear Facing</span> Formula</h1>
+    <p>Understand fear - Break avoidance patterns - Train your brave brain</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🏆</div>
+    <h2>Courage Unlocked!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now understand fear, avoidance, and the ladder that leads to genuine courage.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Fear Detective</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🪜</span><div class="b-title">Ladder Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🦁</span><div class="b-title">Courage Trainer</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+/* ===== STATE ===== */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let selectedSigns   = new Set();
+let signsOk         = false;
+let sortPlacements  = {};
+let sortSelected    = null;
+let avoidChoice     = null;
+let fearLevel       = 65;
+let ladderText      = '';
+let ladderValid     = false;
+let selfTalkText    = '';
+let selfTalkValid   = false;
+let reflectText     = '';
+let reflectValid    = false;
+let choice1Id       = null;
+let choice1Locked   = false;
+let choice2Id       = null;
+let linaTrigDone    = false;
+let linaAvoidDone   = false;
+let linaStepDone    = false;
+let linaTrigCount   = 0;
+let linaAvoidCount  = 0;
+let avoidSortPlac   = {};
+let avoidSortSel    = null;
+let quizAnswers     = {};
+
+/* ===== DATA ===== */
+const bodySigns = [
+  {id:'heart',   icon:'💓', text:'Fast heartbeat',         isFear:true},
+  {id:'sweat',   icon:'💧', text:'Sweaty hands',           isFear:true},
+  {id:'throat',  icon:'🫁', text:'Tight throat',           isFear:true},
+  {id:'smile',   icon:'😊', text:'Smiling with ease',      isFear:false},
+  {id:'calm',    icon:'😌', text:'Calm slow breathing',    isFear:false},
+  {id:'eyes',    icon:'👀', text:'Avoiding eye contact',   isFear:true}
+];
+
+const dangerCards = [
+  {id:'fire',    text:'Fire in the room',                  zone:'real'},
+  {id:'speak',   text:'Speaking in class',                 zone:'false'},
+  {id:'dog',     text:'Angry dog running at you',          zone:'real'},
+  {id:'test',    text:'Taking a test',                     zone:'false'},
+  {id:'chased',  text:'Being chased by a stranger',        zone:'real'}
+];
+
+const fearLevels = [
+  {range:[0,15],  emoji:'😌', label:'Calm', desc:'No fear response. Body and mind at ease. Clear thinking is easy.', bar:'rgba(56,120,208,0.65)', bg:'rgba(56,120,208,0.08)', border:'rgba(24,80,168,0.22)', col:'var(--blue-dark)'},
+  {range:[16,35], emoji:'😕', label:'Nervous', desc:'Mild unease. Slight physical signals beginning. Still able to think and act clearly.', bar:'rgba(112,80,200,0.72)', bg:'rgba(112,80,200,0.08)', border:'rgba(64,48,160,0.22)', col:'var(--violet-dark)'},
+  {range:[36,57], emoji:'😰', label:'Anxious', desc:'Clear fear response. Body is activating. Harder to think straightforwardly. A regulation tool would help now.', bar:'rgba(216,152,32,0.80)', bg:'rgba(216,152,32,0.09)', border:'rgba(144,88,0,0.25)', col:'var(--gold-dark)'},
+  {range:[58,78], emoji:'😨', label:'Very Afraid', desc:'Strong fear response. Avoidance impulse is powerful. Without action, the fear will likely grow.', bar:'rgba(224,96,80,0.86)', bg:'rgba(224,96,80,0.09)', border:'rgba(168,40,8,0.26)', col:'var(--coral-dark)'},
+  {range:[79,100],emoji:'🫨', label:'Panicking', desc:'Maximum fear response. The alarm system is at full volume. Immediate grounding and gradual exposure tools are essential.', bar:'rgba(200,8,8,0.90)', bg:'rgba(200,8,8,0.09)', border:'rgba(160,0,0,0.28)', col:'#a00000'}
+];
+
+const couragePaths = [
+  {
+    id:'avoid', icon:'🔴', text:'Avoid raising his hand entirely from now on', sub:'Escape the fear completely - no risk, no exposure',
+    quality:'harmful', fearLevel:90, courageLevel:6,
+    outcome:{title:'The Avoidance Trap', body:'When Yusuf avoids raising his hand, his fear provides immediate relief - and that relief feels like a solution. But the brain learns a dangerous lesson: "Raising my hand is dangerous, and avoiding it kept me safe." Every time Yusuf avoids, this message gets stronger. Within weeks, the fear has grown significantly larger than it was before the first avoidance. Avoidance does not shrink fear - it feeds it.', tip:'Research: Avoidance is the single most powerful factor in the maintenance and escalation of anxiety. The temporary relief reinforces the behaviour, creating a cycle that becomes increasingly hard to break without gradual exposure.'}
+  },
+  {
+    id:'once', icon:'🟡', text:'Raise his hand once, quietly, just once', sub:'One small step - breaking the avoidance pattern',
+    quality:'ok', fearLevel:50, courageLevel:48,
+    outcome:{title:'One Step Forward', body:'Raising his hand just once - even if his voice shakes slightly - sends the brain a completely different message: "I raised my hand, nothing terrible happened, and I survived." This is the beginning of disconfirming the brain\'s false alarm. One act of courage does not erase fear entirely, but it demonstrates that the feared outcome (humiliation, laughter) is far less likely than the anxious brain predicted.', tip:'Principle: Each small act of courage provides evidence against the fear\'s prediction. Over time, accumulated evidence reduces the intensity of the fear response. One step is genuinely powerful.'}
+  },
+  {
+    id:'gradual', icon:'🟢', text:'Practise answering small, easy questions first, then gradually increase', sub:'The fear ladder - systematic gradual exposure',
+    quality:'best', fearLevel:22, courageLevel:85,
+    outcome:{title:'The Fear Ladder Approach', body:'Gradual, systematic exposure is the most evidence-based approach to reducing fear. By starting with steps that feel challenging but manageable and working upward one step at a time, Yusuf gives his brain repeated evidence that the feared outcome does not occur. Each successful step makes the next step easier. Over weeks, the fear that once felt overwhelming shrinks to manageable nervousness - and then to calm.', tip:'Research: Gradual exposure - the systematic, progressive approach to facing fears - is the most extensively validated treatment for anxiety across all age groups and fear types. It works because it directly updates the brain\'s threat assessment.'}
+  }
+];
+
+const avoidBehaviours = [
+  {id:'skip',    text:'Skip the tryout to avoid rejection', zone:'avoid'},
+  {id:'excuse',  text:'Make an excuse not to go to school on test day', zone:'avoid'},
+  {id:'practice',text:'Practise the feared task in small steps first', zone:'brave'},
+  {id:'hide',    text:'Sit at the back so the teacher cannot see you', zone:'avoid'},
+  {id:'speak',   text:'Raise your hand even when your heart is racing', zone:'brave'},
+  {id:'journal', text:'Write down three reasons you can handle this', zone:'brave'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What happens to fear when we consistently avoid the thing we are afraid of?',
+    options:[
+      {icon:'📈', text:'Fear gradually grows stronger and more controlling with each avoidance - the avoidance trap', correct:true},
+      {icon:'📉', text:'Fear gradually shrinks on its own if we wait long enough without facing it', correct:false},
+      {icon:'➡️', text:'Fear stays at exactly the same level - it does not change either way', correct:false}
+    ],
+    feedback:{
+      correct:'Precisely. Avoidance provides immediate short-term relief, but it teaches the brain that the feared situation is genuinely dangerous and that avoidance kept you safe. Every successful avoidance reinforces the fear response, making the next encounter feel even more threatening. Over time, avoidance transforms manageable nervousness into debilitating anxiety.',
+      incorrect:'Not quite. Avoidance actually strengthens fear over time rather than reducing it. The temporary relief from avoiding feels like a solution, but it sends the brain the message that the feared thing was genuinely dangerous. Each avoidance makes the fear more entrenched and the next exposure feel even more threatening.'
+    }
+  },
+  {
+    q:'Question 2: What is a fear ladder - and why is it built from small steps to large ones?',
+    options:[
+      {icon:'🪜', text:'A graduated sequence of increasingly challenging exposures, starting with manageable steps to build evidence and confidence', correct:true},
+      {icon:'🏃', text:'A technique for avoiding all feared situations by planning escape routes in advance', correct:false},
+      {icon:'💭', text:'A mental list of all the worst possible outcomes of facing your fear', correct:false}
+    ],
+    feedback:{
+      correct:'Correct! A fear ladder is a carefully structured sequence of steps, each one slightly more challenging than the last, all working toward the feared goal. Starting small is essential because it provides achievable wins that build evidence against the fear\'s predictions. Each rung completed makes the next one feel less impossible. The brain updates its threat assessment with each successful step.',
+      incorrect:'Not quite. A fear ladder is the opposite of avoidance - it is a systematic plan for gradually facing the feared thing in a structured, manageable way. It begins with small, achievable steps and works progressively upward. This gradual approach works because it gives the brain repeated evidence that the feared outcome does not occur, systematically updating the threat response.'
+    }
+  },
+  {
+    q:'Question 3: Why is gradual exposure to fear more effective than either avoiding it or forcing immediate full exposure?',
+    options:[
+      {icon:'🤔', text:'It is not more effective - all three approaches produce identical results over time', correct:false},
+      {icon:'🎯', text:'It matches the brain\'s learning capacity - each manageable exposure updates the threat response without overwhelming it', correct:true},
+      {icon:'🙈', text:'It is effective because it lets you avoid the feared thing for longer before having to face it', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. Gradual exposure works because it provides the brain with exactly the right amount of challenge to update its threat response without triggering the full panic response that would make the experience traumatising. Each manageable exposure delivers evidence ("I handled that and nothing terrible happened") in a quantity the brain can actually process and integrate. Too little challenge produces no learning. Too much overwhelms the system.',
+      incorrect:'Not quite. Gradual exposure is the most evidence-based approach to fear reduction because it works in harmony with how the brain learns and updates its threat assessments. Complete avoidance strengthens fear. Immediate total exposure can be overwhelming and counterproductive. Gradual steps give the brain repeated, digestible evidence that the feared outcome does not occur - which is exactly what the brain needs to update its alarm response.'
+    }
+  }
+];
+
+/* ===== UTILS ===== */
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🟣', 2:'🔵', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getFearLevel(v) {
+  return fearLevels.find(function(l){ return v >= l.range[0] && v <= l.range[1]; });
+}
+
+/* ===== PROGRESS ===== */
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ===== ROUTER ===== */
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ===== STAGES ===== */
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Fear') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #007</div>' +
+    '<h2>Why Fear Fires When There Is No Fire</h2>' +
+    '<p>Welcome to the Fear Facing Formula Lab. Fear is one of the oldest and most powerful emotions in the human brain. It evolved to protect us from genuine physical danger - and it is extraordinarily good at that job. The problem is that the same alarm system that fires when a lion appears also fires when you are about to raise your hand in class. The brain cannot always tell the difference between a real threat and a social challenge. Today you will learn to read that difference - and build the tools to act despite the alarm.</p>' +
+    '<div class="story-box" data-icon="✋">' +
+      '<p><span>Yusuf</span> is ten years old and sits in the front row of his maths class. He actually knows the answer to the question the teacher just asked - he has been thinking about it since the lesson began. He starts to raise his hand. And then, without warning, something shifts. His heart begins beating faster. His palms become damp. His throat feels like it is closing slightly. And two thoughts arrive, loud and convincing:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"What if I say something wrong? What if everyone laughs at me?" His hand drops back to his desk. He stares at the table. The teacher calls on someone else.</p></div>' +
+    '<p>In the space of about four seconds, Yusuf\'s brain\'s alarm system fired, his body responded, his thoughts catastrophised, and he chose avoidance. This entire sequence is completely normal - and completely learnable. Your mission: help Yusuf understand exactly what happened, and build the tools to respond differently next time.</p>' +
+    '<div class="feedback-msg info-msg">🎯 <strong>Core concept:</strong> Fear is the brain\'s alarm system - a biological response designed to protect us from danger. In the right situations, it is lifesaving. The problem arises when the alarm fires in response to social challenges, performance situations, or uncertainty - contexts where the "danger" is imagined rather than real. The alarm sounds identical in both cases. Learning to tell the difference is the first step to courage.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Investigation</button>' +
+  '</div>';
+}
+
+function s2() {
+  var cards = bodySigns.map(function(s) {
+    return '<div class="sign-card" id="sc-' + s.id + '" onclick="toggleSign(\'' + s.id + '\',' + s.isFear + ')">' +
+      '<div class="si-check">✓</div>' +
+      '<span class="si-icon">' + s.icon + '</span>' +
+      '<div class="si-text">' + s.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Fear') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Body Warning Signs</div>' +
+    '<h2>Which Are Fear Body Signals?</h2>' +
+    '<p>Fear communicates through the body before it fully reaches the conscious mind. The physical signals of fear - racing heart, tense muscles, shallow breathing - are the result of the brain sending "danger" signals that prepare the body to fight, flee, or freeze. Learning to recognise these signals early gives you the information you need to respond skillfully rather than reactively.</p>' +
+    '<p>Select all the cards that represent genuine physical fear signals. Some cards are calm or positive states - not fear signals at all.</p>' +
+    '<div class="sign-grid">' + cards + '</div>' +
+    '<div id="signsFeedback"></div>' +
+    '<button class="btn-primary" id="signsNextBtn" onclick="renderStage(3)" disabled>Next: Real Danger vs False Alarm -></button>' +
+  '</div>';
+}
+
+function s3() {
+  var bank = dangerCards.map(function(c) {
+    var placed = sortPlacements[c.id];
+    return '<div class="sort-card-item' + (placed ? ' placed' : '') + '" id="sdc-' + c.id + '" onclick="handleDangerClick(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Fear') +
+    backBtn(2,'Back to Body Signs') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Real Danger vs False Alarm</div>' +
+    '<h2>The Brain\'s Biggest Mistake</h2>' +
+    '<p>Here is the most important thing to understand about fear: the brain\'s alarm system does not distinguish between physical dangers that could genuinely harm you and social or performance situations that feel uncomfortable but are actually safe. The physical response - heart racing, hands sweating - is often identical. This is why it feels so real. But the actual risk level is completely different.</p>' +
+    '<p>Sort each card into the correct category: a <strong>Real Danger</strong> (genuine physical threat) or a <strong>False Alarm</strong> (the brain firing when no actual danger exists).</p>' +
+    '<div class="sort-bank" id="dangerBank">' + bank + '</div>' +
+    '<div id="dangerHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a card, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-real" onclick="placeDanger(\'real\')">' +
+        '<div class="sz-title">Real Danger</div>' +
+        '<div class="sz-items" id="zone-real"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-false" onclick="placeDanger(\'false\')">' +
+        '<div class="sz-title">Brain\'s False Alarm</div>' +
+        '<div class="sz-items" id="zone-false"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="dangerFeedback"></div>' +
+    '<button class="btn-primary" id="dangerNextBtn" onclick="renderStage(4)" disabled>Next: The Avoidance Pattern -></button>' +
+  '</div>';
+}
+
+function s4() {
+  avoidChoice = null;
+  var options = [
+    {id:'avoid',    icon:'🚪', text:'Avoid raising his hand for the rest of the year', sub:'Never face the fear again - short-term relief', quality:'harmful'},
+    {id:'sometimes',icon:'😬', text:'Raise his hand occasionally but feel increasingly dread before each attempt', sub:'Inconsistent exposure with growing anticipatory anxiety', quality:'ok'},
+    {id:'ladder',   icon:'🪜', text:'Build a gradual plan to face the fear step by step', sub:'Structured, progressive exposure that directly targets the fear', quality:'best'}
+  ];
+  var btns = options.map(function(o) {
+    return '<button class="avoid-btn" id="av-' + o.id + '" onclick="chooseAvoid(\'' + o.id + '\',\'' + o.quality + '\')">' +
+      '<span class="ab-icon">' + o.icon + '</span>' +
+      '<div><div class="ab-text">' + o.text + '</div><div class="ab-sub">' + o.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Fear') +
+    backBtn(3,'Back to Real vs False Alarm') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - The Avoidance Pattern</div>' +
+    '<h2>What Happens When We Keep Avoiding?</h2>' +
+    '<p>Avoidance is the most natural response to fear - and the most damaging one for long-term wellbeing. When we avoid the thing we fear, the relief we feel is immediate and powerful. That immediate relief is the problem: it teaches the brain that avoidance works, which makes the avoidance behaviour stronger and the fear bigger with every repetition.</p>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:14px">🧠 <strong>The avoidance cycle:</strong> Fear activates → We avoid → Relief arrives immediately → Brain registers: "avoidance = safety" → Fear strengthens → Next encounter feels even more threatening → We avoid again → Fear grows further. Each completed loop of this cycle makes the fear more powerful and the avoidance more automatic.</div>' +
+    '<p>Yusuf dropped his hand. What happens if he keeps choosing this path? Select the option that most accurately describes the long-term outcome.</p>' +
+    '<div class="avoid-options">' + btns + '</div>' +
+    '<div id="avoidFeedback"></div>' +
+    '<button class="btn-primary" id="avoidNextBtn" onclick="renderStage(5)" disabled>Next: The Fear Meter -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Fear') +
+    backBtn(4,'Back to Avoidance Pattern') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Fear Meter</div>' +
+    '<h2>Read the Fear Thermometer</h2>' +
+    '<p>Fear, like all emotions, exists on a spectrum from mild nervousness to full panic. Being able to read where your fear is on that spectrum - in the moment, with accuracy - is a fundamental emotional intelligence skill. Different levels of fear require different responses. Move the slider to estimate Yusuf\'s fear level in the moment he is about to raise his hand.</p>' +
+    '<div class="fear-meter-wrap">' +
+      '<div class="fear-labels"><span>😌 Calm</span><span>😕 Nervous</span><span>😰 Anxious</span><span>😨 Very Afraid</span><span>🫨 Panicking</span></div>' +
+      '<input type="range" class="fear-slider" id="fearSlider" min="0" max="100" value="65" oninput="updateFear(this.value)"/>' +
+    '</div>' +
+    '<div class="fear-display" id="fearDisplay">' +
+      '<div class="fd-bar-wrap"><div class="fd-bar" id="fdBar" style="width:65%"></div></div>' +
+      '<span class="fd-emoji" id="fdEmoji">😨</span>' +
+      '<div class="fd-label" id="fdLabel">Very Afraid</div>' +
+      '<div class="fd-desc" id="fdDesc">Strong fear response. Avoidance impulse is powerful.</div>' +
+    '</div>' +
+    '<br/>' +
+    '<div class="feedback-msg blue-msg">🌡️ <strong>Yusuf\'s situation:</strong> The combination of performance pressure, social judgement fear, and the physical sensations of anxiety (racing heart, tight throat) typically places this experience in the Anxious to Very Afraid range - high enough to trigger avoidance, but also exactly the right level for gradual exposure to be effective.</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Fear Cycle Model -></button>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {step:'Trigger', def:'The event or situation that activates the fear response', match:'Yusuf is about to raise his hand in class'},
+    {step:'Thought', def:'The mind\'s interpretation - often catastrophising in fear', match:'"What if I say something wrong? What if everyone laughs?"'},
+    {step:'Body Reaction', def:'Physical signals as the alarm system activates', match:'Heart races, palms sweat, throat tightens'},
+    {step:'Avoidance', def:'The behaviour chosen to escape the discomfort immediately', match:'Hand drops, Yusuf stares at the desk - fear relieves briefly'},
+    {step:'Consequence', def:'What happens next - how the response shapes the future', match:'Fear is reinforced; the next hand-raise attempt will feel even harder'}
+  ];
+  var rows = steps.map(function(s, i) {
+    return '<div class="cycle-row cr-matched" style="animation-delay:' + (i*0.08) + 's">' +
+      '<div class="cr-num">' + (i+1) + '</div>' +
+      '<div><div class="cr-step">' + s.step + '</div><div class="cr-def">' + s.def + '</div><div class="cr-match">Yusuf: ' + s.match + '</div></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Fear') +
+    backBtn(5,'Back to Fear Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Fear Cycle</div>' +
+    '<h2>How Fear Travels Through Us</h2>' +
+    '<p>Fear follows a predictable five-stage sequence. Understanding each stage gives you multiple places to intervene and interrupt the cycle. The earlier you intervene, the more options you have. Read through how Yusuf\'s experience maps precisely onto this universal fear cycle.</p>' +
+    '<div class="cycle-match">' + rows + '</div>' +
+    '<div class="feedback-msg info-msg">💡 <strong>The intervention window:</strong> The most powerful place to intervene is between the Thought and the Body Reaction - challenging the catastrophic interpretation before it fully activates the alarm system. But even at the Avoidance stage, choosing brave action instead creates a completely different consequence: evidence that the feared outcome did not occur.</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:20px">🏅 <strong>Badge Progress:</strong> Fear Detective Level 1 - almost earned! Continue to Act 2 to build your courage tools...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Building the Fear Ladder -></button>' +
+  '</div>';
+}
+
+function s7() {
+  choice1Locked = false; choice1Id = null;
+  var cards = couragePaths.map(function(c) {
+    return '<button class="avoid-btn" id="c1-' + c.id + '" onclick="chooseC1(\'' + c.id + '\')">' +
+      '<span class="ab-icon">' + c.icon + '</span>' +
+      '<div><div class="ab-text">' + c.text + '</div><div class="ab-sub">' + c.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Building the Fear Ladder') +
+    backBtn(6,'Back to Fear Cycle') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 7 - Choose the Courage Path</div>' +
+    '<h2>What Should Yusuf Do?</h2>' +
+    '<p>Three paths are available to Yusuf. Each will have a measurably different impact on his fear level and courage level over time. The choice is not just about this one moment in class - it is about what the brain learns from the choice. Choose the path you think will serve Yusuf best in the long term and see how the meters respond.</p>' +
+    '<div class="avoid-options" id="c1Grid">' + cards + '</div>' +
+    '<div id="c1Outcome"></div>' +
+    '<div id="c1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Build the Fear Ladder -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  ladderValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Building the Fear Ladder') +
+    backBtn(7,'Back to Courage Path') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 8 - Fear Ladder Builder</div>' +
+    '<h2>Build Yusuf\'s Three-Step Fear Ladder</h2>' +
+    '<p>A fear ladder is a structured plan that breaks the journey from avoidance to full courage into manageable, progressive steps. Each rung is slightly more challenging than the one below it. The key is that each step must be achievable from the current one - not an impossible leap. The gradual increase gives the brain time to update its threat assessment after each successful step.</p>' +
+    '<div class="ladder-display">' +
+      '<div class="ladder-step"><div class="ls-num">1</div><div><div class="ls-text">Lowest step - Easiest challenge</div><div class="ls-sub">Where to start: manageable, slightly uncomfortable but very achievable</div></div></div>' +
+      '<div class="ladder-step"><div class="ls-num">2</div><div><div class="ls-text">Middle step - Moderate challenge</div><div class="ls-sub">Building on step 1: a genuine step up that builds on the evidence gathered</div></div></div>' +
+      '<div class="ladder-step"><div class="ls-num">3</div><div><div class="ls-text">Top step - The goal behaviour</div><div class="ls-sub">What success looks like: the originally feared action, now approached with earned courage</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:14px">💡 <strong>Example for Yusuf\'s ladder:</strong><br/>Step 1: Answer a question quietly to a partner during a paired activity<br/>Step 2: Raise his hand for one easy question per lesson for a week<br/>Step 3: Volunteer to answer a question he is not completely certain of</div>' +
+    '<label class="input-label">Write Yusuf\'s personal 3-step fear ladder. Describe each step clearly:</label>' +
+    '<textarea class="reflection-input" id="ladderInput" oninput="checkLadder(this.value)" placeholder="Step 1 - [What is the first, smallest step that is slightly challenging but very achievable?]&#10;Step 2 - [What comes next - one step more challenging than Step 1?]&#10;Step 3 - [What is the goal - the full brave action he is working toward?]" rows="5"></textarea>' +
+    '<div class="char-counter" id="ladderCounter">0 / 40 minimum characters</div>' +
+    '<button class="btn-primary" id="ladderNextBtn" onclick="renderStage(9)" disabled>Next: Courage Self-Talk -></button>' +
+  '</div>';
+}
+
+function s9() {
+  selfTalkValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Building the Fear Ladder') +
+    backBtn(8,'Back to Fear Ladder') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 9 - Courage Self-Talk</div>' +
+    '<h2>What Can Yusuf Say to Himself?</h2>' +
+    '<p>Courageous self-talk is not the same as pretending fear does not exist. It is not "I am not scared" or "this is easy." Forcing positivity over a genuine fear response makes the brain trust the self-talk less - because it is obviously not true. Effective courage self-talk acknowledges the fear honestly, reminds the person that they are safe, and then redirects attention to the action.</p>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:18px">' +
+      'Your self-talk should include three elements:<br/>' +
+      '<strong>Acknowledge the fear:</strong> "I notice my heart is racing and I am feeling nervous - that is okay."<br/>' +
+      '<strong>Reminder of safety:</strong> "Answering a question in class cannot actually hurt me. The worst possible outcome is manageable."<br/>' +
+      '<strong>Action focus:</strong> "I am going to raise my hand anyway. One breath. Raise. Answer."' +
+    '</div>' +
+    '<label class="input-label">Write what Yusuf could say to himself before raising his hand:</label>' +
+    '<textarea class="reflection-input" id="selfTalkInput" oninput="checkSelfTalk(this.value)" placeholder="For example: I notice my heart is beating fast and my hands feel sweaty - that is my brain\'s alarm going off, and that is okay. Raising my hand in class is not actually dangerous. Even if my answer is wrong, I will survive it. Nothing terrible will happen. One breath. Raise. Speak. I can handle this..." rows="5"></textarea>' +
+    '<div class="char-counter" id="selfTalkCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why this works:</strong> Courage self-talk that acknowledges fear rather than denying it is more neurologically effective because it does not fight the alarm system - it adds information to it. "My heart is racing AND I am safe AND I am going to act anyway" gives the brain a more complete picture than "everything is fine."</div>' +
+    '<button class="btn-primary" id="selfTalkNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Courage -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Building the Fear Ladder') +
+    backBtn(9,'Back to Self-Talk') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Facing Fear Shrink It?</h2>' +
+    '<p>There is a paradox at the heart of courage: the more we avoid something we fear, the bigger it gets. And the more we face it, the smaller it gets. This is not just motivational language - it is a direct description of how the brain updates its threat database through experience.</p>' +
+    '<p>Every time we face a fear and survive it intact, the brain receives a powerful piece of evidence: "That was not as dangerous as I thought." Repeated evidence of this kind directly rewires the threat response. Not by telling the brain to calm down, but by giving it real-world data that contradicts the fear\'s prediction.</p>' +
+    '<p>Answer all three questions thoughtfully:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Why does facing fear gradually reduce it - what is happening in the brain when we survive a feared experience intact?<br/>' +
+      '2. What is the difference between pushing through a fear gradually vs forcing yourself to face the maximum fear all at once?<br/>' +
+      '3. Think of one fear you have. What might the first, smallest rung of a ladder to face it look like?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about what it means for the brain to have evidence versus just instructions to calm down, and how the size of each step on the ladder affects whether the experience is manageable or overwhelming..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🪜 <strong>Badge Progress:</strong> Ladder Builder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Transfer and Bravery Practice -></button>' +
+  '</div>';
+}
+
+function s11() {
+  linaTrigDone = false; linaAvoidDone = false; linaStepDone = false;
+  linaTrigCount = 0; linaAvoidCount = 0;
+  var triggers = [
+    {id:'audition',    icon:'🎭', text:'The school play audition itself', correct:true},
+    {id:'judgement',   icon:'👥', text:'Fear of judgement from classmates watching', correct:true},
+    {id:'failure',     icon:'💭', text:'"I will forget my lines and embarrass myself."', correct:true},
+    {id:'tired',       icon:'😴', text:'She stayed up late last night', correct:false}
+  ];
+  var tCards = triggers.map(function(t) {
+    return '<div class="lina-card" id="lt-' + t.id + '" onclick="tagLinaTrig(\'' + t.id + '\',' + t.correct + ')">' +
+      '<span class="lc-icon">' + t.icon + '</span>' +
+      '<div class="lc-text">' + t.text + '</div>' +
+    '</div>';
+  }).join('');
+  var thoughts = [
+    {id:'avoid1', text:'"I probably won\'t get a part anyway so there\'s no point trying."', type:'avoid'},
+    {id:'avoid2', text:'"I\'ll tell everyone I don\'t want to do it so I don\'t look scared."', type:'avoid'},
+    {id:'courage',text:'"I\'m nervous but I have practised this. I can try and see what happens."', type:'courage'}
+  ];
+  var thoughtBtns = thoughts.map(function(t) {
+    return '<button class="lina-thought" id="la-' + t.id + '" onclick="tagLinaThought(\'' + t.id + '\',\'' + t.type + '\')">' +
+      '<span class="lt-icon">' + (t.type === 'courage' ? '💪' : '🚪') + '</span>' +
+      '<div class="lt-text">' + t.text + '</div>' +
+    '</button>';
+  }).join('');
+  var steps = [
+    {id:'tiny', icon:'🟢', text:'Watch the auditions without auditioning this time', correct:true},
+    {id:'skip', icon:'🔴', text:'Skip the auditions entirely and avoid the whole situation', correct:false},
+    {id:'full',  icon:'🟡', text:'Audition for the leading role immediately despite full terror', correct:false}
+  ];
+  var stepBtns = steps.map(function(s) {
+    return '<button class="lina-thought" id="ls-' + s.id + '" onclick="selectLinaStep(\'' + s.id + '\',' + s.correct + ')">' +
+      '<span class="lt-icon">' + s.icon + '</span>' +
+      '<div class="lt-text">' + s.text + '</div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Bravery Practice') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Lina\'s Audition Challenge</h2>' +
+    '<p>Everything you have learned about fear, avoidance, and courage is now being applied to a completely new character and situation. This is the test of real learning - can the tools transfer?</p>' +
+    '<div class="story-box" data-icon="🎭">' +
+      '<p><span class="gold">Lina</span> is twelve years old and secretly loves acting. She performs characters alone in her room, improvises stories with her little brother, and quotes films by heart. The school play auditions are in three days. And Lina has not told anyone she wants to try out. Because every time she imagines walking onto that stage in front of her classmates, the thought arrives: "I\'ll freeze. I\'ll forget everything. They\'ll all see that I can\'t do it." She has started telling herself she doesn\'t actually want to be in the play anyway.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify Lina\'s fear triggers</div>' +
+    '<p>Select all genuine fear triggers present in Lina\'s situation.</p>' +
+    '<div class="lina-triggers">' + tCards + '</div>' +
+    '<div id="linaTrigFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Identify avoidance vs courage thoughts</div>' +
+    '<div id="linaAvoidWrap" style="opacity:0.4;pointer-events:none"><div class="lina-avoidance">' + thoughtBtns + '</div></div>' +
+    '<div id="linaAvoidFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Choose Lina\'s first courage step</div>' +
+    '<div id="linaStepWrap" style="opacity:0.4;pointer-events:none"><div class="lina-avoidance">' + stepBtns + '</div></div>' +
+    '<div id="linaStepFeedback"></div>' +
+    '<button class="btn-primary" id="linaNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Avoidance vs Exposure Sort -></button>' +
+  '</div>';
+}
+
+function s12() {
+  avoidSortPlac = {}; avoidSortSel = null;
+  var bank = avoidBehaviours.map(function(b) {
+    return '<div class="sort-card-item" id="asb-' + b.id + '" onclick="handleAvoidSortClick(\'' + b.id + '\')">' + b.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Bravery Practice') +
+    backBtn(11,'Back to Lina\'s Scenario') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 12 - Avoidance vs Brave Action</div>' +
+    '<h2>Sort the Behaviours</h2>' +
+    '<p>Courage is not the absence of fear - it is the choice to take action despite fear. But many behaviours that look like reasonable responses to fear are actually avoidance in disguise. And some actions that feel unnecessarily difficult are genuine acts of bravery. Sort the six behaviours below into the correct category.</p>' +
+    '<div class="sort-bank" id="avoidSortBank">' + bank + '</div>' +
+    '<div id="avoidSortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a card, then click a zone below</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-avoid" onclick="placeAvoidSort(\'avoid\')">' +
+        '<div class="sz-title">Avoidance</div>' +
+        '<div class="sz-items" id="zone-avoid"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-brave" onclick="placeAvoidSort(\'brave\')">' +
+        '<div class="sz-title">Brave Action</div>' +
+        '<div class="sz-items" id="zone-brave"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="avoidSortFeedback"></div>' +
+    '<button class="btn-primary" id="avoidSortNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Transfer and Bravery Practice') +
+    backBtn(12,'Back to Avoidance Sort') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Fear Facing Formula with genuine depth and engagement. Let\'s see how clearly the core concepts have settled in. Answer all three questions carefully - draw on everything you have explored today.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Courage Trainer!</h2>' +
+    '<p>You completed the full Fear Facing Formula Lab - all 3 Acts, 14 stages, and a genuine journey into one of the most empowering of all emotional intelligence skills. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Fear Detective</div><div class="b-sub">Read the alarm system</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🪜</span><div class="b-title">Ladder Builder</div><div class="b-sub">Designed gradual exposure</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🦁</span><div class="b-title">Courage Trainer</div><div class="b-sub">Chose action over avoidance</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🔍</span><div><div class="sk-title">Reading the Fear Signal</div><div class="sk-desc">Fear is the brain\'s alarm system - useful and necessary in genuine danger, but prone to false alarms in social and performance situations. The physical response (racing heart, sweating, tight throat) feels identical in both real and imagined threats. Learning to ask "is this a genuine danger or a false alarm?" gives you crucial information before choosing how to respond.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🪜</span><div><div class="sk-title">The Fear Ladder</div><div class="sk-desc">Avoidance feeds fear - every successful avoidance teaches the brain that the feared thing is genuinely dangerous. The fear ladder breaks this cycle by replacing avoidance with systematic, graduated exposure. Each step provides evidence against the fear\'s prediction. Each rung completed makes the next one smaller. Over time, accumulated evidence transforms overwhelming fear into manageable nervousness.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🦁</span><div><div class="sk-title">Courageous Action</div><div class="sk-desc">Courage is not the absence of fear - it is the decision to act despite the alarm. Courage self-talk that honestly acknowledges fear ("I notice my heart is racing") while reminding the brain of safety ("this is not actually dangerous") and redirecting to action ("one breath, then I go") is more effective than forced positivity. Brave action, however small, changes what the brain learns about what is possible.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="🏆" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Every person who has ever done something they were afraid of felt the alarm go off first. Every single one. The alarm is not the enemy - it is information. What you do with the information is the decision that matters. You now have a framework: read the alarm, assess the actual danger, build a ladder, take one step, and let the evidence update the alarm\'s calibration. One step at a time. Your brave brain is already in training. 🦁' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--violet-dark),var(--gold-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ===== POST-RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    selectedSigns.forEach(function(id) {
+      var el = document.getElementById('sc-' + id);
+      if (el) el.classList.add('sc-fear');
+    });
+    checkSignsCount();
+  }
+  if (n === 3) restoreDangerUI();
+  if (n === 5) updateFear(fearLevel);
+  if (n === 8 && ladderText) {
+    var ta = document.getElementById('ladderInput');
+    if (ta) ta.value = ladderText;
+    checkLadder(ladderText);
+  }
+  if (n === 9 && selfTalkText) {
+    var ta2 = document.getElementById('selfTalkInput');
+    if (ta2) ta2.value = selfTalkText;
+    checkSelfTalk(selfTalkText);
+  }
+  if (n === 10 && reflectText) {
+    var ta3 = document.getElementById('reflectInput');
+    if (ta3) ta3.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (linaTrigDone) {
+        var aw = document.getElementById('linaAvoidWrap');
+        if (aw) { aw.style.opacity = '1'; aw.style.pointerEvents = 'auto'; }
+      }
+      if (linaAvoidDone) {
+        var sw = document.getElementById('linaStepWrap');
+        if (sw) { sw.style.opacity = '1'; sw.style.pointerEvents = 'auto'; }
+      }
+      checkLinaComplete();
+    }, 60);
+  }
+  if (n === 12) restoreAvoidSort();
+}
+
+/* ===== ACT 1 INTERACTIONS ===== */
+function toggleSign(id, isFear) {
+  var el = document.getElementById('sc-' + id);
+  if (selectedSigns.has(id)) {
+    selectedSigns.delete(id);
+    el.classList.remove('sc-fear');
+    el.classList.remove('sc-wrong');
+  } else {
+    selectedSigns.add(id);
+    if (isFear) el.classList.add('sc-fear');
+    else el.classList.add('sc-wrong');
+  }
+  checkSignsCount();
+}
+
+function checkSignsCount() {
+  var correct = Array.from(selectedSigns).filter(function(id) {
+    return bodySigns.find(function(s){ return s.id === id; }).isFear;
+  }).length;
+  var wrong = Array.from(selectedSigns).filter(function(id) {
+    return !bodySigns.find(function(s){ return s.id === id; }).isFear;
+  }).length;
+  var fb = document.getElementById('signsFeedback');
+  var nb = document.getElementById('signsNextBtn');
+  if (correct === 4 && wrong === 0) {
+    signsOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All four fear signals identified. Fast heartbeat, sweaty hands, tight throat, and avoiding eye contact are all genuine physiological responses to the brain\'s alarm system activating. Smiling with ease and calm breathing are calm states - opposite to the fear response. Recognising these four signals early is the first step to being able to respond rather than react.</div>';
+    if (nb) nb.disabled = false;
+  } else if (wrong > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">One or more of your selections is not a fear signal. Smiling with ease and calm breathing both indicate the absence of fear. Only physical sensations caused by the alarm system activating count as fear body signals.</div>';
+    if (nb) nb.disabled = true; signsOk = false;
+  } else if (correct >= 3) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg gold-msg">' + correct + ' of 4 fear signals found. Look for one more physical fear sensation.</div>';
+    if (nb) nb.disabled = true; signsOk = false;
+  } else {
+    if (fb) fb.innerHTML = selectedSigns.size > 0 ? '<div class="feedback-msg gold-msg">Keep going - find all four physical fear signals.</div>' : '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function handleDangerClick(id) {
+  if (sortPlacements[id]) return;
+  sortSelected = id;
+  document.querySelectorAll('.sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('sdc-' + id);
+  if (el) el.style.outline = '3px solid var(--violet-dark)';
+  var hint = document.getElementById('dangerHint');
+  if (hint) hint.textContent = 'Now click a zone to place: "' + dangerCards.find(function(c){ return c.id === id; }).text + '"';
+}
+
+function placeDanger(zone) {
+  if (!sortSelected) return;
+  var item = dangerCards.find(function(c){ return c.id === sortSelected; });
+  if (!item) return;
+  sortPlacements[sortSelected] = zone;
+  var el = document.getElementById('sdc-' + sortSelected);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeDanger(\'' + sortSelected + '\',\'' + zone + '\')">x</span></div>';
+  }
+  var hint = document.getElementById('dangerHint');
+  if (hint) hint.textContent = 'Click another card to continue';
+  sortSelected = null;
+  checkDangerSort();
+}
+
+function removeDanger(id, zone) {
+  delete sortPlacements[id];
+  var el = document.getElementById('sdc-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = dangerCards.find(function(c){ return c.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkDangerSort();
+}
+
+function restoreDangerUI() {
+  Object.keys(sortPlacements).forEach(function(id) {
+    var zone = sortPlacements[id];
+    var item = dangerCards.find(function(c){ return c.id === id; });
+    var el = document.getElementById('sdc-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeDanger(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkDangerSort();
+}
+
+function checkDangerSort() {
+  var total = Object.keys(sortPlacements).length;
+  var correct = dangerCards.filter(function(c){ return sortPlacements[c.id] === c.zone; }).length;
+  var fb = document.getElementById('dangerFeedback');
+  var nb = document.getElementById('dangerNextBtn');
+  if (total < dangerCards.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg gold-msg">' + total + ' of 5 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === dangerCards.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. Real dangers (fire, angry dog, stranger chasing you) involve genuine physical threats where the fear response is fully appropriate. False alarms (speaking in class, taking a test) involve social or performance challenges where the discomfort is real but no actual physical danger exists. Understanding this difference is foundational to building courage.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 5). Remove incorrect items and try again. Ask: could this situation cause genuine physical harm? If yes - real danger. If the "danger" is social embarrassment, failure, or discomfort - false alarm.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function chooseAvoid(id, quality) {
+  if (avoidChoice) return;
+  avoidChoice = id;
+  document.querySelectorAll('.avoid-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('av-' + id);
+  if (el) el.classList.add('sel-' + quality);
+  var fb = document.getElementById('avoidFeedback');
+  var nb = document.getElementById('avoidNextBtn');
+  var msgs = {
+    avoid: '<div class="feedback-msg incorrect-msg">This is the avoidance trap in action. Every time Yusuf avoids raising his hand, the relief reinforces the fear. Within weeks, even seeing a question on the board would trigger anxiety. Avoidance is the most powerful fear amplifier available. The correct answer involves gradual exposure.</div>',
+    sometimes: '<div class="feedback-msg gold-msg">A more accurate reading - inconsistent exposure without a structured plan produces inconsistent results. The anticipatory dread that builds before each attempt can actually be more exhausting than the action itself. A structured gradual ladder works significantly better than random, unplanned attempts.</div>',
+    ladder: '<div class="feedback-msg correct-msg">Exactly right. A structured fear ladder with gradual, progressive exposure is the most evidence-based approach to reducing fear. By building from small, manageable steps, Yusuf\'s brain receives repeated evidence that the feared outcome does not occur - and the fear gradually shrinks with each rung climbed.</div>'
+  };
+  if (fb) fb.innerHTML = msgs[id] || '';
+  if (nb) nb.disabled = false;
+}
+
+function updateFear(val) {
+  fearLevel = parseInt(val);
+  var level = getFearLevel(fearLevel);
+  if (!level) return;
+  var bar = document.getElementById('fdBar');
+  var em = document.getElementById('fdEmoji');
+  var lb = document.getElementById('fdLabel');
+  var ds = document.getElementById('fdDesc');
+  var disp = document.getElementById('fearDisplay');
+  if (bar) { bar.style.width = fearLevel + '%'; bar.style.background = level.bar; }
+  if (em) em.textContent = level.emoji;
+  if (lb) { lb.textContent = level.label; lb.style.color = level.col; }
+  if (ds) ds.textContent = level.desc;
+  if (disp) { disp.style.background = level.bg; disp.style.borderColor = level.border; }
+}
+
+/* ===== ACT 2 INTERACTIONS ===== */
+function buildPathMeter(path, pfx) {
+  return '<div class="meters-wrap">' +
+    '<div class="meter-row"><div class="meter-label-row"><span>⚡ Fear Level Over Time</span><span id="' + pfx + 'FL">0%</span></div><div class="meter-track"><div class="meter-fill fear-fill" id="' + pfx + 'FF"></div></div></div>' +
+    '<div class="meter-row"><div class="meter-label-row"><span>🦁 Courage Level</span><span id="' + pfx + 'CL">0%</span></div><div class="meter-track"><div class="meter-fill courage-fill" id="' + pfx + 'CF"></div></div></div>' +
+  '</div>' +
+  '<div class="outcome-box ' + path.quality + '"><div class="outcome-title">' + path.outcome.title + '</div>' + path.outcome.body + '<div class="outcome-tip">' + path.outcome.tip + '</div></div>';
+}
+
+function chooseC1(id) {
+  if (choice1Locked) return;
+  choice1Locked = true; choice1Id = id;
+  var chosen = couragePaths.find(function(c){ return c.id === id; });
+  couragePaths.forEach(function(c) {
+    var el = document.getElementById('c1-' + c.id);
+    if (el) { if (c.id === id) el.classList.add('sel-' + c.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('c1Outcome');
+  if (out) out.innerHTML = buildPathMeter(chosen, 'pm1');
+  setTimeout(function() {
+    var ff = document.getElementById('pm1FF'), cf = document.getElementById('pm1CF');
+    var fl = document.getElementById('pm1FL'), cl = document.getElementById('pm1CL');
+    if (ff) ff.style.width = chosen.fearLevel + '%';
+    if (cf) cf.style.width = chosen.courageLevel + '%';
+    if (fl) fl.textContent = chosen.fearLevel + '%';
+    if (cl) cl.textContent = chosen.courageLevel + '%';
+  }, 150);
+  var nw = document.getElementById('c1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkLadder(val) {
+  ladderText = val;
+  var len = val.trim().length;
+  ladderValid = len >= 40;
+  var c = document.getElementById('ladderCounter');
+  var b = document.getElementById('ladderNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (ladderValid ? ' met' : ''); }
+  if (b) b.disabled = !ladderValid;
+}
+
+function checkSelfTalk(val) {
+  selfTalkText = val;
+  var len = val.trim().length;
+  selfTalkValid = len >= 40;
+  var c = document.getElementById('selfTalkCounter');
+  var b = document.getElementById('selfTalkNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (selfTalkValid ? ' met' : ''); }
+  if (b) b.disabled = !selfTalkValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ===== ACT 3 INTERACTIONS ===== */
+function tagLinaTrig(id, correct) {
+  var el = document.getElementById('lt-' + id);
+  if (el && (el.classList.contains('lc-correct') || el.classList.contains('lc-wrong'))) return;
+  if (el) el.classList.add(correct ? 'lc-correct' : 'lc-wrong');
+  linaTrigCount++;
+  if (linaTrigCount >= 4) {
+    linaTrigDone = true;
+    var fb = document.getElementById('linaTrigFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Triggers identified. Lina faces three genuine fear triggers: the audition itself (external performance pressure), fear of classmate judgement (social evaluation threat), and the thought trigger "I\'ll freeze and embarrass myself" (catastrophising). Staying up late is a fatigue factor, not a fear trigger. Interestingly, the thought trigger - entirely created by Lina\'s own mind - is often more powerful than the external triggers combined.</div>';
+    var aw = document.getElementById('linaAvoidWrap');
+    if (aw) { aw.style.opacity = '1'; aw.style.pointerEvents = 'auto'; }
+    checkLinaComplete();
+  }
+}
+
+function tagLinaThought(id, type) {
+  if (linaAvoidDone) return;
+  linaAvoidCount++;
+  var el = document.getElementById('la-' + id);
+  if (el) el.classList.add(type === 'courage' ? 'lt-courage' : 'lt-avoid');
+  document.querySelectorAll('#linaAvoidWrap .lina-thought').forEach(function(b){ b.style.cursor = 'default'; });
+  if (linaAvoidCount >= 1) {
+    linaAvoidDone = true;
+    var fb = document.getElementById('linaAvoidFeedback');
+    if (fb) fb.innerHTML = type === 'avoid'
+      ? '<div class="feedback-msg incorrect-msg">This is an avoidance thought in disguise - it sounds like a reasonable explanation, but it is actually Lina\'s fear rationalising why she should not try. The courage thought ("I\'m nervous but I have practised - I can try and see what happens") acknowledges fear honestly while still choosing action. All three thoughts are now highlighted.</div>'
+      : '<div class="feedback-msg correct-msg">Correct. "I\'m nervous but I have practised this. I can try and see what happens" is a genuine courage thought - it acknowledges fear without being ruled by it, and it focuses on action rather than outcome. The two avoidance thoughts both rationalise inaction with convincing-sounding reasons that are actually fear-driven.</div>';
+    var sw = document.getElementById('linaStepWrap');
+    if (sw) { sw.style.opacity = '1'; sw.style.pointerEvents = 'auto'; }
+    document.querySelectorAll('#linaAvoidWrap .lina-thought').forEach(function(b){
+      if (b.id === 'la-courage' && !b.classList.contains('lt-courage')) b.classList.add('lt-courage');
+      if (b.id !== 'la-courage' && !b.classList.contains('lt-avoid')) b.classList.add('lt-avoid');
+    });
+    checkLinaComplete();
+  }
+}
+
+function selectLinaStep(id, correct) {
+  if (linaStepDone) return;
+  linaStepDone = true;
+  var el = document.getElementById('ls-' + id);
+  if (el) el.classList.add(correct ? 'lt-courage' : 'lt-avoid');
+  document.querySelectorAll('#linaStepWrap .lina-thought').forEach(function(b){ b.style.cursor = 'default'; });
+  var fb = document.getElementById('linaStepFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The ideal first courage step. Watching the auditions without performing removes all performance pressure while directly breaking the avoidance pattern. Lina gets to see the environment, observe others, and have the experience without the full fear activation of performing herself. This is a perfect rung 1 of her ladder - the next step from here (perhaps reading one line in a low-pressure rehearsal) suddenly feels much more achievable.</div>';
+  } else if (id === 'skip') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Skipping is full avoidance - it maintains and strengthens the fear. The correct first step is going to watch, which breaks the avoidance pattern with minimal risk. The highlighted option shows the correct courage step.</div>';
+    var c = document.getElementById('ls-tiny');
+    if (c) c.classList.add('lt-courage');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg gold-msg">Going straight for the leading role when fear is at maximum is likely to be overwhelming rather than effective. The fear ladder principle says start lower and build gradually. Watching first is the appropriate first rung - it breaks avoidance without requiring full exposure.</div>';
+    var c2 = document.getElementById('ls-tiny');
+    if (c2) c2.classList.add('lt-courage');
+  }
+  checkLinaComplete();
+}
+
+function checkLinaComplete() {
+  if (linaTrigDone && linaAvoidDone && linaStepDone) {
+    var b = document.getElementById('linaNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function handleAvoidSortClick(id) {
+  if (avoidSortPlac[id]) return;
+  avoidSortSel = id;
+  document.querySelectorAll('#avoidSortBank .sort-card-item').forEach(function(el){ el.style.outline = 'none'; });
+  var el = document.getElementById('asb-' + id);
+  if (el) el.style.outline = '3px solid var(--violet-dark)';
+  var hint = document.getElementById('avoidSortHint');
+  if (hint) hint.textContent = 'Now click a zone to place: "' + avoidBehaviours.find(function(b){ return b.id === id; }).text + '"';
+}
+
+function placeAvoidSort(zone) {
+  if (!avoidSortSel) return;
+  var item = avoidBehaviours.find(function(b){ return b.id === avoidSortSel; });
+  if (!item) return;
+  avoidSortPlac[avoidSortSel] = zone;
+  var el = document.getElementById('asb-' + avoidSortSel);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeAvoidSort(\'' + avoidSortSel + '\',\'' + zone + '\')">x</span></div>';
+  }
+  avoidSortSel = null;
+  var hint = document.getElementById('avoidSortHint');
+  if (hint) hint.textContent = 'Click another card to continue';
+  checkAvoidSort();
+}
+
+function removeAvoidSort(id, zone) {
+  delete avoidSortPlac[id];
+  var el = document.getElementById('asb-' + id);
+  if (el) el.classList.remove('placed');
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var text = avoidBehaviours.find(function(b){ return b.id === id; }).text;
+    zoneEl.querySelectorAll('.sz-item').forEach(function(item) {
+      if (item.textContent.includes(text)) item.remove();
+    });
+  }
+  checkAvoidSort();
+}
+
+function restoreAvoidSort() {
+  Object.keys(avoidSortPlac).forEach(function(id) {
+    var zone = avoidSortPlac[id];
+    var item = avoidBehaviours.find(function(b){ return b.id === id; });
+    var el = document.getElementById('asb-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeAvoidSort(\'' + id + '\',\'' + zone + '\')">x</span></div>';
+    }
+  });
+  checkAvoidSort();
+}
+
+function checkAvoidSort() {
+  var total = Object.keys(avoidSortPlac).length;
+  var correct = avoidBehaviours.filter(function(b){ return avoidSortPlac[b.id] === b.zone; }).length;
+  var fb = document.getElementById('avoidSortFeedback');
+  var nb = document.getElementById('avoidSortNextBtn');
+  if (total < avoidBehaviours.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg gold-msg">' + total + ' of 6 placed. Keep going.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  if (correct === avoidBehaviours.length) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correctly sorted. The three avoidance behaviours (skipping the tryout, making excuses, hiding at the back) all involve reducing exposure to the feared situation. The three brave actions (practising in small steps, raising your hand despite racing heart, writing reasons you can handle it) all involve moving toward the fear with deliberate intention. Notice that brave actions do not require you to feel fearless - only to act despite the fear.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all correct (' + correct + ' of 6). Remove incorrect items. Ask: is this behaviour moving toward the fear, or away from it? Even if an action feels difficult, if it moves toward the feared thing, it is brave.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  selectedSigns = new Set(); signsOk = false;
+  sortPlacements = {}; sortSelected = null;
+  avoidChoice = null; fearLevel = 65;
+  ladderText = ''; ladderValid = false;
+  selfTalkText = ''; selfTalkValid = false;
+  reflectText = ''; reflectValid = false;
+  choice1Id = null; choice1Locked = false; choice2Id = null;
+  linaTrigDone = false; linaAvoidDone = false; linaStepDone = false;
+  linaTrigCount = 0; linaAvoidCount = 0;
+  avoidSortPlac = {}; avoidSortSel = null;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#7050c8','#3878d0','#e06050','#d89820','#28c890','#4030a0','#1850a8','#fce0a0'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

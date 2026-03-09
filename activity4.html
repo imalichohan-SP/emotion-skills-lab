@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Confidence Builder Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f8f4;
+  --card:#ffffff;
+  --mint:#3db889;--mint-dark:#27875f;--mint-light:#a8e6cf;
+  --sky:#4a9fd4;--sky-dark:#2a6fa0;--sky-light:#a8d4f0;
+  --violet:#7c60c0;--violet-dark:#4e3890;--violet-light:#c9b8f0;
+  --gold:#e8a820;--gold-dark:#b07808;--gold-light:#ffd98a;
+  --rose:#e06878;--rose-dark:#a83848;
+  --teal:#2ab8b0;--teal-dark:#1a7870;
+  --text:#1a2840;--text-soft:#4a5880;
+  --shadow-sm:0 4px 16px rgba(42,110,100,0.12);
+  --shadow-md:0 8px 32px rgba(42,110,100,0.16);
+  --shadow-lg:0 16px 48px rgba(42,110,100,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 8% 12%,rgba(61,184,137,0.22) 0%,transparent 46%),
+    radial-gradient(circle at 92% 80%,rgba(74,159,212,0.18) 0%,transparent 46%),
+    radial-gradient(circle at 52% 50%,rgba(232,168,32,0.12) 0%,transparent 54%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--mint-dark),var(--sky-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--mint-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+/* ACT BANNER */
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(39,135,95,0.09);color:var(--mint-dark);border:1.5px solid rgba(39,135,95,0.25)}
+.act-banner.act2{background:rgba(42,64,144,0.09);color:var(--violet-dark);border:1.5px solid rgba(78,56,144,0.25)}
+.act-banner.act3{background:rgba(176,120,8,0.09);color:var(--gold-dark);border:1.5px solid rgba(176,120,8,0.25)}
+.act-banner .act-icon{font-size:19px}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(61,184,137,0.18);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--mint-dark),var(--sky-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(39,135,95,0.4)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(61,184,137,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--mint-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--gold-dark)}
+
+/* STAGE CARD */
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(61,184,137,0.14);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(61,184,137,0.11),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--mint-dark);background:rgba(61,184,137,0.11);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(78,56,144,0.09)}
+.stage-label.gold{color:var(--gold-dark);background:rgba(176,120,8,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+/* STORY BOX */
+.story-box{background:linear-gradient(135deg,rgba(61,184,137,0.09),rgba(74,159,212,0.08));border:1.5px solid rgba(61,184,137,0.28);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--mint-dark);font-style:normal}
+.story-box p span.sky{color:var(--sky-dark)}
+.story-box p span.gold{color:var(--gold-dark)}
+.thought-highlight{background:linear-gradient(135deg,rgba(224,104,120,0.12),rgba(124,96,192,0.10));border:2px solid rgba(224,104,120,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-highlight::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-highlight p{font-size:15px;font-weight:900;color:var(--rose-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* CONFIDENCE METER VISUAL */
+.conf-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(61,184,137,0.08),rgba(74,159,212,0.07));border:1.5px solid rgba(61,184,137,0.22);border-radius:var(--radius-sm);padding:22px 24px}
+.conf-meter-labels{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;font-weight:800;color:var(--text-soft)}
+.conf-slider{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:999px;outline:none;cursor:pointer;background:linear-gradient(90deg,rgba(224,104,120,0.5) 0%,rgba(232,168,32,0.55) 50%,rgba(61,184,137,0.65) 100%)}
+.conf-slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--mint-dark);box-shadow:0 3px 14px rgba(39,135,95,0.38);cursor:pointer;transition:transform 0.2s ease}
+.conf-slider::-webkit-slider-thumb:hover,.conf-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.conf-slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--mint-dark);cursor:pointer}
+.conf-display{margin-top:18px;text-align:center;padding:16px 20px;border-radius:var(--radius-sm);transition:background 0.5s ease,border-color 0.5s ease;border:2px solid rgba(61,184,137,0.25)}
+.conf-display .cd-emoji{font-size:40px;display:block;margin-bottom:8px;transition:all 0.4s ease}
+.conf-display .cd-label{font-size:17px;font-weight:900}
+.conf-display .cd-desc{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:6px;line-height:1.5}
+
+/* ANIMATED METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(61,184,137,0.12);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.doubt{background:linear-gradient(90deg,rgba(224,104,120,0.7),var(--rose-dark));box-shadow:0 2px 8px rgba(168,56,72,0.3)}
+.meter-fill.confidence{background:linear-gradient(90deg,var(--mint-light),var(--mint-dark));box-shadow:0 2px 8px rgba(39,135,95,0.3)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,104,120,0.10);border:1.5px solid rgba(168,56,72,0.25)}
+.outcome-box.ok{background:rgba(232,168,32,0.11);border:1.5px solid rgba(176,120,8,0.25)}
+.outcome-box.best{background:rgba(61,184,137,0.10);border:1.5px solid rgba(39,135,95,0.25)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* SORT CARDS */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 14px;min-height:52px;padding:12px 14px;background:rgba(61,184,137,0.06);border:2px dashed rgba(61,184,137,0.28);border-radius:var(--radius-sm)}
+.sort-card{background:#fff;border:2px solid rgba(61,184,137,0.28);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm);border-color:var(--mint)}
+.sort-card.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.sort-zone.zone-healthy{border-color:rgba(39,135,95,0.35);background:rgba(61,184,137,0.07)}
+.sort-zone.zone-arrogance{border-color:rgba(168,56,72,0.3);background:rgba(224,104,120,0.06)}
+.sort-zone.zone-unrealistic{border-color:rgba(176,120,8,0.3);background:rgba(232,168,32,0.07)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-healthy .sz-title{color:var(--mint-dark)}
+.sort-zone.zone-arrogance .sz-title{color:var(--rose-dark)}
+.sort-zone.zone-unrealistic .sz-title{color:var(--gold-dark)}
+.sort-zone .sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.08);display:flex;align-items:center;gap:5px}
+.sz-item .sz-remove{cursor:pointer;font-size:14px;color:var(--text-soft);transition:color 0.2s}
+.sz-item .sz-remove:hover{color:var(--rose-dark)}
+
+/* EVIDENCE GRID */
+.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 26px}
+.evidence-card{background:var(--bg);border:2px solid rgba(61,184,137,0.22);border-radius:var(--radius-sm);padding:16px 14px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.evidence-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--mint)}
+.evidence-card.ev-selected{border-color:var(--mint-dark);background:linear-gradient(135deg,rgba(61,184,137,0.14),rgba(74,159,212,0.09));box-shadow:0 0 0 3px rgba(39,135,95,0.16),var(--shadow-sm)}
+.evidence-card.ev-negative{border-color:rgba(224,104,120,0.4);background:rgba(224,104,120,0.07)}
+.evidence-card .ev-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.evidence-card:hover .ev-icon,.evidence-card.ev-selected .ev-icon{transform:scale(1.15)}
+.evidence-card .ev-text{font-size:13px;font-weight:800;color:var(--text);line-height:1.35}
+.evidence-card .ev-check{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--mint-dark);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.evidence-card.ev-selected .ev-check{opacity:1;transform:scale(1)}
+
+/* DOUBT VS CONFIDENCE CARDS */
+.doubt-grid{display:flex;flex-direction:column;gap:11px;margin:16px 0 24px}
+.doubt-card{display:flex;align-items:center;gap:14px;background:var(--bg);border:2px solid rgba(61,184,137,0.20);border-radius:var(--radius-sm);padding:14px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.doubt-card:hover{border-color:var(--mint);transform:translateX(3px);box-shadow:var(--shadow-sm)}
+.doubt-card .dc-icon{font-size:22px;flex-shrink:0}
+.doubt-card .dc-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.doubt-card .dc-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.doubt-card.dc-doubt{border-color:var(--rose-dark);background:rgba(224,104,120,0.08);animation:wrongShake 0.4s ease}
+.doubt-card.dc-confidence{border-color:var(--mint-dark);background:rgba(61,184,137,0.10);animation:correctPop 0.4s ease}
+
+/* INNER VOICE CARDS */
+.voice-grid{display:flex;flex-direction:column;gap:14px;margin:20px 0 24px}
+.voice-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(61,184,137,0.20);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.voice-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--mint)}
+.voice-btn .v-icon{font-size:28px;flex-shrink:0;transition:transform 0.3s ease;margin-top:2px}
+.voice-btn:hover .v-icon{transform:scale(1.12)}
+.voice-btn .v-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.voice-btn .v-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.voice-btn.sel-best{border-color:var(--mint-dark);background:rgba(61,184,137,0.10);animation:correctPop 0.4s ease}
+.voice-btn.sel-ok{border-color:var(--gold-dark);background:rgba(232,168,32,0.10);animation:correctPop 0.4s ease}
+.voice-btn.sel-harmful{border-color:var(--rose-dark);background:rgba(224,104,120,0.08);animation:wrongShake 0.4s ease}
+
+/* STRENGTH SHIELD */
+.strength-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 24px}
+.strength-card{background:var(--bg);border:2px solid rgba(61,184,137,0.20);border-radius:var(--radius-sm);padding:14px 10px;cursor:pointer;transition:var(--t);text-align:center}
+.strength-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--mint)}
+.strength-card.str-selected{border-color:var(--mint-dark);background:linear-gradient(135deg,rgba(61,184,137,0.16),rgba(74,159,212,0.10));box-shadow:0 0 0 3px rgba(39,135,95,0.16);transform:translateY(-2px)}
+.strength-card .sc-icon{font-size:26px;display:block;margin-bottom:6px;transition:transform 0.3s ease}
+.strength-card:hover .sc-icon,.strength-card.str-selected .sc-icon{transform:scale(1.15)}
+.strength-card .sc-label{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.3}
+.strength-shield{background:linear-gradient(135deg,rgba(61,184,137,0.12),rgba(74,159,212,0.10),rgba(232,168,32,0.10));border:2px solid rgba(61,184,137,0.28);border-radius:var(--radius-sm);padding:20px 22px;margin:18px 0;animation:popIn 0.5s ease both}
+.strength-shield .ss-title{font-size:15px;font-weight:900;color:var(--mint-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.shield-badges{display:flex;flex-wrap:wrap;gap:10px}
+.shield-badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border:2px solid rgba(61,184,137,0.3);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:800;color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* FORMULA BOX */
+.formula-box{background:linear-gradient(135deg,rgba(61,184,137,0.08),rgba(74,159,212,0.07),rgba(232,168,32,0.06));border:2px solid rgba(61,184,137,0.25);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1.5px solid rgba(61,184,137,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(232,168,32,0.10),rgba(61,184,137,0.10));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-plus{text-align:center;font-size:22px;font-weight:900;color:var(--mint-dark);margin:0;padding:2px 0}
+.formula-equals{text-align:center;font-size:16px;font-weight:900;color:var(--gold-dark);margin:8px 0 4px;letter-spacing:1px}
+
+/* OMAR SCENARIO */
+.omar-thoughts{display:flex;flex-direction:column;gap:10px;margin:14px 0 22px}
+.omar-thought{display:flex;align-items:flex-start;gap:12px;background:var(--bg);border:2px solid rgba(61,184,137,0.18);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.omar-thought:hover{border-color:var(--mint);transform:translateX(3px)}
+.omar-thought .ot-icon{font-size:22px;flex-shrink:0}
+.omar-thought .ot-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.omar-thought .ot-type{font-size:12px;font-weight:700;color:var(--text-soft);margin-top:2px}
+.omar-thought.ot-doubt{border-color:var(--rose-dark);background:rgba(224,104,120,0.08);animation:wrongShake 0.4s ease}
+.omar-thought.ot-evidence{border-color:var(--mint-dark);background:rgba(61,184,137,0.09);animation:correctPop 0.35s ease}
+.omar-actions{display:flex;flex-direction:column;gap:12px;margin:14px 0 24px}
+.omar-action{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(61,184,137,0.18);border-radius:var(--radius-sm);padding:16px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.omar-action:hover{border-color:var(--mint);transform:translateX(3px);box-shadow:var(--shadow-sm)}
+.omar-action .oa-icon{font-size:26px;flex-shrink:0}
+.omar-action .oa-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:2px}
+.omar-action .oa-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.omar-action.oa-best{border-color:var(--mint-dark);background:rgba(61,184,137,0.10);animation:correctPop 0.4s ease}
+.omar-action.oa-ok{border-color:var(--gold-dark);background:rgba(232,168,32,0.10);animation:correctPop 0.4s ease}
+.omar-action.oa-harmful{border-color:var(--rose-dark);background:rgba(224,104,120,0.08);animation:wrongShake 0.4s ease}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(61,184,137,0.14);color:#1a6a45;border:1.5px solid rgba(39,135,95,0.28)}
+.feedback-msg.incorrect-msg{background:rgba(224,104,120,0.12);color:#8a2040;border:1.5px solid rgba(168,56,72,0.25)}
+.feedback-msg.info-msg{background:rgba(78,56,144,0.08);color:var(--violet-dark);border:1.5px solid rgba(78,56,144,0.22)}
+.feedback-msg.gold-msg{background:rgba(232,168,32,0.12);color:var(--gold-dark);border:1.5px solid rgba(176,120,8,0.25)}
+.feedback-msg.mint-msg{background:rgba(61,184,137,0.10);color:var(--mint-dark);border:1.5px solid rgba(39,135,95,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(61,184,137,0.28);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(74,88,128,0.42)}
+.reflection-input:focus{border-color:var(--mint-dark);box-shadow:0 0 0 3px rgba(39,135,95,0.13);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--mint-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--mint-dark),var(--sky-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(39,135,95,0.32);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(39,135,95,0.42)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(61,184,137,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(61,184,137,0.08);border-color:var(--mint-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(61,184,137,0.25);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--mint-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(61,184,137,0.20);border-radius:999px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(61,184,137,0.20);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--mint);background:rgba(61,184,137,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--mint-dark);background:rgba(61,184,137,0.14);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--rose-dark);background:rgba(224,104,120,0.10);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--mint-dark);background:rgba(61,184,137,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(61,184,137,0.16);color:#1a6a45}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,104,120,0.14);color:#8a2040}
+
+/* BADGE GRID */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(232,168,32,0.15),rgba(61,184,137,0.12));border:1.5px solid rgba(232,168,32,0.35);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+/* SKILLS SUMMARY */
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(61,184,137,0.18);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+/* CELEBRATION */
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,248,244,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(61,184,137,0.20);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(61,184,137,0.07),rgba(74,159,212,0.06),rgba(232,168,32,0.05));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* ANIMATIONS */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+@keyframes shieldIn{from{opacity:0;transform:scale(0.85) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .strength-grid{grid-template-columns:repeat(3,1fr)}
+  .sort-zones{grid-template-columns:1fr}
+  .evidence-grid{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+  .badge-item{padding:14px 8px}
+  .badge-item .b-icon{font-size:28px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">💪 Confidence Quest</div>
+    <h1>The <span>Confidence Builder</span> Quest</h1>
+    <p>Understand self-doubt - Build real confidence - Strengthen your inner voice</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌟</div>
+    <h2>Quest Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. Your confidence is built on something real - evidence, strengths, and a better inner voice.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Evidence Collector</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🛡️</span><div class="b-title">Strength Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🎯</span><div class="b-title">Brave Performer</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartQuest()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Quest</button>
+  </div>
+</div>
+
+<script>
+/* ============================================= CONSTANTS & STATE ============================================= */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+// Act 1
+let sortPlacements     = {};
+let sortComplete       = false;
+let selectedEvidence   = new Set();
+let evidenceConfirmed  = false;
+let doubtTagged        = {};
+let doubtComplete      = false;
+let confLevel          = 50;
+
+// Act 2
+let voice1Choice       = null;
+let voice1Locked       = false;
+let selectedStrengths  = new Set();
+let rewriteValid       = false;
+let rewriteText        = '';
+let reflectValid       = false;
+let reflectText        = '';
+
+// Act 3
+let omarDoubtDone      = false;
+let omarEvidenceDone   = false;
+let omarVoiceDone      = false;
+let omarActionDone     = false;
+let actionLocked       = false;
+let quizAnswers        = {};
+
+/* ============================================= DATA ============================================= */
+const sortItems = [
+  {id:'prepared',  text:'I prepared well.',         zone:'healthy'},
+  {id:'better',    text:'I am better than everyone.',zone:'arrogance'},
+  {id:'improve',   text:'I can keep improving.',    zone:'healthy'},
+  {id:'neverfail', text:'I never fail.',             zone:'unrealistic'},
+  {id:'hardwork',  text:'I worked hard.',            zone:'healthy'}
+];
+
+const evidenceItems = [
+  {id:'studied',   icon:'📚', text:'She studied the topic thoroughly',         positive:true},
+  {id:'practiced', icon:'🎤', text:'She practised speaking aloud multiple times', positive:true},
+  {id:'questions', icon:'❓', text:'She asked her teacher questions when unsure', positive:true},
+  {id:'failed',    icon:'😬', text:'She once failed a quiz last term',          positive:false},
+  {id:'improved',  icon:'📈', text:'Her grade improved since then',             positive:true}
+];
+
+const doubtThoughts = [
+  {id:'mess',    text:'"What if I mess up?"',         type:'doubt',      icon:'😰'},
+  {id:'judge',   text:'"Everyone will judge me."',    type:'doubt',      icon:'👀'},
+  {id:'forget',  text:'"I might forget something."', type:'doubt',      icon:'😟'},
+  {id:'ready',   text:'"I prepared for this."',       type:'confidence', icon:'💪'}
+];
+
+const confLevels = [
+  {range:[0,20],   emoji:'😰', label:'Doubting', desc:'Strong self-doubt is present. The inner critic is very loud and the belief in ability is low.', bg:'rgba(224,104,120,0.10)', border:'rgba(168,56,72,0.28)', col:'var(--rose-dark)'},
+  {range:[21,45],  emoji:'😕', label:'Unsure', desc:'Mixed feelings - some doubt and some belief coexisting. A common and honest starting point.', bg:'rgba(232,168,32,0.10)', border:'rgba(176,120,8,0.28)', col:'var(--gold-dark)'},
+  {range:[46,70],  emoji:'🙂', label:'Building', desc:'Confidence is growing. Evidence and preparation are beginning to quiet the inner critic.', bg:'rgba(61,184,137,0.09)', border:'rgba(39,135,95,0.25)', col:'var(--mint-dark)'},
+  {range:[71,90],  emoji:'😊', label:'Solid', desc:'Strong grounded confidence. Based on preparation and self-knowledge rather than arrogance.', bg:'rgba(74,159,212,0.10)', border:'rgba(42,111,160,0.28)', col:'var(--sky-dark)'},
+  {range:[91,100], emoji:'💪', label:'Strong and Ready', desc:'Full earned confidence. Prepared, grounded, and ready to act even with some uncertainty.', bg:'rgba(232,168,32,0.12)', border:'rgba(176,120,8,0.32)', col:'var(--gold-dark)'}
+];
+
+const innerVoices = [
+  {
+    id:'negative', icon:'🔴', text:'"I\'m probably going to embarrass myself up there."',
+    sub:'Predicting failure without evidence - maximum doubt',
+    quality:'harmful', doubtLevel:88, confLevel:10,
+    outcome:{title:'The Self-Fulfilling Prophecy Risk', body:'When the inner voice predicts failure, the brain begins preparing for it. Focus shifts from the content to self-monitoring. Heart rate increases. The very anxiety the thought predicts becomes more likely. This is called a self-fulfilling prophecy - the belief shapes the reality.', tip:'Research says: Negative outcome predictions activate the amygdala and impair access to the prefrontal cortex - the part of the brain responsible for clear thinking and recall.'}
+  },
+  {
+    id:'neutral', icon:'🟡', text:'"I hope this goes okay. I\'ll just try my best."',
+    sub:'Passive hope without activating real confidence',
+    quality:'ok', doubtLevel:45, confLevel:55,
+    outcome:{title:'Passive Hope is a Start', body:'This voice is gentler and less destructive than prediction of failure. It reduces anxiety somewhat. However, it is not grounded in specific evidence, and "hope" is an uncertain feeling rather than a confident one. It offers comfort without the full strength of earned confidence.', tip:'Tip: Vague reassurance ("I hope it goes okay") is less powerful than specific evidence ("I practised this five times and I know this material").'}
+  },
+  {
+    id:'positive', icon:'🟢', text:'"I prepared carefully. I may feel nervous, but I can handle this."',
+    sub:'Evidence-based, honest, and growth-ready',
+    quality:'best', doubtLevel:22, confLevel:80,
+    outcome:{title:'Earned Confidence Voice', body:'This statement does two powerful things simultaneously: it acknowledges the reality (nervousness is real and valid) while grounding the response in evidence (preparation is real). It does not deny fear - it reframes the relationship with it. The nervous feeling becomes a signal of importance, not a sign of incompetence.', tip:'Science says: Specific self-talk that references genuine preparation activates the brain\'s executive function, improving access to stored knowledge and reducing performance anxiety.'}
+  }
+];
+
+const strengthOptions = [
+  {id:'curious',   icon:'🔭', label:'Curious'},
+  {id:'persistent',icon:'🏃', label:'Persistent'},
+  {id:'kind',      icon:'💛', label:'Kind'},
+  {id:'listener',  icon:'👂', label:'Good Listener'},
+  {id:'creative',  icon:'🎨', label:'Creative'},
+  {id:'responsible',icon:'📋',label:'Responsible'},
+  {id:'solver',    icon:'🧩', label:'Problem Solver'},
+  {id:'brave',     icon:'🦁', label:'Brave'}
+];
+
+const omarThoughts = [
+  {id:'doubt1', text:'"What if I am not good enough and they do not pick me?"', type:'doubt', icon:'😰'},
+  {id:'doubt2', text:'"Everyone else has been playing longer than me."', type:'doubt', icon:'😟'},
+  {id:'ev1',    text:'"I have been training three times a week for two months."', type:'evidence', icon:'✅'},
+  {id:'ev2',    text:'"My coach said my technique has improved noticeably."', type:'evidence', icon:'📈'}
+];
+
+const omarVoices = [
+  {id:'dread', text:'"I am going to freeze and make a fool of myself."', quality:'harmful', icon:'🔴'},
+  {id:'hope',  text:'"I hope I do well. I will just see what happens."', quality:'ok', icon:'🟡'},
+  {id:'ready', text:'"I trained hard. I may be nervous, but I am ready to show what I can do."', quality:'best', icon:'🟢'}
+];
+
+const omarActions = [
+  {id:'avoid',  icon:'🚪', text:'Avoid the tryout completely', sub:'Do not go - the risk of failure is too great', quality:'harmful'},
+  {id:'attend', icon:'😐', text:'Attend but expect to fail', sub:'Go, but already believe the outcome will be bad', quality:'ok'},
+  {id:'full',   icon:'🎯', text:'Attend and try with full effort', sub:'Show up prepared, give everything, accept the outcome', quality:'best'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is the MOST important foundation of real, lasting confidence?',
+    options:[
+      {icon:'📚', text:'Evidence of preparation and genuine effort - knowing you have done the work', correct:true},
+      {icon:'✨', text:'Always feeling certain and never experiencing doubt or nervousness', correct:false},
+      {icon:'🗣️', text:'Telling yourself you are great even if you have not prepared', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right! Real confidence is built on evidence - actual preparation, practice, and effort. It is not a feeling that appears magically. When you know you have done the work, that knowledge becomes the foundation that holds you steady even when nervousness is present.',
+      incorrect:'Not quite. Real confidence is built on evidence - preparation, practice, and genuine effort. Constant certainty is impossible and unrealistic. Empty affirmations without preparation create a fragile, surface-level confidence that crumbles under pressure. The answer is evidence-based confidence.'
+    }
+  },
+  {
+    q:'Question 2: Is true confidence the complete ABSENCE of fear or nervousness?',
+    options:[
+      {icon:'✅', text:'No - confidence means acting despite uncertainty, while acknowledging honest feelings', correct:true},
+      {icon:'❌', text:'Yes - if you feel nervous or fearful, that means you are not truly confident', correct:false},
+      {icon:'🤔', text:'It depends - confident people should never feel nervous in familiar situations', correct:false}
+    ],
+    feedback:{
+      correct:'Correct! Confidence is not the absence of fear - it is the willingness to act in spite of it. Even the most accomplished performers experience nerves. The difference is that confident people interpret nervousness as a signal of importance rather than evidence of incompetence.',
+      incorrect:'Not this one. Confidence does not mean feeling no fear - it means acting despite uncertainty. Nervousness is a normal, healthy response to things that matter to us. Truly confident people feel nervous and go forward anyway, using their preparation as an anchor.'
+    }
+  },
+  {
+    q:'Question 3: Why is SPECIFIC self-talk (referencing your actual preparation) more powerful than general reassurance?',
+    options:[
+      {icon:'💬', text:'It is not - kind general words like "you will be fine" are equally effective', correct:false},
+      {icon:'🧠', text:'Specific evidence-based thoughts activate the brain\'s executive function and provide real anchors during stress', correct:true},
+      {icon:'😴', text:'Specific thoughts take too long to think about when you are nervous', correct:false}
+    ],
+    feedback:{
+      correct:'Spot on! Specific, evidence-based self-talk ("I practised this five times and improved my grade") is significantly more effective than vague reassurance. It activates the brain\'s prefrontal cortex - the rational, problem-solving region - rather than just soothing the emotional brain with empty words.',
+      incorrect:'Not quite. Specific preparation-based self-talk is considerably more powerful than vague reassurance because it activates the brain\'s executive thinking region and provides genuine evidence. "You will be fine" is comforting but empty. "I studied for three evenings and I know this material" gives the brain a real foundation to stand on.'
+    }
+  }
+];
+
+/* ============================================= UTILITIES ============================================= */
+function backBtn(stage, label) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + stage + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + label + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟣', 3:'⭐'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getConfLevel(v) {
+  return confLevels.find(function(l){ return v >= l.range[0] && v <= l.range[1]; });
+}
+
+/* ============================================= PROGRESS ============================================= */
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ============================================= RENDER ROUTER ============================================= */
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  var fns = [null, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ============================================= STAGE BUILDERS ============================================= */
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand Confidence') +
+    '<div class="stage-label"><span class="dot"></span> Quest Entry</div>' +
+    '<h2>What Is Confidence Really?</h2>' +
+    '<p>Welcome to the Confidence Builder Quest. You are about to learn something important: confidence is not a personality trait some people are born with and others are not. It is a set of skills - learnable, buildable, and strengthened through specific practices. And it is not what most people think it is.</p>' +
+    '<p>Your first case has just arrived.</p>' +
+    '<div class="story-box" data-icon="🎤">' +
+      '<p><span>Hana</span> is eleven years old and genuinely loves science. For the past two weeks she has been building her project on ecosystems - researching, designing, practising. Today is the day. She stands in the corridor outside the science room, holding her carefully printed notes. And then, without warning, her mind switches tracks: Her hands begin to tremble slightly. Her chest tightens. Her heart beats faster. And a thought arrives, quietly at first, then louder:</p>' +
+    '</div>' +
+    '<div class="thought-highlight"><p>"What if I forget everything the moment I stand up? What if everyone thinks I am not actually smart?"</p></div>' +
+    '<p>Hana has prepared. She knows her material. And yet here she is - shaky, tight, doubting herself. Your mission: help Hana understand what is actually happening, and discover what real confidence looks like.</p>' +
+    '<div class="feedback-msg info-msg">💡 <strong>Core concept:</strong> Confidence is not the absence of fear. It is not the belief that everything will go perfectly. Real confidence is the decision to act despite uncertainty - grounded in the knowledge that you have prepared and that you are capable of handling whatever happens.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Confidence Quest</button>' +
+  '</div>';
+}
+
+function s2() {
+  var bankItems = sortItems.map(function(item) {
+    var placed = sortPlacements[item.id];
+    return '<div class="sort-card' + (placed ? ' placed' : '') + '" id="scard-' + item.id + '" onclick="handleSortClick(\'' + item.id + '\')">' + item.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand Confidence') +
+    backBtn(1, 'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Sorting Challenge</div>' +
+    '<h2>Confidence vs Arrogance vs Wishful Thinking</h2>' +
+    '<p>Not all positive-sounding thoughts about ourselves are the same. Real, healthy confidence is grounded in evidence and honest self-assessment. Arrogance involves putting others down or claiming superiority. Unrealistic thinking involves beliefs disconnected from reality. Sort the five statements into their correct categories by clicking a card and then clicking where it belongs.</p>' +
+    '<div class="sort-bank" id="sortBank">' + bankItems + '</div>' +
+    '<div id="sortClickHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a card above, then click a zone below to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-healthy" onclick="placeInZone(\'healthy\')">' +
+        '<div class="sz-title">Healthy Confidence</div>' +
+        '<div class="sz-items" id="zone-healthy"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-arrogance" onclick="placeInZone(\'arrogance\')">' +
+        '<div class="sz-title">Arrogance</div>' +
+        '<div class="sz-items" id="zone-arrogance"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="sort-zones" style="margin-top:0;grid-template-columns:1fr">' +
+      '<div class="sort-zone zone-unrealistic" onclick="placeInZone(\'unrealistic\')">' +
+        '<div class="sz-title">Unrealistic Thinking</div>' +
+        '<div class="sz-items" id="zone-unrealistic"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sortFeedback"></div>' +
+    '<button class="btn-primary" id="sortNextBtn" onclick="renderStage(3)" disabled>Next: Collect Evidence -></button>' +
+  '</div>';
+}
+
+function s3() {
+  evidenceConfirmed = false;
+  var cards = evidenceItems.map(function(e) {
+    var sel = selectedEvidence.has(e.id);
+    return '<div class="evidence-card' + (sel ? ' ev-selected' : '') + '" id="ev-' + e.id + '" onclick="toggleEvidence(\'' + e.id + '\',' + e.positive + ')">' +
+      '<div class="ev-check">✓</div>' +
+      '<span class="ev-icon">' + e.icon + '</span>' +
+      '<div class="ev-text">' + e.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand Confidence') +
+    backBtn(2, 'Back to Sorting') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Evidence Collector</div>' +
+    '<h2>Build Hana\'s Evidence File</h2>' +
+    '<p>Real confidence is not a feeling that appears out of nowhere. It is built on <strong>evidence</strong> - actual facts about what you have done, how you have prepared, and what you have already demonstrated you can do. The brain trusts evidence far more than reassurance.</p>' +
+    '<p>Look at the cards below. Select all the pieces of genuine evidence that support Hana\'s ability to deliver her presentation successfully. Think carefully - not everything listed is a positive confidence anchor.</p>' +
+    '<div class="evidence-grid">' + cards + '</div>' +
+    '<div id="evidenceFeedback"></div>' +
+    '<button class="btn-primary" id="evidenceNextBtn" onclick="renderStage(4)" disabled>Next: Self-Doubt Detector -></button>' +
+  '</div>';
+}
+
+function s4() {
+  doubtTagged = {}; doubtComplete = false;
+  var cards = doubtThoughts.map(function(t) {
+    return '<button class="doubt-card" id="dc-' + t.id + '" onclick="tagDoubt(\'' + t.id + '\',\'' + t.type + '\')">' +
+      '<span class="dc-icon">' + t.icon + '</span>' +
+      '<div><div class="dc-text">' + t.text + '</div><div class="dc-sub">What category does this belong to?</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand Confidence') +
+    backBtn(3, 'Back to Evidence') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Doubt Detector</div>' +
+    '<h2>Which Thoughts Help and Which Hurt?</h2>' +
+    '<p>Inside Hana\'s mind right now, several thoughts are competing for attention. Some of them increase self-doubt and make the nervous feeling stronger. One of them actually supports confidence and grounds her. Tap each thought to identify whether it belongs in the <strong>Doubt</strong> category or the <strong>Confidence</strong> category.</p>' +
+    '<div class="doubt-grid">' + cards + '</div>' +
+    '<div id="doubtFeedback"></div>' +
+    '<button class="btn-primary" id="doubtNextBtn" onclick="renderStage(5)" disabled>Next: Confidence Meter -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand Confidence') +
+    backBtn(4, 'Back to Doubt Detector') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Confidence Meter</div>' +
+    '<h2>Measure the Shift</h2>' +
+    '<p>Before you moved through the evidence and identified the doubt thoughts, where was Hana\'s confidence? And after focusing on what she actually knows - that she studied, practised, and improved - where does it shift to?</p>' +
+    '<p>Use the slider to set Hana\'s confidence level after she has reminded herself of her genuine preparation. Notice how focusing on evidence changes the emotional reading on the meter.</p>' +
+    '<div class="conf-meter-wrap">' +
+      '<div class="conf-meter-labels"><span>😰 Doubting</span><span>😕 Unsure</span><span>💪 Strong</span></div>' +
+      '<input type="range" class="conf-slider" id="confSlider" min="0" max="100" value="50" oninput="updateConfDisplay(this.value)"/>' +
+    '</div>' +
+    '<div class="conf-display" id="confDisplay">' +
+      '<span class="cd-emoji" id="cdEmoji">🙂</span>' +
+      '<div class="cd-label" id="cdLabel">Building</div>' +
+      '<div class="cd-desc" id="cdDesc">Confidence is growing. Evidence and preparation are beginning to quiet the inner critic.</div>' +
+    '</div>' +
+    '<br/>' +
+    '<div class="feedback-msg mint-msg">🌱 <strong>Notice:</strong> When Hana reminds herself of the evidence - the studying, the practising, the asking questions and improving - her confidence level on the meter genuinely shifts. This is not pretending. This is accurately recalibrating the inner voice based on what is actually true.</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Confidence Formula -></button>' +
+  '</div>';
+}
+
+function s6() {
+  return '<div class="stage-card">' +
+    actBanner(1, 'Act 1 - Understand Confidence') +
+    backBtn(5, 'Back to Confidence Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Formula</div>' +
+    '<h2>The Confidence Formula</h2>' +
+    '<p>You have now explored all three essential ingredients of real, earned confidence. They work together as a system - each one making the others stronger. When all three are present, the nervous feeling does not disappear, but it stops being in charge.</p>' +
+    '<div class="formula-box">' +
+      '<div class="formula-row">' +
+        '<span class="fr-icon">📝</span>' +
+        '<div><div class="fr-title">Preparation</div><div class="fr-desc">Doing the actual work - studying, practising, researching, rehearsing. This is the bedrock. Without preparation, affirmations are empty.</div></div>' +
+      '</div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row">' +
+        '<span class="fr-icon">🔍</span>' +
+        '<div><div class="fr-title">Evidence</div><div class="fr-desc">Deliberately collecting and recalling proof of your capability - past improvements, specific efforts, moments you handled something difficult. Evidence is what the brain trusts.</div></div>' +
+      '</div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row">' +
+        '<span class="fr-icon">💬</span>' +
+        '<div><div class="fr-title">Balanced Self-Talk</div><div class="fr-desc">An inner voice that is honest about the challenge, acknowledges real feelings, and grounds itself in preparation rather than prediction. Not "this will be perfect" but "I am ready to try."</div></div>' +
+      '</div>' +
+      '<div class="formula-equals">= REAL CONFIDENCE</div>' +
+      '<div class="formula-row formula-result">' +
+        '<span class="fr-icon">🌟</span>' +
+        '<div><div class="fr-title">Earned Confidence</div><div class="fr-desc">Not arrogance. Not wishful thinking. The quiet, grounded knowledge that you have done what you can, you have genuine strengths, and you are capable of handling what comes - even if it is imperfect.</div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg gold-msg">🏅 <strong>Badge Progress:</strong> Evidence Collector Level 1 - almost earned! Continue to Act 2 to build your inner strength...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Build Inner Strength -></button>' +
+  '</div>';
+}
+
+function s7() {
+  voice1Locked = false; voice1Choice = null;
+  var cards = innerVoices.map(function(v) {
+    return '<button class="voice-btn" id="voice-' + v.id + '" onclick="chooseVoice1(\'' + v.id + '\')">' +
+      '<span class="v-icon">' + v.icon + '</span>' +
+      '<div><div class="v-text">' + v.text + '</div><div class="v-sub">' + v.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Build Inner Strength') +
+    backBtn(6, 'Back to Formula') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Inner Voice</div>' +
+    '<h2>Which Voice Does Hana Choose?</h2>' +
+    '<p>The moment before she walks into the room, Hana has a final choice about the inner voice she listens to. Three options are available. Each one will create a measurable difference in her confidence and doubt levels - and in what actually happens when she stands up to present. Which voice would you give her?</p>' +
+    '<div class="voice-grid" id="voiceGrid1">' + cards + '</div>' +
+    '<div id="voice1Outcome"></div>' +
+    '<div id="voice1NextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">-> Build the Strength Shield</button></div>' +
+  '</div>';
+}
+
+function s8() {
+  var cards = strengthOptions.map(function(s) {
+    var sel = selectedStrengths.has(s.id);
+    return '<div class="strength-card' + (sel ? ' str-selected' : '') + '" id="str-' + s.id + '" onclick="toggleStrength(\'' + s.id + '\')">' +
+      '<span class="sc-icon">' + s.icon + '</span>' +
+      '<div class="sc-label">' + s.label + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Build Inner Strength') +
+    backBtn(7, 'Back to Inner Voice') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Strength Shield</div>' +
+    '<h2>Build Your Personal Strength Shield</h2>' +
+    '<p>One of the most powerful confidence practices is the deliberate act of identifying and naming your genuine strengths. Not talents you wish you had - actual qualities that describe who you already are. A Strength Shield is a visual reminder of what you bring to any challenge.</p>' +
+    '<p>Choose exactly <strong>3 strengths</strong> from the options below that genuinely describe you. These will be placed on your personal Strength Shield.</p>' +
+    '<div class="strength-grid">' + cards + '</div>' +
+    '<div id="strengthShield" style="display:none"></div>' +
+    '<div id="strengthFeedback"></div>' +
+    '<button class="btn-primary" id="strengthNextBtn" onclick="renderStage(9)" disabled>Next: Rewrite the Doubt -></button>' +
+  '</div>';
+}
+
+function s9() {
+  rewriteValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Build Inner Strength') +
+    backBtn(8, 'Back to Strength Shield') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Rewrite the Doubt</div>' +
+    '<h2>Transform Hana\'s Doubt</h2>' +
+    '<p>Hana\'s original thought was: <em>"What if I forget everything? What if everyone thinks I am not smart?"</em> This thought is unhelpful because it predicts a specific failure, and because it makes a judgement about her intelligence based on a single possible mistake.</p>' +
+    '<div class="thought-highlight" style="margin-bottom:20px"><p>Original: "What if I forget everything? What if everyone thinks I am not smart?"</p></div>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'A strong rewrite should be:<br/>' +
+      '<strong>Honest</strong> - acknowledge that nervousness is real<br/>' +
+      '<strong>Evidence-based</strong> - reference what Hana actually did to prepare<br/>' +
+      '<strong>Forward-looking</strong> - point toward capability, not certainty<br/>' +
+      '<strong>Specific</strong> - grounded in this situation, not vague optimism' +
+    '</div>' +
+    '<label class="input-label">Write your reframed version of Hana\'s thought:</label>' +
+    '<textarea class="reflection-input" id="rewriteInput" oninput="checkRewrite(this.value)" placeholder="For example: I prepared carefully and I know this material. I may feel nervous when I stand up - that is normal when something matters to me. But nervousness is not the same as being unprepared. I studied, I practised, and I have real evidence that I can do this..." rows="5"></textarea>' +
+    '<div class="char-counter" id="rewriteCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why this matters:</strong> Writing a reframed confidence statement strengthens neural pathways associated with capability. The brain responds to written specificity more powerfully than to vague positive thinking - because specificity feels credible.</div>' +
+    '<button class="btn-primary" id="rewriteNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Confidence -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2, 'Act 2 - Build Inner Strength') +
+    backBtn(9, 'Back to Rewrite') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Effort Over Perfection</h2>' +
+    '<p>There is a crucial difference between two types of confidence: <strong>perfection-based confidence</strong> ("I will be good only if everything goes perfectly") and <strong>effort-based confidence</strong> ("I have prepared carefully and I am ready to try"). These two beliefs produce dramatically different results under pressure.</p>' +
+    '<p>Perfection-based confidence collapses the moment something goes slightly wrong. Effort-based confidence holds steady because it is anchored in something you actually control - the work you did.</p>' +
+    '<p>Answer all three questions in your response:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Why does focusing on effort and preparation build more durable confidence than focusing on perfection?<br/>' +
+      '2. What happens to perfection-based confidence the moment something goes wrong?<br/>' +
+      '3. How does this understanding change the way you would talk to yourself before something difficult?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about what happens inside someone who believes they must be perfect versus someone who believes they have prepared well and can handle whatever comes..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg violet" style="background:rgba(78,56,144,0.08);color:var(--violet-dark);border:1.5px solid rgba(78,56,144,0.22);margin-bottom:16px">🛡️ <strong>Badge Progress:</strong> Strength Builder Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>-> Continue to Act 3: Real Life Transfer</button>' +
+  '</div>';
+}
+
+function s11() {
+  omarDoubtDone = false; omarEvidenceDone = false; omarVoiceDone = false; omarActionDone = false;
+  var thoughts = omarThoughts.map(function(t) {
+    return '<button class="omar-thought" id="ot-' + t.id + '" onclick="tagOmarThought(\'' + t.id + '\',\'' + t.type + '\')">' +
+      '<span class="ot-icon">' + t.icon + '</span>' +
+      '<div><div class="ot-text">' + t.text + '</div><div class="ot-type">Click to identify: Doubt thought or Evidence thought?</div></div>' +
+    '</button>';
+  }).join('');
+  var voices = omarVoices.map(function(v) {
+    return '<button class="voice-btn" id="omar-voice-' + v.id + '" onclick="selectOmarVoice(\'' + v.id + '\',\'' + v.quality + '\')">' +
+      '<span class="v-icon">' + v.icon + '</span>' +
+      '<div><div class="v-text">' + v.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Transfer to Real Life') +
+    backBtn(10, 'Back to Act 2') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Omar\'s Tryout Challenge</h2>' +
+    '<p>The skills you have built are now going to be applied in a brand new situation with a different character. This is the true test of learning - transferring a skill beyond where you first encountered it.</p>' +
+    '<div class="story-box" data-icon="⚽">' +
+      '<p><span class="sky">Omar</span> is twelve years old and has spent two months training seriously for his school football team tryout. He has attended every session, listened carefully to his coach, and put in genuine effort. Today is the day. Standing at the edge of the pitch waiting to be called, he hears the other boys warming up - some of them have clearly been playing for years. His stomach tightens. And his mind starts working:</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify doubt thoughts vs evidence thoughts</div>' +
+    '<p>Tag each thought as either a <strong>Doubt</strong> thought (increases self-doubt) or an <strong>Evidence</strong> thought (supports real confidence).</p>' +
+    '<div class="omar-thoughts">' + thoughts + '</div>' +
+    '<div id="omarThoughtFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Choose Omar\'s inner voice</div>' +
+    '<div id="omarVoiceWrap" style="opacity:0.4;pointer-events:none">' +
+      '<div class="voice-grid">' + voices + '</div>' +
+    '</div>' +
+    '<div id="omarVoiceFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - What should Omar DO?</div>' +
+    '<div id="omarActionWrap" style="opacity:0.4;pointer-events:none">' +
+      '<div class="omar-actions">' +
+        omarActions.map(function(a) {
+          return '<button class="omar-action" id="oa-' + a.id + '" onclick="selectOmarAction(\'' + a.id + '\',\'' + a.quality + '\')">' +
+            '<span class="oa-icon">' + a.icon + '</span>' +
+            '<div><div class="oa-text">' + a.text + '</div><div class="oa-sub">' + a.sub + '</div></div>' +
+          '</button>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+    '<div id="omarActionFeedback"></div>' +
+    '<button class="btn-primary" id="omarNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Confidence in Action -></button>' +
+  '</div>';
+}
+
+function s12() {
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Transfer to Real Life') +
+    backBtn(11, 'Back to Omar\'s Scenario') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 12 - Confidence in Action</div>' +
+    '<h2>The Day of the Tryout</h2>' +
+    '<p>Omar has classified his thoughts, identified his evidence, and chosen a powerful inner voice. Now there is only one question left: what does he actually do? Confidence without action stays invisible. The moment Omar walks onto that pitch - nervous, prepared, uncertain of the outcome - is the moment the skill becomes real.</p>' +
+    '<p>Three paths are available to him. Which one does confidence require?</p>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">💡 Remember: Confidence is not certainty about the outcome. It is the decision to act despite not knowing exactly how things will go. It requires courage, not guarantees.</div>' +
+    '<div class="omar-actions">' +
+      '<button class="omar-action" id="oa2-avoid" onclick="selectAction2(\'avoid\',\'harmful\')">' +
+        '<span class="oa-icon">🚪</span><div><div class="oa-text">Decide not to go after all - the risk feels too high</div><div class="oa-sub">Choosing safety over growth - avoidance</div></div>' +
+      '</button>' +
+      '<button class="omar-action" id="oa2-attend" onclick="selectAction2(\'attend\',\'ok\')">' +
+        '<span class="oa-icon">😐</span><div><div class="oa-text">Go, but spend the whole time expecting to fail</div><div class="oa-sub">Present physically but checked out mentally - passive attendance</div></div>' +
+      '</button>' +
+      '<button class="omar-action" id="oa2-full" onclick="selectAction2(\'full\',\'best\')">' +
+        '<span class="oa-icon">🎯</span><div><div class="oa-text">Go, give 100% effort, and accept whatever the outcome is</div><div class="oa-sub">Full engagement - the definition of brave performance</div></div>' +
+      '</button>' +
+    '</div>' +
+    '<div id="action2Feedback"></div>' +
+    '<button class="btn-primary" id="action2NextBtn" onclick="renderStage(13)" disabled style="margin-top:4px">Next: Skill Check -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="quiz-opt-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" id="quiz-q-' + i + '" style="animation-delay:' + (i * 0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="quiz-feedback-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Transfer to Real Life') +
+    backBtn(12, 'Back to Action') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have worked through all three acts of the Confidence Builder Quest with real depth. Let\'s see how firmly the core ideas have taken root. Answer all three questions - your responses reveal how deeply you now understand what real confidence actually is.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Quest!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Quest Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3, 'Act 3 - Quest Complete!') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Confidence Builder!</h2>' +
+    '<p>You completed the full Confidence Builder Quest - all 3 Acts, 14 stages, and a genuine journey into what real inner strength actually looks like. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔍</span><div class="b-title">Evidence Collector</div><div class="b-sub">Built confidence on proof</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🛡️</span><div class="b-title">Strength Builder</div><div class="b-sub">Named and owned strengths</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🎯</span><div class="b-title">Brave Performer</div><div class="b-sub">Chose action despite doubt</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🔍</span><div><div class="sk-title">Evidence-Based Confidence</div><div class="sk-desc">Real confidence is not a feeling that arrives uninvited. It is built deliberately by collecting and recalling genuine evidence of preparation, effort, and past capability. The brain trusts specific evidence far more than vague reassurance - this is the foundation of earned confidence.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">💬</span><div><div class="sk-title">The Power of Balanced Self-Talk</div><div class="sk-desc">The inner voice you give yourself before a challenge has measurable neurological effects. Evidence-based, honest self-talk - acknowledging nervousness while grounding in preparation - activates clearer thinking and better performance than either self-criticism or empty positivity.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🎯</span><div><div class="sk-title">Confidence Requires Brave Action</div><div class="sk-desc">Confidence without action remains invisible - to you and to the world. The act of showing up, trying fully, and accepting the outcome regardless of certainty is what transforms inner belief into outer competence. Every brave attempt - regardless of the result - builds the evidence base for the next one.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="⭐" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Every confident person you admire was once exactly where you are - uncertain, doubting, nervous. The difference is not that they stopped feeling those things. The difference is that they learned to act alongside them. Confidence is a muscle. Every time you prepare carefully, remind yourself of your evidence, choose a better inner voice, and take the brave action anyway - you make it stronger. You have started. Keep building. Your strength is real. 🌟' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--mint-dark),var(--gold-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartQuest()" style="width:100%;justify-content:center;display:flex">Restart the Quest</button>' +
+  '</div>';
+}
+
+/* ============================================= POST-RENDER RESTORE ============================================= */
+function postRender(n) {
+  if (n === 2) {
+    restoreSortUI();
+  }
+  if (n === 3) {
+    selectedEvidence.forEach(function(id) {
+      var el = document.getElementById('ev-' + id);
+      if (el) el.classList.add('ev-selected');
+    });
+    checkEvidenceCount();
+  }
+  if (n === 4) {
+    Object.keys(doubtTagged).forEach(function(id) {
+      var el = document.getElementById('dc-' + id);
+      if (el) el.classList.add(doubtTagged[id] === 'doubt' ? 'dc-doubt' : 'dc-confidence');
+    });
+    checkDoubtComplete();
+  }
+  if (n === 5) updateConfDisplay(confLevel);
+  if (n === 8) {
+    selectedStrengths.forEach(function(id) {
+      var el = document.getElementById('str-' + id);
+      if (el) el.classList.add('str-selected');
+    });
+    updateShield();
+  }
+  if (n === 9 && rewriteText) {
+    var ta = document.getElementById('rewriteInput');
+    if (ta) ta.value = rewriteText;
+    checkRewrite(rewriteText);
+  }
+  if (n === 10 && reflectText) {
+    var ta2 = document.getElementById('reflectInput');
+    if (ta2) ta2.value = reflectText;
+    checkReflect(reflectText);
+  }
+}
+
+/* ============================================= ACT 1 INTERACTIONS ============================================= */
+
+// SORT ACTIVITY
+var sortSelected = null;
+function handleSortClick(id) {
+  if (sortPlacements[id]) return;
+  sortSelected = id;
+  document.querySelectorAll('.sort-card').forEach(function(el) { el.style.outline = 'none'; });
+  var el = document.getElementById('scard-' + id);
+  if (el) el.style.outline = '3px solid var(--mint-dark)';
+  var hint = document.getElementById('sortClickHint');
+  if (hint) hint.textContent = 'Now click a zone below to place: "' + sortItems.find(function(s){ return s.id === id; }).text + '"';
+}
+
+function placeInZone(zone) {
+  if (!sortSelected) return;
+  var item = sortItems.find(function(s){ return s.id === sortSelected; });
+  if (!item) return;
+  sortPlacements[sortSelected] = zone;
+  var el = document.getElementById('scard-' + sortSelected);
+  if (el) { el.classList.add('placed'); el.style.outline = 'none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var correct = item.zone === zone;
+    zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeFromZone(\'' + sortSelected + '\',\'' + zone + '\')">×</span></div>';
+  }
+  var hint = document.getElementById('sortClickHint');
+  if (hint) hint.textContent = 'Click another card to continue sorting';
+  sortSelected = null;
+  checkSortComplete();
+}
+
+function removeFromZone(id, zone) {
+  delete sortPlacements[id];
+  var el = document.getElementById('scard-' + id);
+  if (el) { el.classList.remove('placed'); }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) {
+    var items = zoneEl.querySelectorAll('.sz-item');
+    items.forEach(function(item) { if (item.textContent.includes(sortItems.find(function(s){ return s.id === id; }).text)) item.remove(); });
+  }
+  checkSortComplete();
+}
+
+function restoreSortUI() {
+  Object.keys(sortPlacements).forEach(function(id) {
+    var zone = sortPlacements[id];
+    var item = sortItems.find(function(s){ return s.id === id; });
+    var el = document.getElementById('scard-' + id);
+    if (el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-' + zone);
+    if (zoneEl && item) {
+      var correct = item.zone === zone;
+      zoneEl.innerHTML += '<div class="sz-item">' + (correct ? '✅' : '❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeFromZone(\'' + id + '\',\'' + zone + '\')">×</span></div>';
+    }
+  });
+  checkSortComplete();
+}
+
+function checkSortComplete() {
+  var total = Object.keys(sortPlacements).length;
+  var correct = sortItems.filter(function(item){ return sortPlacements[item.id] === item.zone; }).length;
+  var fb = document.getElementById('sortFeedback');
+  var nb = document.getElementById('sortNextBtn');
+  if (total < sortItems.length) {
+    if (fb) fb.innerHTML = total > 0 ? '<div class="feedback-msg gold-msg">' + total + ' of 5 placed. Keep going - sort all five cards.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  sortComplete = correct === sortItems.length;
+  if (sortComplete) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All correct! Healthy confidence is grounded in real effort and growth ("I prepared", "I can improve"). Arrogance puts others down ("I am better than everyone"). Unrealistic thinking disconnects from reality ("I never fail"). The distinction matters enormously for mental wellbeing and genuine performance.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Not all placements are correct (' + correct + ' of 5 right). Remove the incorrect items (click the × symbol) and try again. Hint: healthy confidence acknowledges both effort and room to grow - it does not claim superiority or impossibility.</div>';
+  }
+  if (nb) nb.disabled = !sortComplete;
+}
+
+function toggleEvidence(id, positive) {
+  var el = document.getElementById('ev-' + id);
+  if (selectedEvidence.has(id)) {
+    selectedEvidence.delete(id);
+    el.classList.remove('ev-selected');
+    el.classList.remove('ev-negative');
+  } else {
+    selectedEvidence.add(id);
+    if (positive) el.classList.add('ev-selected');
+    else el.classList.add('ev-negative');
+  }
+  checkEvidenceCount();
+}
+
+function checkEvidenceCount() {
+  var positiveSelected = Array.from(selectedEvidence).filter(function(id) {
+    return evidenceItems.find(function(e){ return e.id === id; }).positive;
+  }).length;
+  var negativeSelected = selectedEvidence.has('failed');
+  var fb = document.getElementById('evidenceFeedback');
+  var nb = document.getElementById('evidenceNextBtn');
+  if (positiveSelected >= 3 && !negativeSelected) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Excellent evidence file! The four positive items (studying, practising, asking questions, improving her grade) are all genuine evidence of Hana\'s capability. The failed quiz, by contrast, does not belong in a confidence file unless paired with the evidence that she then improved - which is already captured in the fourth item.</div>';
+    if (!evidenceConfirmed) { evidenceConfirmed = true; if (nb) nb.disabled = false; }
+  } else if (negativeSelected) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg amber-msg" style="background:rgba(232,168,32,0.12);color:var(--gold-dark);border:1.5px solid rgba(176,120,8,0.25)">The failed quiz by itself is not strong confidence evidence. However, her grade improvement since then IS powerful evidence - it shows growth and resilience. Remove the failed quiz card and keep the improvement card instead.</div>';
+    if (nb) nb.disabled = true;
+  } else if (positiveSelected > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg gold-msg">' + positiveSelected + ' pieces of evidence collected. Look for all four positive evidence items.</div>';
+    if (nb) nb.disabled = true;
+  } else {
+    if (fb) fb.innerHTML = '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function tagDoubt(id, type) {
+  if (doubtTagged[id]) return;
+  doubtTagged[id] = type;
+  var el = document.getElementById('dc-' + id);
+  if (el) el.classList.add(type === 'doubt' ? 'dc-doubt' : 'dc-confidence');
+  checkDoubtComplete();
+}
+
+function checkDoubtComplete() {
+  var tagged = Object.keys(doubtTagged).length;
+  var correctDoubt = ['mess','judge','forget'].filter(function(id){ return doubtTagged[id] === 'doubt'; }).length;
+  var correctConf = doubtTagged['ready'] === 'confidence' ? 1 : 0;
+  var fb = document.getElementById('doubtFeedback');
+  var nb = document.getElementById('doubtNextBtn');
+  if (tagged < doubtThoughts.length) {
+    if (fb) fb.innerHTML = tagged > 0 ? '<div class="feedback-msg gold-msg">Keep going - classify all four thoughts.</div>' : '';
+    if (nb) nb.disabled = true;
+    return;
+  }
+  var allCorrect = correctDoubt === 3 && correctConf === 1;
+  doubtComplete = allCorrect;
+  if (allCorrect) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Perfectly classified! The three "what if" thoughts are all doubt thoughts - they predict negative outcomes and fuel anxiety without any evidence. "I prepared for this" is the confidence thought - it is grounded in an actual fact and redirects attention to capability rather than catastrophe.</div>';
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Some classifications need adjusting. The doubt thoughts all begin with "what if" and predict failure. The confidence thought references something Hana actually did. (Once tagged, thoughts cannot be changed in this exercise.)</div>';
+  }
+  if (nb) nb.disabled = !allCorrect;
+}
+
+function updateConfDisplay(val) {
+  confLevel = parseInt(val);
+  var level = confLevels.find(function(l){ return confLevel >= l.range[0] && confLevel <= l.range[1]; });
+  if (!level) return;
+  var em = document.getElementById('cdEmoji');
+  var lb = document.getElementById('cdLabel');
+  var ds = document.getElementById('cdDesc');
+  var disp = document.getElementById('confDisplay');
+  if (em) em.textContent = level.emoji;
+  if (lb) { lb.textContent = level.label; lb.style.color = level.col; }
+  if (ds) ds.textContent = level.desc;
+  if (disp) { disp.style.background = level.bg; disp.style.borderColor = level.border; }
+}
+
+/* ============================================= ACT 2 INTERACTIONS ============================================= */
+function buildVoiceMeterHTML(v, prefix) {
+  return '<div class="meters-wrap">' +
+    '<div class="meter-row"><div class="meter-label-row"><span>😰 Doubt Level</span><span id="' + prefix + 'DLvl">0%</span></div><div class="meter-track"><div class="meter-fill doubt" id="' + prefix + 'DFill"></div></div></div>' +
+    '<div class="meter-row"><div class="meter-label-row"><span>💪 Confidence Level</span><span id="' + prefix + 'CLvl">0%</span></div><div class="meter-track"><div class="meter-fill confidence" id="' + prefix + 'CFill"></div></div></div>' +
+  '</div>' +
+  '<div class="outcome-box ' + v.quality + '"><div class="outcome-title">' + v.outcome.title + '</div>' + v.outcome.body + '<div class="outcome-tip">' + v.outcome.tip + '</div></div>';
+}
+
+function chooseVoice1(id) {
+  if (voice1Locked) return;
+  voice1Locked = true; voice1Choice = id;
+  var chosen = innerVoices.find(function(v){ return v.id === id; });
+  innerVoices.forEach(function(v) {
+    var el = document.getElementById('voice-' + v.id);
+    if (el) { if (v.id === id) el.classList.add('sel-' + v.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('voice1Outcome');
+  if (out) out.innerHTML = buildVoiceMeterHTML(chosen, 'v1');
+  setTimeout(function() {
+    var df = document.getElementById('v1DFill'), cf = document.getElementById('v1CFill');
+    var dl = document.getElementById('v1DLvl'), cl = document.getElementById('v1CLvl');
+    if (df) df.style.width = chosen.doubtLevel + '%';
+    if (cf) cf.style.width = chosen.confLevel + '%';
+    if (dl) dl.textContent = chosen.doubtLevel + '%';
+    if (cl) cl.textContent = chosen.confLevel + '%';
+  }, 150);
+  var nw = document.getElementById('voice1NextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function toggleStrength(id) {
+  var el = document.getElementById('str-' + id);
+  if (selectedStrengths.has(id)) {
+    selectedStrengths.delete(id);
+    if (el) el.classList.remove('str-selected');
+  } else {
+    if (selectedStrengths.size >= 3) {
+      var fb = document.getElementById('strengthFeedback');
+      if (fb) fb.innerHTML = '<div class="feedback-msg gold-msg">You can select exactly 3 strengths. Remove one before adding another.</div>';
+      return;
+    }
+    selectedStrengths.add(id);
+    if (el) el.classList.add('str-selected');
+  }
+  updateShield();
+}
+
+function updateShield() {
+  var shield = document.getElementById('strengthShield');
+  var nb = document.getElementById('strengthNextBtn');
+  var fb = document.getElementById('strengthFeedback');
+  if (selectedStrengths.size === 3) {
+    var badges = Array.from(selectedStrengths).map(function(id) {
+      var s = strengthOptions.find(function(o){ return o.id === id; });
+      return s ? '<div class="shield-badge">' + s.icon + ' ' + s.label + '</div>' : '';
+    }).join('');
+    if (shield) {
+      shield.style.display = 'block';
+      shield.innerHTML = '<div class="strength-shield">' +
+        '<div class="ss-title">🛡️ Your Personal Strength Shield</div>' +
+        '<div class="shield-badges">' + badges + '</div>' +
+        '<p style="font-size:13px;font-weight:600;color:var(--text-soft);margin-top:12px;line-height:1.6">These are not wishes - they are genuine qualities you bring to every challenge. In moments of self-doubt, your Strength Shield is a reminder of what is actually, already, true about you.</p>' +
+      '</div>';
+    }
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Strength Shield built! These three qualities are part of you regardless of any single outcome or performance. Carry them with you.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (shield) shield.style.display = 'none';
+    if (fb) fb.innerHTML = selectedStrengths.size > 0 ? '<div class="feedback-msg gold-msg">Select ' + (3 - selectedStrengths.size) + ' more strength' + (3 - selectedStrengths.size === 1 ? '' : 's') + '.</div>' : '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function checkRewrite(val) {
+  rewriteText = val;
+  var len = val.trim().length;
+  rewriteValid = len >= 40;
+  var c = document.getElementById('rewriteCounter');
+  var b = document.getElementById('rewriteNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (rewriteValid ? ' met' : ''); }
+  if (b) b.disabled = !rewriteValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ============================================= ACT 3 INTERACTIONS ============================================= */
+var omarThoughtCount = 0;
+function tagOmarThought(id, type) {
+  var el = document.getElementById('ot-' + id);
+  if (el && (el.classList.contains('ot-doubt') || el.classList.contains('ot-evidence'))) return;
+  if (el) el.classList.add(type === 'doubt' ? 'ot-doubt' : 'ot-evidence');
+  omarThoughtCount++;
+  if (omarThoughtCount >= omarThoughts.length) {
+    omarDoubtDone = true;
+    var doubts = omarThoughts.filter(function(t){ return t.type === 'doubt'; }).length;
+    var evs = omarThoughts.filter(function(t){ return t.type === 'evidence'; }).length;
+    var fb = document.getElementById('omarThoughtFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All classified! Omar has ' + doubts + ' doubt thoughts and ' + evs + ' evidence thoughts. The doubt thoughts are real - but so is the evidence. When Omar actively focuses on the evidence rather than the doubt thoughts, his confidence level changes significantly.</div>';
+    var vw = document.getElementById('omarVoiceWrap');
+    if (vw) { vw.style.opacity = '1'; vw.style.pointerEvents = 'auto'; }
+  }
+}
+
+function selectOmarVoice(id, quality) {
+  if (omarVoiceDone) return;
+  omarVoiceDone = true;
+  omarVoices.forEach(function(v) {
+    var el = document.getElementById('omar-voice-' + v.id);
+    if (el) el.style.cursor = 'default';
+  });
+  var el = document.getElementById('omar-voice-' + id);
+  if (el) el.classList.add('sel-' + quality);
+  var fb = document.getElementById('omarVoiceFeedback');
+  var msg = quality === 'best'
+    ? '<div class="feedback-msg correct-msg">The strongest voice. It acknowledges nervousness honestly while anchoring in specific preparation evidence. Omar does not claim certainty - he claims readiness. That is the difference between false confidence and earned confidence.</div>'
+    : quality === 'ok'
+    ? '<div class="feedback-msg gold-msg">A reasonable choice - gentle and not destructive. However it is passive ("I hope") rather than grounded in specific evidence. Omar could go further by referencing what he actually did to prepare.</div>'
+    : '<div class="feedback-msg incorrect-msg">This voice predicts failure without evidence and will increase anxiety and impair performance. The confident voice does not predict perfection - but it also does not predict disaster.</div>';
+  if (fb) fb.innerHTML = msg;
+  var aw = document.getElementById('omarActionWrap');
+  if (aw) { aw.style.opacity = '1'; aw.style.pointerEvents = 'auto'; }
+}
+
+function selectOmarAction(id, quality) {
+  if (omarActionDone) return;
+  omarActionDone = true;
+  omarActions.forEach(function(a) {
+    var el = document.getElementById('oa-' + a.id);
+    if (el) el.style.cursor = 'default';
+  });
+  var el = document.getElementById('oa-' + id);
+  if (el) el.classList.add('oa-' + quality);
+  var action = omarActions.find(function(a){ return a.id === id; });
+  var fb = document.getElementById('omarActionFeedback');
+  var msgs = {
+    avoid: '<div class="feedback-msg incorrect-msg">Avoidance feels safe but it costs something important: the evidence that could have come from trying. Every avoided challenge shrinks the evidence file slightly. Over time, avoidance trains the brain to associate challenge with danger rather than opportunity.</div>',
+    attend: '<div class="feedback-msg gold-msg">Going is better than not going - that is genuine progress. However attending while expecting failure means the mind is not fully available for the performance. Confident action requires mental as well as physical presence.</div>',
+    full: '<div class="feedback-msg correct-msg">This is exactly what confidence looks like in action. Omar does not know the outcome - no one does. But he goes, prepares mentally, gives everything, and accepts the result. Win or lose, this choice adds to his evidence file: "I showed up and tried fully." That matters enormously.</div>'
+  };
+  if (fb) fb.innerHTML = msgs[id] || '';
+  checkOmarComplete();
+}
+
+function checkOmarComplete() {
+  if (omarDoubtDone && omarVoiceDone && omarActionDone) {
+    var b = document.getElementById('omarNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+var action2Locked = false;
+function selectAction2(id, quality) {
+  if (action2Locked) return;
+  action2Locked = true;
+  ['avoid','attend','full'].forEach(function(a) {
+    var el = document.getElementById('oa2-' + a);
+    if (el) el.style.cursor = 'default';
+  });
+  var el = document.getElementById('oa2-' + id);
+  if (el) el.classList.add('oa-' + quality);
+  var fb = document.getElementById('action2Feedback');
+  var msgs = {
+    avoid: '<div class="outcome-box harmful"><div class="outcome-title">The Cost of Avoidance</div>Omar misses the tryout. The short-term relief is real - no risk of public failure. But he also loses the chance to test himself, to discover what he can do, and to add new evidence to his confidence file. Avoidance shrinks the world gradually until challenges that should feel manageable feel impossible.<div class="outcome-tip">Growth principle: Every challenge we avoid sends a message to the brain - "that was too dangerous." Every challenge we face sends a different message: "I can handle difficult things."</div></div>',
+    attend: '<div class="outcome-box ok"><div class="outcome-title">Showing Up Without Showing Up</div>Omar attends physically but his mind is already predicting failure. He performs below his capability - not because of lack of ability, but because his mental resources are divided between the task and the internal self-criticism. Passive attendance is better than avoidance, but it leaves significant capability on the table.<div class="outcome-tip">Research: Self-fulfilling expectation effects show that performance outcomes are influenced by expectation quality. Neutral or negative expectations impair access to skills already learned.</div></div>',
+    full: '<div class="outcome-box best"><div class="outcome-title">Brave Full Engagement</div>Omar walks onto the pitch, nervous and prepared. He gives everything. Whether or not he makes the team, he has done something important: he has chosen growth over comfort, action over avoidance, and full presence over self-protection. His evidence file just got stronger - regardless of the outcome.<div class="outcome-tip">The most powerful piece of confidence evidence you can collect is not a success - it is proof that you showed up and tried fully when it was hard. That is what brave performance means.</div></div>'
+  };
+  if (fb) fb.innerHTML = msgs[id] || '';
+  var nb = document.getElementById('action2NextBtn');
+  if (nb) nb.disabled = false;
+}
+
+/* ============================================= QUIZ ============================================= */
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('quiz-opt-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('quiz-feedback-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var b = document.getElementById('quizNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+/* ============================================= RESTART ============================================= */
+function restartQuest() {
+  sortPlacements = {}; sortComplete = false; sortSelected = null;
+  selectedEvidence = new Set(); evidenceConfirmed = false;
+  doubtTagged = {}; doubtComplete = false; confLevel = 50;
+  voice1Choice = null; voice1Locked = false;
+  selectedStrengths = new Set();
+  rewriteValid = false; rewriteText = ''; reflectValid = false; reflectText = '';
+  omarDoubtDone = false; omarEvidenceDone = false; omarVoiceDone = false;
+  omarActionDone = false; omarThoughtCount = 0; actionLocked = false; action2Locked = false;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+/* ============================================= CONFETTI ============================================= */
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#3db889','#4a9fd4','#7c60c0','#e8a820','#2ab8b0','#27875f','#2a6fa0','#ffd98a'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5,
+      drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+/* ============================================= INIT ============================================= */
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

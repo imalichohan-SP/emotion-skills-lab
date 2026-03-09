@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Friendship Repair Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f0ff;
+  --card:#ffffff;
+  --lav:#7048c8;--lav-dark:#3c1890;--lav-light:#c8a8f8;
+  --blue:#1860c8;--blue-dark:#0a3888;--blue-light:#a8c8f8;
+  --coral:#e85050;--coral-dark:#a01828;--coral-light:#f8b0b0;
+  --gold:#d89020;--gold-dark:#886000;--gold-light:#f8dea0;
+  --green:#18c870;--green-dark:#0a7840;--green-light:#a0f0c0;
+  --teal:#0d9898;--teal-dark:#065858;--teal-light:#98e0e0;
+  --red:#e02828;--red-dark:#980808;--red-light:#f8b0b0;
+  --text:#0c0828;--text-soft:#2a1848;
+  --shadow-sm:0 4px 16px rgba(60,24,144,0.12);
+  --shadow-md:0 8px 32px rgba(60,24,144,0.16);
+  --shadow-lg:0 16px 48px rgba(60,24,144,0.22);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 7% 10%,rgba(112,72,200,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 93% 82%,rgba(24,96,200,0.14) 0%,transparent 44%),
+    radial-gradient(circle at 50% 50%,rgba(216,144,32,0.08) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--lav-dark),var(--blue-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(21px,5vw,31px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--lav-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(60,24,144,0.09);color:var(--lav-dark);border:1.5px solid rgba(60,24,144,0.24)}
+.act-banner.act2{background:rgba(10,56,136,0.09);color:var(--blue-dark);border:1.5px solid rgba(10,56,136,0.24)}
+.act-banner.act3{background:rgba(136,96,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(136,96,0,0.24)}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(112,72,200,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--lav-dark),var(--blue-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(60,24,144,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(112,72,200,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--lav-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(112,72,200,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(112,72,200,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--lav-dark);background:rgba(112,72,200,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.blue{color:var(--blue-dark);background:rgba(10,56,136,0.09)}
+.stage-label.gold{color:var(--gold-dark);background:rgba(136,96,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(112,72,200,0.09),rgba(24,96,200,0.07));border:1.5px solid rgba(112,72,200,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--lav-dark);font-style:normal}
+.story-box p span.blue{color:var(--blue-dark)}
+.story-box p span.coral{color:var(--coral-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(232,80,80,0.10),rgba(112,72,200,0.09));border:2px solid rgba(232,80,80,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💬';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--coral-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* EMOTION SELECTION */
+.emotion-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 26px}
+.emo-card{background:var(--bg);border:2px solid rgba(112,72,200,0.18);border-radius:var(--radius-sm);padding:16px 14px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.emo-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--lav)}
+.emo-card .ec-emoji{font-size:32px;display:block;margin-bottom:8px}
+.emo-card .ec-label{font-size:13.5px;font-weight:900;color:var(--text)}
+.emo-card .ec-desc{font-size:11.5px;font-weight:600;color:var(--text-soft);margin-top:4px;line-height:1.3}
+.emo-card.ec-correct{border-color:var(--teal-dark);background:linear-gradient(135deg,rgba(13,152,152,0.12),rgba(24,200,112,0.09));box-shadow:0 0 0 3px rgba(6,88,88,0.12),var(--shadow-sm);animation:correctPop 0.35s ease}
+.emo-card.ec-wrong{border-color:var(--coral-dark);background:rgba(232,80,80,0.08);animation:wrongShake 0.4s ease}
+.ec-check{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--teal-dark);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.emo-card.ec-correct .ec-check{opacity:1;transform:scale(1)}
+
+/* BLAME vs RESPONSIBILITY SORT */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px;padding:14px 16px;background:rgba(112,72,200,0.06);border:2px dashed rgba(112,72,200,0.26);border-radius:var(--radius-sm);min-height:52px}
+.sort-chip{background:#fff;border:2px solid rgba(112,72,200,0.22);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none}
+.sort-chip:hover{border-color:var(--lav-dark);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.sort-chip.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-chip.sc-selected{outline:3px solid var(--lav-dark)}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 24px}
+.sort-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:90px;border:2px solid}
+.sort-zone.zone-blame{border-color:rgba(152,8,8,0.30);background:rgba(232,80,80,0.07)}
+.sort-zone.zone-resp{border-color:rgba(10,120,64,0.30);background:rgba(24,200,112,0.07)}
+.sort-zone.zone-escalate{border-color:rgba(152,8,8,0.30);background:rgba(232,80,80,0.07)}
+.sort-zone.zone-repair{border-color:rgba(10,56,136,0.30);background:rgba(24,96,200,0.07)}
+.sort-zone.zone-damage{border-color:rgba(152,8,8,0.30);background:rgba(232,80,80,0.07)}
+.sort-zone.zone-rebuild{border-color:rgba(10,120,64,0.30);background:rgba(24,200,112,0.07)}
+.sort-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort-zone.zone-blame .sz-title,.sort-zone.zone-escalate .sz-title,.sort-zone.zone-damage .sz-title{color:var(--coral-dark)}
+.sort-zone.zone-resp .sz-title,.sort-zone.zone-rebuild .sz-title{color:var(--green-dark)}
+.sort-zone.zone-repair .sz-title{color:var(--blue-dark)}
+.sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:30px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:4px}
+.sz-remove{cursor:pointer;font-size:13px;color:var(--text-soft);transition:color 0.2s;margin-left:2px}
+.sz-remove:hover{color:var(--coral-dark)}
+
+/* TRUST METER */
+.trust-meter-wrap{margin:22px 0 26px;background:linear-gradient(135deg,rgba(24,96,200,0.07),rgba(112,72,200,0.06));border:1.5px solid rgba(24,96,200,0.20);border-radius:var(--radius-sm);padding:24px}
+.trust-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.trust-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer;transition:background 0.4s ease}
+.trust-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);box-shadow:0 3px 14px rgba(10,56,136,0.36);cursor:pointer;transition:transform 0.2s}
+.trust-slider::-webkit-slider-thumb:hover,.trust-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.trust-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);cursor:pointer}
+.trust-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.trust-bar-side{padding:16px;border-radius:var(--radius-sm);border:2px solid}
+.trust-bar-side.trust-side{border-color:rgba(10,56,136,0.26);background:rgba(24,96,200,0.07)}
+.trust-bar-side.damage-side{border-color:rgba(152,8,8,0.26);background:rgba(232,80,80,0.07)}
+.tbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tbs-emoji{font-size:24px}
+.tbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.tbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06)}
+.tbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.trust-side .tbs-fill{background:linear-gradient(90deg,var(--blue-light),var(--blue-dark));box-shadow:0 2px 6px rgba(10,56,136,0.28)}
+.damage-side .tbs-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 6px rgba(152,8,8,0.28)}
+.tbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.trust-side .tbs-pct{color:var(--blue-dark)}
+.damage-side .tbs-pct{color:var(--coral-dark)}
+.tbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:34px}
+
+/* APOLOGY OPTIONS */
+.apology-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.apology-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(112,72,200,0.18);border-radius:var(--radius-sm);padding:17px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.apology-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--lav)}
+.apology-btn .ab-icon{font-size:28px;flex-shrink:0}
+.apology-btn .ab-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.apology-btn .ab-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.apology-btn.sel-dismissive{border-color:var(--coral-dark);background:rgba(232,80,80,0.08);animation:wrongShake 0.4s ease}
+.apology-btn.sel-partial{border-color:var(--gold-dark);background:rgba(216,144,32,0.09);animation:correctPop 0.4s ease}
+.apology-btn.sel-full{border-color:var(--teal-dark);background:rgba(13,152,152,0.09);animation:correctPop 0.4s ease}
+
+/* METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(112,72,200,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.trust-fill{background:linear-gradient(90deg,var(--blue-light),var(--blue-dark));box-shadow:0 2px 8px rgba(10,56,136,0.28)}
+.meter-fill.damage-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 8px rgba(152,8,8,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.dismissive{background:rgba(232,80,80,0.09);border:1.5px solid rgba(160,24,40,0.22)}
+.outcome-box.partial{background:rgba(216,144,32,0.10);border:1.5px solid rgba(136,96,0,0.22)}
+.outcome-box.full{background:rgba(13,152,152,0.09);border:1.5px solid rgba(6,88,88,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(112,72,200,0.08),rgba(24,96,200,0.07),rgba(24,200,112,0.06));border:2px solid rgba(112,72,200,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(112,72,200,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,96,200,0.10),rgba(24,200,112,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.fr-icon{font-size:26px;flex-shrink:0}
+.fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:18px;font-weight:900;color:var(--lav-dark);padding:2px 0}
+
+/* ZARA SCENARIO */
+.zara-opts{display:flex;flex-direction:column;gap:10px;margin:10px 0 18px}
+.zara-btn{display:flex;align-items:flex-start;gap:13px;background:var(--bg);border:2px solid rgba(112,72,200,0.18);border-radius:var(--radius-sm);padding:14px 17px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.zara-btn:hover{border-color:var(--lav);transform:translateX(3px)}
+.zara-btn .zb-icon{font-size:22px;flex-shrink:0}
+.zara-btn .zb-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.zara-btn .zb-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.zara-btn.zb-correct{border-color:var(--teal-dark);background:rgba(13,152,152,0.10);animation:correctPop 0.4s ease}
+.zara-btn.zb-incorrect{border-color:var(--coral-dark);background:rgba(232,80,80,0.08);animation:wrongShake 0.4s ease}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(112,72,200,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--lav);background:rgba(112,72,200,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--teal-dark);background:rgba(13,152,152,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(232,80,80,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--teal-dark);background:rgba(13,152,152,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(13,152,152,0.16);color:#033838}
+.quiz-feedback.q-fb-incorrect{background:rgba(232,80,80,0.12);color:#800010}
+
+/* FEEDBACK MSGS */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(13,152,152,0.13);color:#033838;border:1.5px solid rgba(6,88,88,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(232,80,80,0.10);color:#800010;border:1.5px solid rgba(160,24,40,0.22)}
+.feedback-msg.info-msg{background:rgba(60,24,144,0.08);color:var(--lav-dark);border:1.5px solid rgba(60,24,144,0.20)}
+.feedback-msg.gold-msg{background:rgba(136,96,0,0.09);color:var(--gold-dark);border:1.5px solid rgba(136,96,0,0.22)}
+.feedback-msg.blue-msg{background:rgba(10,56,136,0.08);color:var(--blue-dark);border:1.5px solid rgba(10,56,136,0.20)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(112,72,200,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(42,24,72,0.36)}
+.reflection-input:focus{border-color:var(--lav-dark);box-shadow:0 0 0 3px rgba(60,24,144,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--green-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--lav-dark),var(--blue-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(60,24,144,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(60,24,144,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(112,72,200,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(112,72,200,0.08);border-color:var(--lav-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(112,72,200,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--lav-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(112,72,200,0.18);border-radius:999px}
+
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(216,144,32,0.14),rgba(112,72,200,0.11));border:1.5px solid rgba(216,144,32,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(112,72,200,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(245,240,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(112,72,200,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(112,72,200,0.06),rgba(24,96,200,0.05),rgba(24,200,112,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .emotion-grid{grid-template-columns:1fr 1fr}
+  .trust-bars{grid-template-columns:1fr}
+  .sort-zones{grid-template-columns:1fr}
+  .badge-grid{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">💜 Repair Workshop</div>
+    <h1>The <span>Friendship Repair</span> Workshop</h1>
+    <p>Understand conflict - Repair mistakes - Strengthen friendships</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🤝</div>
+    <h2>Workshop Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed the full Friendship Repair Workshop. You can now recognize hurt, take responsibility, and rebuild trust the right way. These skills will strengthen every relationship you have.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🕊</span><div class="b-title">Conflict Resolver</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💙</span><div class="b-title">Trust Builder</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🛠</span><div class="b-title">Repair Expert</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartWorkshop()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Workshop</button>
+  </div>
+</div>
+
+<script>
+var TOTAL_STAGES = 14;
+var currentStage = 1;
+
+var emoSel = new Set();
+var emoOk = false;
+var sort1Plac = {};
+var sort1Sel = null;
+var trustLevel = 20;
+var sort2Plac = {};
+var sort2Sel = null;
+var apoChoice = null;
+var apoLock = false;
+var apoText = '';
+var apoValid = false;
+var amendsText = '';
+var amendsValid = false;
+var reflectText = '';
+var reflectValid = false;
+var zaraDone1 = false;
+var zaraDone2 = false;
+var zaraDone3 = false;
+var sort3Plac = {};
+var sort3Sel = null;
+var quizAnswers = {};
+
+var trustStates = [
+  {range:[0,18],   tLabel:'Very High', dLabel:'Minimal',    tMood:'Deep trust. The friendship is strong and both people feel safe. Small conflicts are weathered easily.', dMood:'Very little damage present. The friendship\'s foundation is solid and resilient.'},
+  {range:[19,38],  tLabel:'Strong',    dLabel:'Low',         tMood:'Good trust level. The friendship is healthy with a strong track record. Trust is the default assumption.', dMood:'Minor damage only. The friendship can absorb this without lasting impact if addressed promptly.'},
+  {range:[39,58],  tLabel:'Moderate',  dLabel:'Moderate',    tMood:'Some trust remains but it has been shaken. The friendship is at a decision point - repair actions matter now.', dMood:'Noticeable damage. The hurt person is unsure whether to trust again. This is the critical repair window.'},
+  {range:[59,78],  tLabel:'Low',       dLabel:'High',        tMood:'Trust is significantly damaged. The hurt person is guarded. Repair requires genuine, consistent effort over time.', dMood:'Substantial damage. Defensive patterns may have set in. The friendship needs deliberate, sustained repair work.'},
+  {range:[79,100], tLabel:'Very Low',  dLabel:'Severe',      tMood:'Trust nearly gone. The hurt person may have decided this friendship is not safe. Deep, consistent repair is the only path.', dMood:'Severe damage. The relationship is at serious risk. Without significant repair effort, the friendship may not survive.'}
+];
+
+var sort1Data = [
+  {id:'b1', text:'"It wasn\'t my fault."',                      zone:'blame'},
+  {id:'b2', text:'"They were going to find out anyway."',       zone:'blame'},
+  {id:'b3', text:'"I should not have said that."',             zone:'resp'},
+  {id:'b4', text:'"I understand why you feel hurt."',          zone:'resp'},
+  {id:'b5', text:'"You\'re overreacting."',                    zone:'blame'},
+  {id:'b6', text:'"I want to make this right between us."',    zone:'resp'}
+];
+
+var sort2Data = [
+  {id:'e1', text:'Defending yourself loudly',      zone:'escalate'},
+  {id:'e2', text:'Walking away mid-argument',      zone:'escalate'},
+  {id:'e3', text:'Saying sorry first',             zone:'repair'},
+  {id:'e4', text:'Blaming the other person',       zone:'escalate'},
+  {id:'e5', text:'Listening without interrupting', zone:'repair'},
+  {id:'e6', text:'Acknowledging their feelings',   zone:'repair'}
+];
+
+var sort3Data = [
+  {id:'r1', text:'Remembering important things they told you',       zone:'rebuild'},
+  {id:'r2', text:'Gossiping about them to others',                    zone:'damage'},
+  {id:'r3', text:'Checking in when they seem upset',                  zone:'rebuild'},
+  {id:'r4', text:'Promising things you do not follow through on',     zone:'damage'},
+  {id:'r5', text:'Saying sorry and meaning it',                       zone:'rebuild'},
+  {id:'r6', text:'Bringing up past mistakes in new arguments',        zone:'damage'},
+  {id:'r7', text:'Keeping their secrets',                             zone:'rebuild'},
+  {id:'r8', text:'Making them feel guilty for being hurt',            zone:'damage'}
+];
+
+var apoOptions = [
+  {id:'dismiss', icon:'🔴', text:'"Relax, it was not a big deal."', sub:'Dismisses the hurt entirely - invalidates Sami\'s feelings',
+   quality:'dismissive', tL:8, dL:92,
+   outcome:{title:'The Dismissal - Repair Blocked', body:'"Relax" communicates that Sami\'s feelings are wrong or exaggerated. It places the problem with Sami\'s reaction rather than Omar\'s action. This is one of the most damaging responses to hurt feelings in friendship - it adds invalidation on top of the original betrayal. Sami now has two reasons to feel hurt: the secret being shared, and not being taken seriously when he expressed pain. Trust drops further; damage deepens.', tip:'Research: Validation - communicating that someone\'s feelings make sense given their experience - is one of the most powerful repair tools in interpersonal relationships. Its absence in conflict responses is consistently associated with escalation and relationship deterioration.'}},
+  {id:'brief', icon:'🟡', text:'"Sorry about that."', sub:'Generic acknowledgement - better than dismissal but incomplete',
+   quality:'partial', tL:42, dL:54,
+   outcome:{title:'The Generic Apology - Partial Repair', body:'"Sorry about that" acknowledges wrongdoing in a general way, which is meaningfully better than dismissal. Sami knows Omar is at least aware something went wrong. The weakness is the vagueness: it does not name what happened, does not show understanding of why it was hurtful, and does not demonstrate that Omar actually understands the impact. It leaves Sami wondering whether Omar really gets it - and whether the same thing will happen again.', tip:'Principle: Specificity in apology serves two functions. First, it demonstrates that the person genuinely understands what they did and why it was hurtful. Second, it builds confidence that the behavior will not be repeated - because someone who can name exactly what they did wrong is more likely to recognize and avoid it in future.'}},
+  {id:'full', icon:'🟢', text:'"I\'m sorry I shared your secret. I know that hurt you and I should not have done it. I want to make it right."', sub:'Specific, accountable, empathetic, repair-oriented - the full apology',
+   quality:'full', tL:74, dL:22,
+   outcome:{title:'The Full Repair Apology', body:'"I shared your secret" names the specific action without deflection. "I know that hurt you" demonstrates genuine understanding of the impact on Sami - it is not about Omar\'s intention but about Sami\'s experience. "I should not have done it" takes clear, unambiguous responsibility without excuses or conditions. "I want to make it right" signals commitment to the relationship going forward. Each component does specific repair work - together they address the knowledge, the feeling, the accountability, and the future.', tip:'Research: Lazare\'s apology model identifies four components of effective apologies: acknowledgement of the offence, explanation, expression of remorse, and reparation. Research on interpersonal repair consistently shows that apologies containing all four components produce significantly greater forgiveness and trust restoration than partial apologies.'}}
+];
+
+var quizData = [
+  {
+    q:'Question 1: What makes an apology genuinely sincere - as opposed to just technically being an apology?',
+    opts:[
+      {icon:'🎭', text:'Using the word "sorry" is sufficient - the length and detail of the apology does not matter as long as the word is said', correct:false},
+      {icon:'💬', text:'A sincere apology names the specific action, demonstrates understanding of the hurt caused, takes clear responsibility, and shows commitment to doing better - without conditions or deflection', correct:true},
+      {icon:'😐', text:'The best apology is a general one that covers many possibilities, so you do not have to think too carefully about what went wrong', correct:false}
+    ],
+    fb:{
+      correct:'Precisely. A sincere apology is not about the word "sorry" - it is about what surrounds it. Naming the specific action shows you understand exactly what you did. Demonstrating understanding of the hurt shows you have considered the impact on the other person, not just your own intention. Taking clear responsibility without conditions ("I\'m sorry if you felt hurt" is not responsibility - it makes the other person\'s feelings the problem). Commitment to doing better shows the apology is not just social performance but genuine repair.',
+      incorrect:'Not quite. Research on apology effectiveness consistently shows that specificity, demonstrated understanding, clear responsibility, and repair commitment are the components that produce genuine forgiveness and trust restoration. Saying "sorry" alone - without those components - is often experienced as worse than no apology, because it signals awareness without genuine accountability.'
+    }
+  },
+  {
+    q:'Question 2: Why is taking responsibility more powerful than defending yourself when you have hurt a friend?',
+    opts:[
+      {icon:'🛡', text:'It is not - defending yourself shows strength and confidence, which friends respect more than admitting fault', correct:false},
+      {icon:'🤝', text:'Taking responsibility communicates that you value the friendship and the other person\'s experience above your own need to be right - which is exactly what rebuilds trust', correct:true},
+      {icon:'😶', text:'Responsibility and defence produce identical outcomes in friendships - the choice does not significantly affect the repair process', correct:false}
+    ],
+    fb:{
+      correct:'Exactly. When you take responsibility after hurting someone, you are communicating several things simultaneously: that you recognize the impact of your actions on them, that you value their experience and feelings, that you prioritize the relationship over being right, and that you can be trusted to be honest when you make mistakes. Each of these communications directly addresses what was damaged by the hurtful action. Defence communicates the opposite - that being right matters more than their hurt - which deepens the damage rather than repairing it.',
+      incorrect:'Not quite. The fundamental mechanism of trust repair is the communication that the other person\'s experience matters to you. Taking responsibility makes this communication directly. Defending yourself - even if you are factually correct about your intentions - communicates that your perspective matters more than their hurt. This is experienced as a second invalidation after the first hurtful action, and consistently makes trust repair harder or impossible.'
+    }
+  },
+  {
+    q:'Question 3: Why does rebuilding trust take time, even after a genuine apology has been made?',
+    opts:[
+      {icon:'🕐', text:'It does not - a genuine, sincere apology should immediately restore trust to its previous level', correct:false},
+      {icon:'🧱', text:'Trust is built from patterns of behaviour over time - a genuine apology starts the repair process, but consistent trustworthy behaviour over time is what actually restores the trust level', correct:true},
+      {icon:'😤', text:'If trust takes time to rebuild after an apology, the hurt person is being unreasonable and should forgive more quickly', correct:false}
+    ],
+    fb:{
+      correct:'Correct. Trust is not a single decision - it is a pattern-based evaluation of how reliably someone has treated us over time. When trust is damaged, the hurt person has new evidence that being vulnerable with this person led to pain. A genuine apology changes the evidence picture - but the pattern of evidence needs to shift over time through consistent trustworthy behaviour. The hurt person\'s nervous system needs to accumulate new positive experiences to rebalance the recent negative one. This is not stubbornness - it is a natural and self-protective psychological process.',
+      incorrect:'Not quite. Trust is fundamentally pattern-based, not event-based. It is built and rebuilt through accumulated consistent experiences - not single events, no matter how meaningful. A genuine apology is essential and powerful, but it is the beginning of the repair process, not the end of it. The hurt person needs new positive experiences to update the pattern that was damaged. Expecting immediate restoration of trust after an apology misunderstands how trust works neurologically and psychologically.'
+    }
+  }
+];
+
+function backBtn(s, l) {
+  return '<div style="margin-bottom:4px"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟣', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span style="font-size:19px">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getTrustState(v) {
+  return trustStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(n) {
+  var pct = Math.round(((n - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + n + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Conflict') +
+    '<div class="stage-label"><span class="dot"></span> Workshop Entry - Case File #015</div>' +
+    '<h2>Friendship Is Built on Trust - And Trust Can Break</h2>' +
+    '<p>Welcome to the Friendship Repair Workshop. Every friendship faces conflict. Someone says something they should not. Someone forgets something important. Someone makes a choice that hurts the other person. This is not a flaw in friendship - it is an inevitable part of being human. What separates friendships that survive conflict from those that do not is not whether conflict happens. It is what happens after.</p>' +
+    '<div class="story-box" data-icon="👥">' +
+      '<p><span>Sami</span> and <span class="blue">Omar</span> have been friends for two years. Last week, <span class="blue">Omar</span> accidentally mentioned one of <span>Sami\'s</span> personal struggles in front of a group of classmates - something <span>Sami</span> had told <span class="blue">Omar</span> in private, trusting him completely. <span>Sami\'s</span> face turned red. Everyone looked. The conversation continued around him, but <span>Sami</span> was no longer there in the same way.</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"He told everyone. He knew that was private. Why would he do that?"</p></div>' +
+    '<p>Sami is hurt and confused. Omar realizes what he did but does not know how to respond. This workshop will walk through what is happening for both of them - and more importantly, what it actually takes to repair a friendship after trust has been broken.</p>' +
+    '<div class="feedback-msg info-msg">🤝 <strong>Core concept:</strong> Trust is not an abstract idea - it is the specific belief that someone will treat your vulnerability with care. When that belief is violated, even accidentally, real emotional damage occurs. Repairing it requires more than time - it requires deliberate, specific actions that directly address what was damaged.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Build the Repair</button>' +
+  '</div>';
+}
+
+function s2() {
+  emoSel = new Set(); emoOk = false;
+  var emotions = [
+    {id:'hurt',      emoji:'💔', label:'Hurt',         desc:'Betrayal by someone trusted',       correct:true},
+    {id:'angry',     emoji:'😠', label:'Angry',         desc:'At the unfairness of what happened', correct:false},
+    {id:'embarr',    emoji:'😳', label:'Embarrassed',  desc:'Exposed in front of classmates',     correct:true},
+    {id:'proud',     emoji:'😊', label:'Proud',         desc:'Feeling good about yourself',        correct:false}
+  ];
+  var cards = emotions.map(function(e) {
+    return '<div class="emo-card" id="ec-' + e.id + '" onclick="toggleEmo(\'' + e.id + '\',' + e.correct + ')">' +
+      '<div class="ec-check">&#10003;</div>' +
+      '<span class="ec-emoji">' + e.emoji + '</span>' +
+      '<div class="ec-label">' + e.label + '</div>' +
+      '<div class="ec-desc">' + e.desc + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Conflict') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Identify Sami\'s Emotions</div>' +
+    '<h2>What Is Sami Actually Feeling?</h2>' +
+    '<p>Before any repair can happen, the hurt person\'s emotions must be understood accurately - by the person who caused the hurt, and by us. Misreading emotions leads to mismatched repair attempts. Someone who feels embarrassed needs their dignity acknowledged. Someone who feels hurt needs their trust acknowledged. These require different words and different repair actions.</p>' +
+    '<p>Select the two emotions that most accurately describe Sami\'s experience in this moment. Think carefully about what the scenario tells you about his inner state.</p>' +
+    '<div class="emotion-grid">' + cards + '</div>' +
+    '<div id="emoFeedback"></div>' +
+    '<button class="btn-primary" id="emoNextBtn" onclick="renderStage(3)" disabled>Next: Blame vs Responsibility -></button>' +
+  '</div>';
+}
+
+function s3() {
+  sort1Plac = {}; sort1Sel = null;
+  var bank = sort1Data.map(function(c) {
+    return '<div class="sort-chip" id="s1c-' + c.id + '" onclick="handleSort1Click(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Conflict') +
+    backBtn(2,'Back to Emotions') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Blame vs Responsibility</div>' +
+    '<h2>The Most Important Choice After a Mistake</h2>' +
+    '<p>When we hurt someone, the mind immediately generates a defence. It searches for reasons the situation was not our fault, or reasons it was not that serious. This is a natural protective response. But it is also the single biggest obstacle to genuine repair. The difference between blame and responsibility is not about facts - it is about where we place our focus: on protecting ourselves, or on understanding the other person\'s experience.</p>' +
+    '<div class="feedback-msg info-msg">📌 <strong>Blame</strong> redirects attention away from the hurt we caused. <strong>Responsibility</strong> keeps attention on the impact our actions had on the other person - regardless of our intention.</div>' +
+    '<div class="sort-bank" id="sort1Bank">' + bank + '</div>' +
+    '<div id="sort1Hint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a statement, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-blame" onclick="placeSort1(\'blame\')">' +
+        '<div class="sz-title">Blame</div>' +
+        '<div class="sz-items" id="zone-blame"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-resp" onclick="placeSort1(\'resp\')">' +
+        '<div class="sz-title">Responsibility</div>' +
+        '<div class="sz-items" id="zone-resp"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sort1Feedback"></div>' +
+    '<button class="btn-primary" id="sort1NextBtn" onclick="renderStage(4)" disabled>Next: The Trust Meter -></button>' +
+  '</div>';
+}
+
+function s4() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Conflict') +
+    backBtn(3,'Back to Blame vs Responsibility') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Trust Meter</div>' +
+    '<h2>How Behaviour Moves the Trust Meter</h2>' +
+    '<p>Trust is not a light switch. It builds gradually through hundreds of small experiences of reliability, honesty, and care. It drops sharply when violated - because the brain updates its safety model rapidly in response to threat. Understanding this asymmetry - trust builds slowly, drops fast - is essential to understanding why repair takes consistent effort over time, not just a single action.</p>' +
+    '<p>The slider below represents the relationship between Trust Level and Damage Level. Move it to explore different states - and consider where you think Sami and Omar\'s friendship sits right now, immediately after Omar shared the secret.</p>' +
+    '<div class="trust-meter-wrap">' +
+      '<div class="trust-slider-labels"><span>💙 Full Trust</span><span>Balanced</span><span>💔 Broken</span></div>' +
+      '<input type="range" class="trust-slider" id="trustSl" min="0" max="100" value="20" oninput="updateTrust(this.value)"/>' +
+      '<div class="trust-bars">' +
+        '<div class="trust-bar-side trust-side">' +
+          '<div class="tbs-header"><span class="tbs-emoji">💙</span><span class="tbs-title">Trust Level</span></div>' +
+          '<div class="tbs-track"><div class="tbs-fill" id="trustFill" style="width:80%"></div></div>' +
+          '<div class="tbs-pct" id="trustPct">80%</div>' +
+          '<div class="tbs-mood" id="trustMood">Loading...</div>' +
+        '</div>' +
+        '<div class="trust-bar-side damage-side">' +
+          '<div class="tbs-header"><span class="tbs-emoji">💔</span><span class="tbs-title">Damage Level</span></div>' +
+          '<div class="tbs-track"><div class="tbs-fill" id="damageFill" style="width:20%"></div></div>' +
+          '<div class="tbs-pct" id="damagePct">20%</div>' +
+          '<div class="tbs-mood" id="damageMood">Loading...</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg blue-msg">💙 <strong>Omar and Sami right now:</strong> Two years of friendship creates a strong trust foundation - which is exactly why the betrayal stings so much. The damage is real but the foundation has not collapsed. This means repair is possible - if Omar responds well. The trust meter for their friendship sits somewhere in the Moderate damage zone: real hurt, but genuine foundation still present. This is the most repairable state - if the right actions follow quickly.</div>' +
+    '<button class="btn-primary" onclick="renderStage(5)">Next: Escalation vs Repair -></button>' +
+  '</div>';
+}
+
+function s5() {
+  sort2Plac = {}; sort2Sel = null;
+  var bank = sort2Data.map(function(c) {
+    return '<div class="sort-chip" id="s2c-' + c.id + '" onclick="handleSort2Click(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Conflict') +
+    backBtn(4,'Back to Trust Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Escalation vs Repair</div>' +
+    '<h2>Not All Reactions Repair - Some Make It Worse</h2>' +
+    '<p>When conflict happens, the immediate emotional response often pushes people toward behaviours that feel right in the moment but make repair harder. Defending yourself loudly feels natural when you feel accused. Walking away feels like self-protection. But these behaviours are consistently escalating - they move the relationship further from repair even when they feel justified.</p>' +
+    '<p>Sort each reaction into the correct zone. Think about the long-term effect on the relationship, not the immediate emotional relief.</p>' +
+    '<div class="sort-bank" id="sort2Bank">' + bank + '</div>' +
+    '<div id="sort2Hint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a reaction, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-escalate" onclick="placeSort2(\'escalate\')">' +
+        '<div class="sz-title">Escalates Conflict</div>' +
+        '<div class="sz-items" id="zone-escalate"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-repair" onclick="placeSort2(\'repair\')">' +
+        '<div class="sz-title">Helps Repair</div>' +
+        '<div class="sz-items" id="zone-repair"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sort2Feedback"></div>' +
+    '<button class="btn-primary" id="sort2NextBtn" onclick="renderStage(6)" disabled>Next: The Repair Formula -></button>' +
+  '</div>';
+}
+
+function s6() {
+  var steps = [
+    {icon:'👀', title:'Acknowledge', desc:'"I see what I did, and I see that it hurt you." This is not negotiable - repair cannot begin without the person who caused the hurt naming what happened. Without acknowledgement, the hurt person is left holding all the pain alone.'},
+    {icon:'🗣', title:'Apologise Specifically', desc:'"I am sorry I shared your secret in front of everyone." Not "sorry if you felt hurt" - which makes feelings the problem. Not "sorry but I did not mean to" - which centres intention over impact. Specific, clean, no conditions.'},
+    {icon:'💛', title:'Validate the Feelings', desc:'"I understand why you are hurt. That makes complete sense." This communicates that the hurt person\'s emotional response is reasonable and legitimate. Validation does not mean the apology is complete - it is a separate, essential step.'},
+    {icon:'🔧', title:'Make Amends', desc:'"What can I do to make this better?" or "I am going to [specific action] to show I take this seriously." Amends are not punishment - they are practical demonstrations of repair commitment. They give the hurt person something concrete to build trust around.'},
+    {icon:'🔄', title:'Give Time', desc:'"I will give you the space you need. I am here when you are ready." Trust rebuilds through consistent behaviour over time - not through a single conversation. The final step is recognising that repair is ongoing, and committing to the long game.'}
+  ];
+  var rows = steps.map(function(st, i) {
+    return '<div class="formula-row" style="animation-delay:' + (i*0.09) + 's"><span class="fr-icon">' + st.icon + '</span><div><div class="fr-title">' + st.title + '</div><div class="fr-desc">' + st.desc + '</div></div></div>';
+  }).join('<div class="formula-arrow">&darr;</div>');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Conflict') +
+    backBtn(5,'Back to Escalation Sort') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Repair Formula</div>' +
+    '<h2>The Five-Step Friendship Repair Formula</h2>' +
+    '<p>Genuine friendship repair is not a single action - it is a sequence. Each step does specific emotional work that the previous step sets up. Missing a step or doing them out of order significantly reduces the repair\'s effectiveness. Understanding why each step matters - not just what to do - is what makes the formula actually work under the pressure of real conflict.</p>' +
+    '<div class="formula-box">' + rows + '<div class="formula-row formula-result" style="margin-top:12px"><span class="fr-icon">🤝</span><div><div class="fr-title">Restored Trust</div><div class="fr-desc">The five steps together communicate one underlying message to the hurt person: "You matter to me more than my need to defend myself. I see your pain, I take responsibility for my part in it, and I will work to earn your trust back." That message - communicated consistently through actions, not just words - is what actually rebuilds friendship after conflict.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg gold-msg">🏅 <strong>Badge Progress:</strong> Conflict Resolver Level 1 - almost earned! Continue to Act 2 to build the repair...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Build the Repair -></button>' +
+  '</div>';
+}
+
+function s7() {
+  apoChoice = null; apoLock = false;
+  var btns = apoOptions.map(function(o) {
+    return '<button class="apology-btn" id="ap-' + o.id + '" onclick="chooseApo(\'' + o.id + '\')">' +
+      '<span class="ab-icon">' + o.icon + '</span>' +
+      '<div><div class="ab-text">' + o.text + '</div><div class="ab-sub">' + o.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build the Repair') +
+    backBtn(6,'Back to Repair Formula') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 7 - Choose the Best Apology</div>' +
+    '<h2>Omar Needs to Say Something - What Should He Say?</h2>' +
+    '<p>Omar realizes what he did the moment the words left his mouth. Now he has a choice about how to respond to Sami. The three options below represent very different relationships between Omar and his mistake - and they will produce very different effects on the trust meter. Choose the one that gives the friendship the best chance of genuine repair.</p>' +
+    '<div class="apology-options">' + btns + '</div>' +
+    '<div id="apoOutcome"></div>' +
+    '<div id="apoNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(8)">Practise the Apology Builder -></button></div>' +
+  '</div>';
+}
+
+function s8() {
+  apoValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build the Repair') +
+    backBtn(7,'Back to Apology Choice') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 8 - Apology Builder</div>' +
+    '<h2>Build a Full Apology From Scratch</h2>' +
+    '<p>Writing an apology in calm conditions - when you are not in the middle of conflict, not feeling defensive, and not under time pressure - is one of the most powerful preparation exercises in friendship repair. It forces you to think carefully about each component, rather than improvising under emotional pressure when the brain\'s capacity for careful thinking is most reduced.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your apology should include four components:<br/>' +
+      '<strong>What happened:</strong> The specific action, named clearly without deflection<br/>' +
+      '<strong>Responsibility:</strong> Clear ownership - not "if you felt hurt" but "I hurt you"<br/>' +
+      '<strong>Empathy:</strong> Acknowledgement of how the other person felt and why that makes sense<br/>' +
+      '<strong>Repair action:</strong> Something specific and concrete you will do or change' +
+    '</div>' +
+    '<label class="input-label">If I hurt a friend, I can say...</label>' +
+    '<textarea class="reflection-input" id="apoInput" oninput="checkApo(this.value)" placeholder="For example: If I hurt a friend, I can say: I know I shared something you told me in private, and that was wrong of me. You trusted me and I let you down. I understand if you feel hurt and angry - that makes complete sense. I am sorry. I want to earn your trust back and I promise I will not share anything private you tell me again..." rows="5"></textarea>' +
+    '<div class="char-counter" id="apoCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg blue-msg" style="margin-bottom:16px">💬 <strong>The ownership test:</strong> After writing your apology, read it back and ask: does this apology contain any conditions? ("if you felt...") Any deflections? ("but I did not mean...") Any minimisations? ("it was not that big a deal") If yes, rewrite those parts. A genuine apology contains none of these - it stands clean, specific, and accountable on its own.</div>' +
+    '<button class="btn-primary" id="apoNextBtn" onclick="renderStage(9)" disabled>Next: Make Amends Plan -></button>' +
+  '</div>';
+}
+
+function s9() {
+  amendsValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build the Repair') +
+    backBtn(8,'Back to Apology Builder') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 9 - Make Amends Plan</div>' +
+    '<h2>What Does "Making It Right" Actually Look Like?</h2>' +
+    '<p>Amends are not punishment or penance. They are practical demonstrations of repair commitment - concrete actions that give the hurt person something tangible to anchor new trust around. The most effective amends directly address what was damaged: if the harm was sharing something private, the amends involves demonstrating reliability with private information going forward.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'An effective amends plan includes:<br/>' +
+      '<strong>Specific action:</strong> What exactly will you do - not "be better" but a concrete behaviour<br/>' +
+      '<strong>Connection to harm:</strong> Why does this specific action address what was damaged?<br/>' +
+      '<strong>Timeframe:</strong> When will you do it - soon and consistently, not vaguely "eventually"' +
+    '</div>' +
+    '<label class="input-label">To rebuild trust with a friend I have hurt, I can...</label>' +
+    '<textarea class="reflection-input" id="amendsInput" oninput="checkAmends(this.value)" placeholder="For example: To rebuild trust with a friend I have hurt, I can check in with them privately rather than waiting for them to come to me. I can demonstrate over the next few weeks that I can keep things private by being careful with everything they share. I can ask what would specifically help them feel better and follow through on what they say..." rows="5"></textarea>' +
+    '<div class="char-counter" id="amendsCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🧠 <strong>The consistency principle:</strong> Research on trust repair consistently shows that repeated small demonstrations of trustworthy behaviour over time are more effective at restoring trust than single grand gestures. The person who checks in every day for two weeks builds more trust than the person who buys a large gift once. Consistency is the message - and the message is: "You can count on me."</div>' +
+    '<button class="btn-primary" id="amendsNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on Trust -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build the Repair') +
+    backBtn(9,'Back to Amends Plan') +
+    '<div class="stage-label blue"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Trust Take Time to Rebuild?</h2>' +
+    '<p>One of the most common frustrations after a genuine apology is: "I said sorry - why are they still hurt?" Understanding why trust takes time is not just interesting - it changes how you show up during the repair process. Someone who understands the mechanism responds to the hurt person\'s guardedness with patience rather than frustration.</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.75">' +
+      '1. Explain in your own words why a genuine apology is the beginning of trust repair - not the completion of it. What does the hurt person\'s brain need beyond the apology itself?<br/>' +
+      '2. Think of a time you were hurt by a friend or family member. What did they do - or not do - that made the repair feel genuine or not genuine to you? What would have helped most?<br/>' +
+      '3. What is the difference between asking for forgiveness and earning trust back? Why does that difference matter?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about what trust actually is, what the brain needs to feel safe again, your own experience of conflict and repair, and the difference between asking for something and demonstrating you deserve it..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg gold-msg" style="margin-bottom:16px">🏅 <strong>Badge Progress:</strong> Trust Builder Level 1 - almost earned! Final act coming up...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Apply and Strengthen -></button>' +
+  '</div>';
+}
+
+function s11() {
+  zaraDone1 = false; zaraDone2 = false; zaraDone3 = false;
+  var z1count = 0;
+  var emoOpts = [
+    {id:'lonely', text:'Lonely and left out', correct:true},
+    {id:'excited', text:'Excited and energised', correct:false},
+    {id:'proud2', text:'Proud and confident', correct:false}
+  ];
+  var repairOpts = [
+    {id:'ignore', text:'Wait and see if Zara reaches out first, avoiding the awkwardness', correct:false},
+    {id:'check', text:'Reach out privately, acknowledge you noticed something was off, and ask how they are', correct:true},
+    {id:'gossip', text:'Tell other friends that Zara has been acting strangely lately', correct:false}
+  ];
+  var mkBtns = function(opts, fnName) {
+    return opts.map(function(o) {
+      return '<button class="zara-btn" id="zb-' + o.id + '" onclick="' + fnName + '(\'' + o.id + '\',' + o.correct + ')">' +
+        '<span class="zb-icon">💭</span>' +
+        '<div><div class="zb-text">' + o.text + '</div></div>' +
+      '</button>';
+    }).join('');
+  };
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Strengthen') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Zara Has Been Ignoring Her Friend</h2>' +
+    '<div class="story-box" data-icon="🏫">' +
+      '<p><span class="coral">Zara</span> and her best friend have been close since primary school. Over the past week, Zara has been responding to messages with one word answers, not saving her friend a seat at lunch, and finding reasons not to walk home together. She has not explained why. Her friend has noticed and does not know what she did wrong.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - How is Zara\'s friend feeling?</div>' +
+    '<div class="zara-opts">' + mkBtns(emoOpts,'pickZaraEmo') + '</div>' +
+    '<div id="zaraEmoFb"></div>' +
+    '<div class="section-divider">Step 2 of 3 - What is the first repair step?</div>' +
+    '<div id="zaraRepairWrap" style="opacity:0.4;pointer-events:none"><div class="zara-opts">' + mkBtns(repairOpts,'pickZaraRepair') + '</div></div>' +
+    '<div id="zaraRepairFb"></div>' +
+    '<div class="section-divider">Step 3 of 3 - What should Zara say when she reaches out?</div>' +
+    '<div id="zaraSayWrap" style="opacity:0.4;pointer-events:none">' +
+      '<div class="zara-opts">' +
+        '<button class="zara-btn" id="zb-deny" onclick="pickZaraSay(\'deny\',false)">' +
+          '<span class="zb-icon">💬</span><div><div class="zb-text">"You\'re imagining things. Nothing is wrong."</div></div>' +
+        '</button>' +
+        '<button class="zara-btn" id="zb-attack" onclick="pickZaraSay(\'attack\',false)">' +
+          '<span class="zb-icon">💬</span><div><div class="zb-text">"You should have noticed sooner that something was wrong."</div></div>' +
+        '</button>' +
+        '<button class="zara-btn" id="zb-open" onclick="pickZaraSay(\'open\',true)">' +
+          '<span class="zb-icon">💬</span><div><div class="zb-text">"I know I have been distant and that is not fair on you. Can we talk? I want us to be okay."</div></div>' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="zaraSayFb"></div>' +
+    '<button class="btn-primary" id="zaraNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Repair Sorting Challenge -></button>' +
+  '</div>';
+}
+
+function s12() {
+  sort3Plac = {}; sort3Sel = null;
+  var bank = sort3Data.map(function(c) {
+    return '<div class="sort-chip" id="s3c-' + c.id + '" onclick="handleSort3Click(\'' + c.id + '\')">' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Strengthen') +
+    backBtn(11,'Back to Zara\'s Scenario') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 12 - Repair Sorting Challenge</div>' +
+    '<h2>Which Behaviours Rebuild Trust - Which Ones Damage It?</h2>' +
+    '<p>Trust is rebuilt not through a single dramatic gesture but through accumulated consistent behaviours over time. Many of the most trust-building behaviours are small and undramatic. Many of the most trust-damaging behaviours seem minor in the moment. The challenge is that damaging behaviours often feel easier or more satisfying short-term - which is exactly why understanding them in advance matters.</p>' +
+    '<div class="sort-bank" id="sort3Bank">' + bank + '</div>' +
+    '<div id="sort3Hint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a behaviour, then click a zone to place it</div>' +
+    '<div class="sort-zones">' +
+      '<div class="sort-zone zone-damage" onclick="placeSort3(\'damage\')">' +
+        '<div class="sz-title">Damages Trust</div>' +
+        '<div class="sz-items" id="zone-damage"></div>' +
+      '</div>' +
+      '<div class="sort-zone zone-rebuild" onclick="placeSort3(\'rebuild\')">' +
+        '<div class="sz-title">Rebuilds Trust</div>' +
+        '<div class="sz-items" id="zone-rebuild"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sort3Feedback"></div>' +
+    '<button class="btn-primary" id="sort3NextBtn" onclick="renderStage(13)" disabled>Next: Final Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.opts.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Strengthen') +
+    backBtn(12,'Back to Sorting') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 13 - Final Quiz</div>' +
+    '<h2>Three Questions to Confirm Your Understanding</h2>' +
+    '<p>You have worked through the full Friendship Repair framework - understanding conflict, building the repair, and applying it in new scenarios. These three questions test whether the core principles have genuinely settled. Answer each one carefully and precisely.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Workshop Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Workshop Complete!') +
+    '<div class="stage-label gold"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>You Are Now a Friendship Repair Expert</h2>' +
+    '<p>You completed all 3 Acts of the Friendship Repair Workshop - understanding conflict, building genuine repair, and applying the skills in new scenarios. You have earned all three badges:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🕊</span><div class="b-title">Conflict Resolver</div><div class="b-sub">Understood the break</div></div>' +
+      '<div class="badge-item"><span class="b-icon">💙</span><div class="b-title">Trust Builder</div><div class="b-sub">Built the repair</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🛠</span><div class="b-title">Repair Expert</div><div class="b-sub">Applied the skills</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Built Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🕊</span><div><div class="sk-title">Understanding Conflict</div><div class="sk-desc">Conflict in friendship is not a sign that something is wrong with the friendship - it is an inevitable part of being human. What matters is what happens after. Recognising the hurt person\'s emotions accurately, understanding the difference between blame and responsibility, and knowing which reactions escalate vs repair - these are the foundations that everything else is built on.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">💙</span><div><div class="sk-title">The Five-Step Repair Formula</div><div class="sk-desc">Acknowledge what happened. Apologise specifically without conditions. Validate the feelings. Make amends with concrete actions. Give time. Each step does different emotional repair work - and missing any step significantly reduces the effectiveness of the whole repair. The formula works because it is built around what the hurt person actually needs, not around what makes the apologising person feel better.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🛠</span><div><div class="sk-title">Trust Rebuilds Through Behaviour</div><div class="sk-desc">Trust is pattern-based, not event-based. A genuine apology starts the process - it does not complete it. Trust is rebuilt through consistent small demonstrations of care, reliability, and honesty over time. The person who checks in regularly, keeps their promises, and handles vulnerability carefully builds more trust than the person who makes one dramatic gesture and expects instant forgiveness. Patience with the process is itself a trust-building behaviour.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="🤝" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'Every friendship you have will face a moment of conflict. Someone will say something thoughtless. Someone will forget something important. Someone will choose themselves when the other person needed them to choose the friendship. This is not the end of the friendship - it is a test of it. And now you have the tools. You know how to name what happened without defensiveness. You know how to apologise in a way that actually heals. You know how to show up consistently until the trust comes back. Those skills are rare - and they will make every friendship you carry stronger for the rest of your life. 🤝' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartWorkshop()" style="width:100%;justify-content:center;display:flex">Restart the Workshop</button>' +
+  '</div>';
+}
+
+function postRender(n) {
+  if (n === 2) { emoSel.forEach(function(id){ var el=document.getElementById('ec-'+id); if(el) el.classList.add('ec-correct'); }); if(emoOk){var b=document.getElementById('emoNextBtn'); if(b) b.disabled=false;} }
+  if (n === 3) { restoreSort1(); }
+  if (n === 4) { updateTrust(trustLevel); }
+  if (n === 5) { restoreSort2(); }
+  if (n === 8 && apoText) { var ta=document.getElementById('apoInput'); if(ta) ta.value=apoText; checkApo(apoText); }
+  if (n === 9 && amendsText) { var ta2=document.getElementById('amendsInput'); if(ta2) ta2.value=amendsText; checkAmends(amendsText); }
+  if (n === 10 && reflectText) { var ta3=document.getElementById('reflectInput'); if(ta3) ta3.value=reflectText; checkReflect(reflectText); }
+  if (n === 11) { setTimeout(function(){ if(zaraDone1){ var rw=document.getElementById('zaraRepairWrap'); if(rw){rw.style.opacity='1';rw.style.pointerEvents='auto';} } if(zaraDone2){ var sw=document.getElementById('zaraSayWrap'); if(sw){sw.style.opacity='1';sw.style.pointerEvents='auto';} } checkZaraDone(); },60); }
+  if (n === 12) { restoreSort3(); }
+}
+
+/* S2 EMOTIONS */
+function toggleEmo(id, correct) {
+  var el = document.getElementById('ec-' + id);
+  if (!el) return;
+  if (emoSel.has(id)) {
+    emoSel.delete(id);
+    el.classList.remove('ec-correct','ec-wrong');
+  } else {
+    if (emoSel.size >= 2) return;
+    emoSel.add(id);
+    el.classList.add(correct ? 'ec-correct' : 'ec-wrong');
+    if (!correct) {
+      setTimeout(function(){
+        emoSel.delete(id);
+        if(el) el.classList.remove('ec-wrong');
+        var fb=document.getElementById('emoFeedback');
+        if(fb) {
+          if(id==='angry') fb.innerHTML='<div class="feedback-msg incorrect-msg">Anger may be present, but it is not the primary emotion Sami is experiencing here. The scenario describes embarrassment - being exposed in front of classmates - and betrayal of trust. Look for the two emotions that most precisely match those experiences.</div>';
+          else fb.innerHTML='<div class="feedback-msg incorrect-msg">Pride does not fit this scenario at all - Sami\'s secret was shared without his consent. Think about what someone feels when they are publicly exposed and their trust is broken.</div>';
+        }
+      }, 800);
+      return;
+    }
+  }
+  checkEmoState();
+}
+
+function checkEmoState() {
+  var correctSel = Array.from(emoSel).filter(function(id){ return id==='hurt'||id==='embarr'; });
+  var wrongSel = Array.from(emoSel).filter(function(id){ return id!=='hurt'&&id!=='embarr'; });
+  var fb = document.getElementById('emoFeedback');
+  var nb = document.getElementById('emoNextBtn');
+  if (correctSel.length === 2 && wrongSel.length === 0) {
+    emoOk = true;
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">Both correct. Hurt describes the betrayal of trust - Sami shared something private and Omar treated it as ordinary information. Embarrassed describes the public dimension - being exposed in front of classmates changes something private into something public, taking away Sami\'s control over his own story. Both emotions need to be addressed separately in the repair for it to be complete.</div>';
+    if(nb) nb.disabled = false;
+  } else if (emoSel.size > 0) {
+    if(fb && !fb.innerHTML.includes('incorrect')) fb.innerHTML='<div class="feedback-msg info-msg">Select one more emotion that matches Sami\'s experience.</div>';
+    if(nb) nb.disabled = true;
+  }
+}
+
+/* SORT 1 - BLAME vs RESP */
+function handleSort1Click(id) {
+  if (sort1Plac[id]) return;
+  sort1Sel = id;
+  document.querySelectorAll('#sort1Bank .sort-chip').forEach(function(el){ el.classList.remove('sc-selected'); el.style.outline='none'; });
+  var el = document.getElementById('s1c-' + id);
+  if (el) { el.classList.add('sc-selected'); el.style.outline='3px solid var(--lav-dark)'; }
+  var hint = document.getElementById('sort1Hint');
+  if (hint) hint.textContent = 'Click a zone to place this statement';
+}
+function placeSort1(zone) {
+  if (!sort1Sel) return;
+  var item = sort1Data.find(function(c){ return c.id===sort1Sel; });
+  if (!item) return;
+  sort1Plac[sort1Sel] = zone;
+  var el = document.getElementById('s1c-' + sort1Sel);
+  if (el) { el.classList.add('placed'); el.classList.remove('sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  var correct = item.zone === zone;
+  if (zoneEl) zoneEl.innerHTML += '<div class="sz-item">' + (correct?'✅':'❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort1(\'' + sort1Sel + '\',\'' + zone + '\')">x</span></div>';
+  sort1Sel = null;
+  var hint = document.getElementById('sort1Hint');
+  if (hint) hint.textContent = 'Click another statement to continue';
+  checkSort1();
+}
+function removeSort1(id, zone) {
+  delete sort1Plac[id];
+  var el = document.getElementById('s1c-' + id);
+  if (el) { el.classList.remove('placed','sc-selected'); }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) { var t=sort1Data.find(function(c){return c.id===id;}).text; zoneEl.querySelectorAll('.sz-item').forEach(function(i){ if(i.textContent.includes(t)) i.remove(); }); }
+  checkSort1();
+}
+function restoreSort1() {
+  Object.keys(sort1Plac).forEach(function(id) {
+    var zone = sort1Plac[id]; var item = sort1Data.find(function(c){return c.id===id;});
+    var el = document.getElementById('s1c-'+id); if(el) el.classList.add('placed');
+    var zoneEl = document.getElementById('zone-'+zone);
+    if(zoneEl&&item){ var correct=item.zone===zone; zoneEl.innerHTML+='<div class="sz-item">'+(correct?'✅':'❌')+' '+item.text+'<span class="sz-remove" onclick="removeSort1(\''+id+'\',\''+zone+'\')">x</span></div>'; }
+  });
+  checkSort1();
+}
+function checkSort1() {
+  var total = Object.keys(sort1Plac).length;
+  var correct = sort1Data.filter(function(c){ return sort1Plac[c.id]===c.zone; }).length;
+  var fb = document.getElementById('sort1Feedback'); var nb = document.getElementById('sort1NextBtn');
+  if (total < sort1Data.length) { if(fb&&total>0) fb.innerHTML='<div class="feedback-msg info-msg">'+total+' of 6 placed. Continue.</div>'; if(nb) nb.disabled=true; return; }
+  if (correct === sort1Data.length) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">All correctly sorted. Blame statements ("it was not my fault", "they were going to find out anyway", "you are overreacting") redirect attention away from the hurt caused and toward self-protection. Responsibility statements ("I should not have said that", "I understand why you feel hurt", "I want to make this right") keep attention on the impact of the action and the relationship - which is exactly where repair needs to happen.</div>';
+    if(nb) nb.disabled=false;
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Not all correct ('+correct+' of 6). Ask: does this statement focus on defending the speaker, or on understanding the hurt caused? Defenders go in Blame. Those that acknowledge impact go in Responsibility.</div>';
+    if(nb) nb.disabled=true;
+  }
+}
+
+/* SORT 2 - ESCALATE vs REPAIR */
+function handleSort2Click(id) {
+  if (sort2Plac[id]) return;
+  sort2Sel = id;
+  document.querySelectorAll('#sort2Bank .sort-chip').forEach(function(el){ el.classList.remove('sc-selected'); el.style.outline='none'; });
+  var el = document.getElementById('s2c-' + id);
+  if (el) { el.classList.add('sc-selected'); el.style.outline='3px solid var(--lav-dark)'; }
+  var hint = document.getElementById('sort2Hint');
+  if (hint) hint.textContent = 'Click a zone to place this reaction';
+}
+function placeSort2(zone) {
+  if (!sort2Sel) return;
+  var item = sort2Data.find(function(c){ return c.id===sort2Sel; });
+  if (!item) return;
+  sort2Plac[sort2Sel] = zone;
+  var el = document.getElementById('s2c-' + sort2Sel);
+  if (el) { el.classList.add('placed'); el.classList.remove('sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  var correct = item.zone === zone;
+  if (zoneEl) zoneEl.innerHTML += '<div class="sz-item">' + (correct?'✅':'❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort2(\'' + sort2Sel + '\',\'' + zone + '\')">x</span></div>';
+  sort2Sel = null;
+  var hint = document.getElementById('sort2Hint');
+  if (hint) hint.textContent = 'Click another reaction to continue';
+  checkSort2();
+}
+function removeSort2(id, zone) {
+  delete sort2Plac[id];
+  var el = document.getElementById('s2c-' + id);
+  if (el) { el.classList.remove('placed','sc-selected'); }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) { var t=sort2Data.find(function(c){return c.id===id;}).text; zoneEl.querySelectorAll('.sz-item').forEach(function(i){ if(i.textContent.includes(t)) i.remove(); }); }
+  checkSort2();
+}
+function restoreSort2() {
+  Object.keys(sort2Plac).forEach(function(id) {
+    var zone=sort2Plac[id]; var item=sort2Data.find(function(c){return c.id===id;});
+    var el=document.getElementById('s2c-'+id); if(el) el.classList.add('placed');
+    var zoneEl=document.getElementById('zone-'+zone);
+    if(zoneEl&&item){ var correct=item.zone===zone; zoneEl.innerHTML+='<div class="sz-item">'+(correct?'✅':'❌')+' '+item.text+'<span class="sz-remove" onclick="removeSort2(\''+id+'\',\''+zone+'\')">x</span></div>'; }
+  });
+  checkSort2();
+}
+function checkSort2() {
+  var total = Object.keys(sort2Plac).length;
+  var correct = sort2Data.filter(function(c){ return sort2Plac[c.id]===c.zone; }).length;
+  var fb = document.getElementById('sort2Feedback'); var nb = document.getElementById('sort2NextBtn');
+  if (total < sort2Data.length) { if(fb&&total>0) fb.innerHTML='<div class="feedback-msg info-msg">'+total+' of 6 placed. Continue.</div>'; if(nb) nb.disabled=true; return; }
+  if (correct === sort2Data.length) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">All correctly sorted. Escalating reactions (defending loudly, walking away mid-argument, blaming) are driven by the impulse to protect the self - they feel justified but they signal to the hurt person that being right matters more than the relationship. Repair reactions (apologising first, listening without interrupting, acknowledging feelings) demonstrate that the relationship matters more - which is the core message that begins genuine repair.</div>';
+    if(nb) nb.disabled=false;
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Not all correct ('+correct+' of 6). Ask: does this reaction move the relationship toward repair, or does it signal self-protection? Escalating ones protect the self; repair ones prioritise the relationship.</div>';
+    if(nb) nb.disabled=true;
+  }
+}
+
+/* SORT 3 - DAMAGE vs REBUILD */
+function handleSort3Click(id) {
+  if (sort3Plac[id]) return;
+  sort3Sel = id;
+  document.querySelectorAll('#sort3Bank .sort-chip').forEach(function(el){ el.classList.remove('sc-selected'); el.style.outline='none'; });
+  var el = document.getElementById('s3c-' + id);
+  if (el) { el.classList.add('sc-selected'); el.style.outline='3px solid var(--lav-dark)'; }
+  var hint = document.getElementById('sort3Hint');
+  if (hint) hint.textContent = 'Click a zone to place this behaviour';
+}
+function placeSort3(zone) {
+  if (!sort3Sel) return;
+  var item = sort3Data.find(function(c){ return c.id===sort3Sel; });
+  if (!item) return;
+  sort3Plac[sort3Sel] = zone;
+  var el = document.getElementById('s3c-' + sort3Sel);
+  if (el) { el.classList.add('placed'); el.classList.remove('sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  var correct = item.zone === zone;
+  if (zoneEl) zoneEl.innerHTML += '<div class="sz-item">' + (correct?'✅':'❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort3(\'' + sort3Sel + '\',\'' + zone + '\')">x</span></div>';
+  sort3Sel = null;
+  var hint = document.getElementById('sort3Hint');
+  if (hint) hint.textContent = 'Click another behaviour to continue';
+  checkSort3();
+}
+function removeSort3(id, zone) {
+  delete sort3Plac[id];
+  var el = document.getElementById('s3c-' + id);
+  if (el) { el.classList.remove('placed','sc-selected'); }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) { var t=sort3Data.find(function(c){return c.id===id;}).text; zoneEl.querySelectorAll('.sz-item').forEach(function(i){ if(i.textContent.includes(t)) i.remove(); }); }
+  checkSort3();
+}
+function restoreSort3() {
+  Object.keys(sort3Plac).forEach(function(id) {
+    var zone=sort3Plac[id]; var item=sort3Data.find(function(c){return c.id===id;});
+    var el=document.getElementById('s3c-'+id); if(el) el.classList.add('placed');
+    var zoneEl=document.getElementById('zone-'+zone);
+    if(zoneEl&&item){ var correct=item.zone===zone; zoneEl.innerHTML+='<div class="sz-item">'+(correct?'✅':'❌')+' '+item.text+'<span class="sz-remove" onclick="removeSort3(\''+id+'\',\''+zone+'\')">x</span></div>'; }
+  });
+  checkSort3();
+}
+function checkSort3() {
+  var total = Object.keys(sort3Plac).length;
+  var correct = sort3Data.filter(function(c){ return sort3Plac[c.id]===c.zone; }).length;
+  var fb = document.getElementById('sort3Feedback'); var nb = document.getElementById('sort3NextBtn');
+  if (total < sort3Data.length) { if(fb&&total>0) fb.innerHTML='<div class="feedback-msg info-msg">'+total+' of 8 placed. Continue.</div>'; if(nb) nb.disabled=true; return; }
+  if (correct === sort3Data.length) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">All correctly sorted. Trust-rebuilding behaviours (remembering important things, checking in, genuine apologies, keeping secrets) all communicate the same underlying message: "You matter to me and I pay attention to you." Trust-damaging behaviours (gossiping, broken promises, bringing up past mistakes, guilt trips) all communicate the opposite - even when they feel minor in the moment. Trust is built from the accumulated weight of small behaviours over time.</div>';
+    if(nb) nb.disabled=false;
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Not all correct ('+correct+' of 8). Ask: does this behaviour communicate "you matter to me" or does it prioritise the speaker\'s comfort/defence over the relationship?</div>';
+    if(nb) nb.disabled=true;
+  }
+}
+
+/* S4 TRUST METER */
+function updateTrust(val) {
+  trustLevel = parseInt(val);
+  var tV = 100 - trustLevel;
+  var dV = trustLevel;
+  var state = getTrustState(trustLevel);
+  if (!state) return;
+  var tF=document.getElementById('trustFill'), dF=document.getElementById('damageFill');
+  var tP=document.getElementById('trustPct'), dP=document.getElementById('damagePct');
+  var tM=document.getElementById('trustMood'), dM=document.getElementById('damageMood');
+  var sl=document.getElementById('trustSl');
+  if(tF) tF.style.width = tV + '%';
+  if(dF) dF.style.width = dV + '%';
+  if(tP) tP.textContent = tV + '%';
+  if(dP) dP.textContent = dV + '%';
+  if(tM) tM.textContent = state.tMood;
+  if(dM) dM.textContent = state.dMood;
+  if(sl) {
+    var g1 = 'rgba(232,80,80,' + (0.28 + dV/190) + ')';
+    var g2 = 'rgba(24,96,200,' + (0.28 + tV/190) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+/* S7 APOLOGY CHOICE */
+function chooseApo(id) {
+  if (apoLock) return;
+  apoLock = true; apoChoice = id;
+  var chosen = apoOptions.find(function(o){ return o.id===id; });
+  if (!chosen) return;
+  apoOptions.forEach(function(o){ var el=document.getElementById('ap-'+o.id); if(el) el.style.cursor='default'; });
+  var el = document.getElementById('ap-' + id);
+  if (el) el.classList.add('sel-' + chosen.quality);
+  var out = document.getElementById('apoOutcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💙 Trust Level</span><span id="apoTL">0%</span></div><div class="meter-track"><div class="meter-fill trust-fill" id="apoTF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💔 Damage Level</span><span id="apoDL">0%</span></div><div class="meter-track"><div class="meter-fill damage-fill" id="apoDF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var tF=document.getElementById('apoTF'), dF=document.getElementById('apoDF');
+    var tL=document.getElementById('apoTL'), dL=document.getElementById('apoDL');
+    if(tF) tF.style.width = chosen.tL + '%';
+    if(dF) dF.style.width = chosen.dL + '%';
+    if(tL) tL.textContent = chosen.tL + '%';
+    if(dL) dL.textContent = chosen.dL + '%';
+  }, 150);
+  var nw = document.getElementById('apoNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+/* TEXTAREAS */
+function checkApo(val) {
+  apoText = val;
+  var len = val.trim().length; apoValid = len >= 40;
+  var c=document.getElementById('apoCounter'), b=document.getElementById('apoNextBtn');
+  if(c){ c.textContent = len+' / 40 minimum characters'; c.className='char-counter'+(apoValid?' met':''); }
+  if(b) b.disabled = !apoValid;
+}
+function checkAmends(val) {
+  amendsText = val;
+  var len = val.trim().length; amendsValid = len >= 40;
+  var c=document.getElementById('amendsCounter'), b=document.getElementById('amendsNextBtn');
+  if(c){ c.textContent = len+' / 40 minimum characters'; c.className='char-counter'+(amendsValid?' met':''); }
+  if(b) b.disabled = !amendsValid;
+}
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length; reflectValid = len >= 40;
+  var c=document.getElementById('reflectCounter'), b=document.getElementById('reflectNextBtn');
+  if(c){ c.textContent = len+' / 40 minimum characters'; c.className='char-counter'+(reflectValid?' met':''); }
+  if(b) b.disabled = !reflectValid;
+}
+
+/* S11 ZARA */
+var z1done = false, z2done = false, z3done = false;
+function pickZaraEmo(id, correct) {
+  if (z1done) return;
+  z1done = true; zaraDone1 = true;
+  document.querySelectorAll('#stageContainer .zara-opts:nth-of-type(1) .zara-btn').forEach(function(b){ b.style.cursor='default'; });
+  var el = document.getElementById('zb-' + id);
+  if (el) el.classList.add(correct ? 'zb-correct' : 'zb-incorrect');
+  var fb = document.getElementById('zaraEmoFb');
+  if (correct) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">Correct. Zara\'s friend is experiencing loneliness and hurt from the sudden distance - she does not know what she did wrong, which adds confusion and self-doubt to the hurt. This combination of emotions (lonely, confused, possibly self-blaming) tells us what the repair needs to address: reassurance, honesty, and genuine reconnection.</div>';
+    var rw = document.getElementById('zaraRepairWrap');
+    if (rw) { rw.style.opacity='1'; rw.style.pointerEvents='auto'; }
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Think about what it feels like to notice your close friend pulling away with no explanation. Excitement and pride do not fit here. The correct answer is shown. The repair wrap is unlocked for you to continue.</div>';
+    var ec = document.getElementById('zb-lonely'); if(ec) ec.classList.add('zb-correct');
+    var rw2 = document.getElementById('zaraRepairWrap');
+    if (rw2) { rw2.style.opacity='1'; rw2.style.pointerEvents='auto'; }
+  }
+  checkZaraDone();
+}
+function pickZaraRepair(id, correct) {
+  if (z2done) return;
+  z2done = true; zaraDone2 = true;
+  document.querySelectorAll('#zaraRepairWrap .zara-btn').forEach(function(b){ b.style.cursor='default'; });
+  var el = document.getElementById('zb-' + id);
+  if (el) el.classList.add(correct ? 'zb-correct' : 'zb-incorrect');
+  var fb = document.getElementById('zaraRepairFb');
+  if (correct) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">Correct first repair step. Reaching out privately is respectful - it does not put either person on the spot publicly. Acknowledging that something seems off opens the door without accusation. Asking how they are puts the friend\'s experience first. This combination demonstrates the repair formula in miniature: acknowledgement, opening to connection, attention to feelings.</div>';
+  } else if (id === 'ignore') {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Waiting for the friend to reach out places the repair burden on the person who was hurt - which is the opposite of the repair formula. The correct first step is shown above. The next step is now unlocked.</div>';
+    var c2=document.getElementById('zb-check'); if(c2) c2.classList.add('zb-correct');
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Gossiping to others actively deepens the damage. The correct first step is shown above. The next step is now unlocked.</div>';
+    var c3=document.getElementById('zb-check'); if(c3) c3.classList.add('zb-correct');
+  }
+  var sw = document.getElementById('zaraSayWrap');
+  if (sw) { sw.style.opacity='1'; sw.style.pointerEvents='auto'; }
+  checkZaraDone();
+}
+function pickZaraSay(id, correct) {
+  if (z3done) return;
+  z3done = true; zaraDone3 = true;
+  document.querySelectorAll('#zaraSayWrap .zara-btn').forEach(function(b){ b.style.cursor='default'; });
+  var el = document.getElementById('zb-' + id);
+  if (el) el.classList.add(correct ? 'zb-correct' : 'zb-incorrect');
+  var fb = document.getElementById('zaraSayFb');
+  if (correct) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">The best response. "I know I have been distant" is acknowledgement without deflection. "That is not fair on you" is responsibility - placing the discomfort caused on Zara rather than blaming the friend. "Can we talk?" opens the door. "I want us to be okay" communicates that the friendship matters. Each phrase does specific repair work in very few words.</div>';
+  } else if (id === 'deny') {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Denial invalidates the friend\'s accurate perception, adding a second hurt to the first. The correct response is shown - it takes responsibility and opens the door to repair.</div>';
+    var c2=document.getElementById('zb-open'); if(c2) c2.classList.add('zb-correct');
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Attacking the friend for not noticing sooner is blame-shifting - it adds guilt to existing hurt. The correct response is shown - it acknowledges Zara\'s distance and prioritises the friendship.</div>';
+    var c3=document.getElementById('zb-open'); if(c3) c3.classList.add('zb-correct');
+  }
+  checkZaraDone();
+}
+function checkZaraDone() {
+  if (zaraDone1 && zaraDone2 && zaraDone3) {
+    var b = document.getElementById('zaraNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+/* QUIZ */
+function answerQuiz(qi, oi, correct) {
+  if (quizAnswers[qi] !== undefined) return;
+  quizAnswers[qi] = correct;
+  var q = quizData[qi];
+  q.opts.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qi + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === oi) el.classList.add(correct ? 'q-correct' : 'q-incorrect');
+    else if (q.opts[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qi);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (correct ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = correct ? q.fb.correct : q.fb.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartWorkshop() {
+  emoSel = new Set(); emoOk = false;
+  sort1Plac = {}; sort1Sel = null;
+  trustLevel = 20;
+  sort2Plac = {}; sort2Sel = null;
+  apoChoice = null; apoLock = false;
+  apoText = ''; apoValid = false;
+  amendsText = ''; amendsValid = false;
+  reflectText = ''; reflectValid = false;
+  zaraDone1=false; zaraDone2=false; zaraDone3=false;
+  z1done=false; z2done=false; z3done=false;
+  sort3Plac = {}; sort3Sel = null;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#7048c8','#1860c8','#e85050','#d89020','#18c870','#3c1890','#c8a8f8','#a8c8f8'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x:Math.random()*canvas.width, y:Math.random()*canvas.height-canvas.height,
+      w:Math.random()*12+5, h:Math.random()*6+3,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      rot:Math.random()*360, rotSpeed:(Math.random()-0.5)*6,
+      speed:Math.random()*3+1.5, drift:(Math.random()-0.5)*1.5,
+      opacity:Math.random()*0.5+0.5
+    });
+  }
+  var frame = 0, maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(function(p){
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame/maxFrames);
+      ctx.translate(p.x+p.w/2, p.y+p.h/2);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.y+=p.speed; p.x+=p.drift; p.rot+=p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function(){
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

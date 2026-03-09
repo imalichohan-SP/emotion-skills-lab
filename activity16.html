@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Balanced Life Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f6ff;
+  --card:#ffffff;
+  --blue:#1a60d8;--blue-dark:#0a3898;--blue-light:#a8caff;
+  --green:#18b85a;--green-dark:#0a7038;--green-light:#a0f0c0;
+  --amber:#d88c18;--amber-dark:#886000;--amber-light:#fde8a0;
+  --violet:#7040c8;--violet-dark:#3c1890;--violet-light:#c8aaf8;
+  --coral:#e84848;--coral-dark:#a01828;--coral-light:#f8b0b0;
+  --orange:#e87820;--orange-dark:#a04800;--orange-light:#fccca0;
+  --teal:#0d9898;--teal-dark:#065858;--teal-light:#98e0e0;
+  --text:#060e28;--text-soft:#1a2848;
+  --shadow-sm:0 4px 16px rgba(10,56,152,0.12);
+  --shadow-md:0 8px 32px rgba(10,56,152,0.16);
+  --shadow-lg:0 16px 48px rgba(10,56,152,0.22);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 6% 10%,rgba(26,96,216,0.18) 0%,transparent 46%),
+    radial-gradient(circle at 94% 82%,rgba(24,184,90,0.14) 0%,transparent 44%),
+    radial-gradient(circle at 50% 50%,rgba(216,140,24,0.07) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--green-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(21px,5vw,31px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--blue-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(10,56,152,0.09);color:var(--blue-dark);border:1.5px solid rgba(10,56,152,0.24)}
+.act-banner.act2{background:rgba(10,112,56,0.09);color:var(--green-dark);border:1.5px solid rgba(10,112,56,0.24)}
+.act-banner.act3{background:rgba(136,96,0,0.09);color:var(--amber-dark);border:1.5px solid rgba(136,96,0,0.24)}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(26,96,216,0.16);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-dark),var(--green-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(10,56,152,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(26,96,216,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--blue-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--green-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(26,96,216,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(26,96,216,0.09),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue-dark);background:rgba(26,96,216,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.green{color:var(--green-dark);background:rgba(10,112,56,0.09)}
+.stage-label.amber{color:var(--amber-dark);background:rgba(136,96,0,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(26,96,216,0.09),rgba(24,184,90,0.07));border:1.5px solid rgba(26,96,216,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--blue-dark);font-style:normal}
+.thought-box{background:linear-gradient(135deg,rgba(232,72,72,0.10),rgba(26,96,216,0.09));border:2px solid rgba(232,72,72,0.28);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'💭';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--coral-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* IMBALANCE CARDS */
+.imbal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 26px}
+.imbal-card{background:var(--bg);border:2px solid rgba(26,96,216,0.18);border-radius:var(--radius-sm);padding:16px 14px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.imbal-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.imbal-card .ic-emoji{font-size:30px;display:block;margin-bottom:8px}
+.imbal-card .ic-label{font-size:13.5px;font-weight:900;color:var(--text)}
+.imbal-card .ic-desc{font-size:11.5px;font-weight:600;color:var(--text-soft);margin-top:3px;line-height:1.3}
+.imbal-card.ic-correct{border-color:var(--teal-dark);background:linear-gradient(135deg,rgba(13,152,152,0.12),rgba(24,184,90,0.09));box-shadow:0 0 0 3px rgba(6,88,88,0.12),var(--shadow-sm);animation:correctPop 0.35s ease}
+.imbal-card.ic-wrong{border-color:var(--coral-dark);background:rgba(232,72,72,0.08);animation:wrongShake 0.4s ease}
+.ic-check{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--teal-dark);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.imbal-card.ic-correct .ic-check{opacity:1;transform:scale(1)}
+
+/* ENERGY METER */
+.energy-meter-wrap{margin:22px 0 26px;background:linear-gradient(135deg,rgba(24,184,90,0.07),rgba(26,96,216,0.06));border:1.5px solid rgba(24,184,90,0.20);border-radius:var(--radius-sm);padding:24px}
+.e-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.e-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer;transition:background 0.4s ease}
+.e-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--green-dark);box-shadow:0 3px 14px rgba(10,112,56,0.36);cursor:pointer;transition:transform 0.2s}
+.e-slider::-webkit-slider-thumb:hover,.e-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.e-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--green-dark);cursor:pointer}
+.e-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.e-bar-side{padding:16px;border-radius:var(--radius-sm);border:2px solid}
+.e-bar-side.energy-side{border-color:rgba(10,112,56,0.26);background:rgba(24,184,90,0.07)}
+.e-bar-side.overload-side{border-color:rgba(152,8,8,0.26);background:rgba(232,72,72,0.07)}
+.ebs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ebs-emoji{font-size:24px}
+.ebs-title{font-size:13px;font-weight:900;color:var(--text)}
+.ebs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06)}
+.ebs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.energy-side .ebs-fill{background:linear-gradient(90deg,var(--green-light),var(--green-dark))}
+.overload-side .ebs-fill{background:linear-gradient(90deg,var(--orange-light),var(--coral-dark))}
+.ebs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px}
+.energy-side .ebs-pct{color:var(--green-dark)}
+.overload-side .ebs-pct{color:var(--coral-dark)}
+.ebs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:38px}
+
+/* ACTIVITY SORT */
+.sort-bank{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 12px;padding:14px 16px;background:rgba(26,96,216,0.06);border:2px dashed rgba(26,96,216,0.26);border-radius:var(--radius-sm);min-height:52px}
+.sort-chip{background:#fff;border:2px solid rgba(26,96,216,0.22);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800;color:var(--text);cursor:pointer;transition:var(--t);user-select:none;display:flex;align-items:center;gap:7px}
+.sort-chip:hover{border-color:var(--blue-dark);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.sort-chip.placed{opacity:0.4;pointer-events:none;border-style:dashed}
+.sort-chip.sc-selected{outline:3px solid var(--blue-dark)}
+.cat-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 24px}
+.cat-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:88px;border:2px solid;cursor:pointer}
+.cat-zone.zone-study{border-color:rgba(10,56,152,0.30);background:rgba(26,96,216,0.07)}
+.cat-zone.zone-play{border-color:rgba(10,112,56,0.30);background:rgba(24,184,90,0.07)}
+.cat-zone.zone-rest{border-color:rgba(112,64,200,0.30);background:rgba(112,64,200,0.07)}
+.cat-zone.zone-social{border-color:rgba(136,96,0,0.30);background:rgba(216,140,24,0.07)}
+.cat-zone .cz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.cat-zone.zone-study .cz-title{color:var(--blue-dark)}
+.cat-zone.zone-play .cz-title{color:var(--green-dark)}
+.cat-zone.zone-rest .cz-title{color:var(--violet-dark)}
+.cat-zone.zone-social .cz-title{color:var(--amber-dark)}
+.cz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:28px}
+.cz-item{background:#fff;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:4px}
+.cz-remove{cursor:pointer;font-size:13px;color:var(--text-soft);transition:color 0.2s;margin-left:2px}
+.cz-remove:hover{color:var(--coral-dark)}
+
+/* TIME ALLOCATION */
+.time-alloc-wrap{margin:18px 0 24px}
+.time-slot-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:14px 16px;background:var(--bg);border:2px solid rgba(26,96,216,0.16);border-radius:var(--radius-sm);transition:var(--t)}
+.time-slot-row:hover{border-color:rgba(26,96,216,0.32)}
+.ts-label{font-size:14px;font-weight:900;color:var(--text);min-width:100px;display:flex;align-items:center;gap:8px}
+.ts-emoji{font-size:22px}
+.ts-slider{-webkit-appearance:none;appearance:none;flex:1;height:12px;border-radius:999px;outline:none;cursor:pointer}
+.ts-slider::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
+.ts-val{font-size:14px;font-weight:900;min-width:46px;text-align:right}
+.ts-sleep .ts-slider{background:linear-gradient(90deg,var(--violet-light),var(--violet-dark))}
+.ts-sleep .ts-slider::-webkit-slider-thumb{border-color:var(--violet-dark)}
+.ts-sleep .ts-val{color:var(--violet-dark)}
+.ts-study .ts-slider{background:linear-gradient(90deg,var(--blue-light),var(--blue-dark))}
+.ts-study .ts-slider::-webkit-slider-thumb{border-color:var(--blue-dark)}
+.ts-study .ts-val{color:var(--blue-dark)}
+.ts-play .ts-slider{background:linear-gradient(90deg,var(--green-light),var(--green-dark))}
+.ts-play .ts-slider::-webkit-slider-thumb{border-color:var(--green-dark)}
+.ts-play .ts-val{color:var(--green-dark)}
+.ts-break .ts-slider{background:linear-gradient(90deg,var(--amber-light),var(--amber-dark))}
+.ts-break .ts-slider::-webkit-slider-thumb{border-color:var(--amber-dark)}
+.ts-break .ts-val{color:var(--amber-dark)}
+.time-total-bar{height:14px;border-radius:999px;overflow:hidden;background:rgba(26,96,216,0.10);margin:8px 0}
+.time-total-fill{height:100%;border-radius:999px;transition:width 0.4s ease,background 0.4s ease}
+.time-total-label{display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:6px}
+.time-total-label .tl-used{color:var(--text)}
+.time-total-label .tl-remain{color:var(--text-soft)}
+
+/* WEEKLY PLANNER */
+.week-planner{margin:16px 0 24px;overflow-x:auto}
+.week-table{width:100%;border-collapse:collapse;min-width:520px}
+.week-table th{padding:9px 6px;font-size:12px;font-weight:900;text-align:center;background:rgba(26,96,216,0.09);color:var(--blue-dark);border:1.5px solid rgba(26,96,216,0.14)}
+.week-table td{padding:4px;border:1.5px solid rgba(26,96,216,0.10)}
+.week-table td:first-child{font-size:12px;font-weight:800;color:var(--text-soft);padding:8px 10px;background:rgba(26,96,216,0.06);white-space:nowrap}
+.block-btn{width:100%;height:38px;border:none;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;transition:var(--t);opacity:0.85}
+.block-btn:hover{opacity:1;transform:scale(1.04)}
+.block-study{background:linear-gradient(135deg,#a8caff,#1a60d8);color:#fff}
+.block-play{background:linear-gradient(135deg,#a0f0c0,#18b85a);color:#fff}
+.block-rest{background:linear-gradient(135deg,#c8aaf8,#7040c8);color:#fff}
+.block-social{background:linear-gradient(135deg,#fde8a0,#d88c18);color:#553000}
+.block-empty{background:rgba(26,96,216,0.07);color:var(--text-soft)}
+.planner-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;padding:10px 14px;background:rgba(26,96,216,0.05);border-radius:var(--radius-sm)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--text);cursor:pointer;padding:5px 10px;border-radius:8px;border:2px solid rgba(0,0,0,0.07);transition:var(--t)}
+.legend-item:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.legend-item.active-mode{box-shadow:0 0 0 3px rgba(26,96,216,0.28),var(--shadow-sm);transform:scale(1.05)}
+.legend-dot{width:14px;height:14px;border-radius:4px;flex-shrink:0}
+
+/* PIE CHART */
+.pie-wrap{margin:18px 0 24px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.pie-svg-wrap{position:relative;width:200px;height:200px}
+.pie-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.pie-center-label .pcl-main{font-size:15px;font-weight:900;color:var(--text)}
+.pie-center-label .pcl-sub{font-size:11px;font-weight:700;color:var(--text-soft)}
+.pie-controls{width:100%;display:flex;flex-direction:column;gap:10px}
+.pie-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg);border:2px solid rgba(26,96,216,0.14);border-radius:var(--radius-sm)}
+.pie-row .pr-dot{width:16px;height:16px;border-radius:4px;flex-shrink:0}
+.pie-row .pr-label{font-size:13px;font-weight:900;color:var(--text);min-width:80px}
+.pie-row input[type=range]{flex:1;height:10px;border-radius:999px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.pie-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid;cursor:pointer}
+.pie-row .pr-pct{font-size:13px;font-weight:900;min-width:38px;text-align:right}
+.pie-total{font-size:14px;font-weight:800;color:var(--text-soft);text-align:center;margin-top:4px;transition:color 0.3s}
+.pie-total.balanced{color:var(--green-dark)}
+.pie-total.over{color:var(--coral-dark)}
+
+/* SCENARIO BTNS */
+.scenario-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.scenario-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(26,96,216,0.18);border-radius:var(--radius-sm);padding:17px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.scenario-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.scenario-btn .sb-icon{font-size:28px;flex-shrink:0}
+.scenario-btn .sb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.scenario-btn .sb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.scenario-btn.sel-wrong{border-color:var(--coral-dark);background:rgba(232,72,72,0.08);animation:wrongShake 0.4s ease}
+.scenario-btn.sel-ok{border-color:var(--amber-dark);background:rgba(216,140,24,0.09);animation:correctPop 0.4s ease}
+.scenario-btn.sel-best{border-color:var(--green-dark);background:rgba(24,184,90,0.09);animation:correctPop 0.4s ease}
+
+/* SORT2 - OVERLOAD vs HEALTHY */
+.sort2-zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 24px}
+.sort2-zone{border-radius:var(--radius-sm);padding:14px 14px 12px;min-height:88px;border:2px solid;cursor:pointer}
+.sort2-zone.zone-overload{border-color:rgba(152,8,8,0.30);background:rgba(232,72,72,0.07)}
+.sort2-zone.zone-healthy{border-color:rgba(10,112,56,0.30);background:rgba(24,184,90,0.07)}
+.sort2-zone .sz-title{font-size:12px;font-weight:900;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.sort2-zone.zone-overload .sz-title{color:var(--coral-dark)}
+.sort2-zone.zone-healthy .sz-title{color:var(--green-dark)}
+.sz-items{display:flex;flex-wrap:wrap;gap:7px;min-height:28px}
+.sz-item{background:#fff;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:800;color:var(--text);border:1.5px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:4px}
+.sz-remove{cursor:pointer;font-size:13px;color:var(--text-soft);margin-left:2px}
+.sz-remove:hover{color:var(--coral-dark)}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(26,96,216,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--blue);background:rgba(26,96,216,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--green-dark);background:rgba(24,184,90,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(232,72,72,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--green-dark);background:rgba(24,184,90,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(24,184,90,0.16);color:#033818}
+.quiz-feedback.q-fb-incorrect{background:rgba(232,72,72,0.12);color:#800010}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(26,96,216,0.08),rgba(24,184,90,0.07),rgba(112,64,200,0.06));border:2px solid rgba(26,96,216,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(26,96,216,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,184,90,0.10),rgba(26,96,216,0.08));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.fr-icon{font-size:26px;flex-shrink:0}
+.fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-plus{text-align:center;font-size:24px;font-weight:900;color:var(--blue-dark);padding:1px 0;line-height:1}
+
+/* FEEDBACK MSGS */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(24,184,90,0.13);color:#033818;border:1.5px solid rgba(10,112,56,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(232,72,72,0.10);color:#800010;border:1.5px solid rgba(160,24,40,0.22)}
+.feedback-msg.info-msg{background:rgba(10,56,152,0.08);color:var(--blue-dark);border:1.5px solid rgba(10,56,152,0.20)}
+.feedback-msg.amber-msg{background:rgba(136,96,0,0.09);color:var(--amber-dark);border:1.5px solid rgba(136,96,0,0.22)}
+.feedback-msg.green-msg{background:rgba(10,112,56,0.09);color:var(--green-dark);border:1.5px solid rgba(10,112,56,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(26,96,216,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(26,40,72,0.36)}
+.reflection-input:focus{border-color:var(--blue-dark);box-shadow:0 0 0 3px rgba(10,56,152,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--green-dark)}
+
+/* IMRAN SCENARIO */
+.imran-opts{display:flex;flex-direction:column;gap:10px;margin:10px 0 18px}
+.imran-btn{display:flex;align-items:flex-start;gap:13px;background:var(--bg);border:2px solid rgba(26,96,216,0.18);border-radius:var(--radius-sm);padding:14px 17px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.imran-btn:hover{border-color:var(--blue);transform:translateX(3px)}
+.imran-btn .ib-icon{font-size:22px;flex-shrink:0}
+.imran-btn .ib-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.imran-btn .ib-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.imran-btn.ib-correct{border-color:var(--green-dark);background:rgba(24,184,90,0.10);animation:correctPop 0.4s ease}
+.imran-btn.ib-incorrect{border-color:var(--coral-dark);background:rgba(232,72,72,0.08);animation:wrongShake 0.4s ease}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(26,96,216,0.18);border-radius:999px}
+
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(216,140,24,0.14),rgba(26,96,216,0.11));border:1.5px solid rgba(216,140,24,0.32);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(26,96,216,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.sk-icon{font-size:28px;flex-shrink:0}
+.sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--green-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(10,56,152,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(10,56,152,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(26,96,216,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(26,96,216,0.08);border-color:var(--blue-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;flex-shrink:0;transition:transform 0.2s}
+.btn-back:hover svg{transform:translateX(-3px)}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(26,96,216,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--blue-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,246,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(26,96,216,0.18);max-height:90vh;overflow-y:auto}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .imbal-grid{grid-template-columns:1fr 1fr}
+  .e-bars{grid-template-columns:1fr}
+  .cat-zones{grid-template-columns:1fr 1fr}
+  .sort2-zones{grid-template-columns:1fr}
+  .badge-grid{gap:10px}
+  .btn-primary{padding:14px 22px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">📅 Life Design Lab</div>
+    <h1>The <span>Balanced Life</span> Planner</h1>
+    <p>Balance work &bull; Play &bull; Rest &bull; Relationships</p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🌟</div>
+    <h2>Plan Complete!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You designed a complete balanced life plan. You understand how work, play, rest and connection combine to produce genuine energy and focus. These skills will serve you every single week.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🎨</span><div class="b-title">Balance Designer</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🔋</span><div class="b-title">Energy Manager</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">📅</span><div class="b-title">Life Planner</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+var TOTAL_STAGES = 14;
+var currentStage = 1;
+
+var imbalSel = new Set();
+var imbalOk = false;
+var energyLevel = 78;
+var actSortPlac = {};
+var actSortSel = null;
+var timeVals = {sleep:8, study:6, play:3, brk:2};
+var timeOk = false;
+var plannerBlocks = {};
+var activePlannerMode = 'study';
+var pieVals = {study:30, play:20, rest:35, social:15};
+var planText = '';
+var planValid = false;
+var reflectText = '';
+var reflectValid = false;
+var imranDone1 = false;
+var imranDone2 = false;
+var sort2Plac = {};
+var sort2Sel = null;
+var quizAnswers = {};
+
+var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+var SLOTS = ['Morning','Afternoon','Evening'];
+var BLOCK_TYPES = ['study','play','rest','social','empty'];
+var BLOCK_LABELS = {study:'Study',play:'Play',rest:'Rest',social:'Social',empty:'Free'};
+var BLOCK_COLORS = {study:'block-study',play:'block-play',rest:'block-rest',social:'block-social',empty:'block-empty'};
+
+var energyStates = [
+  {range:[0,18],   eLabel:'Peak Energy',   oLabel:'No Overload',   eMood:'Brain fully recharged. Focus sharp, mood stable, memory working well. This is what genuine balance produces.',         oMood:'No signs of overload. All body systems operating in healthy recovery mode.'},
+  {range:[19,38],  eLabel:'Good Energy',   oLabel:'Minimal',        eMood:'Good energy reserves. Able to concentrate and stay positive. Small stressors manageable with ease.',               oMood:'Minor overload signals only. Normal challenges are not yet accumulating into burden.'},
+  {range:[39,58],  eLabel:'Moderate',      oLabel:'Building',       eMood:'Energy present but not full. Noticeable tiredness by afternoon. This is the early warning zone for imbalance.',   oMood:'Overload beginning to accumulate. Sleep quality, mood and patience are subtly affected.'},
+  {range:[59,78],  eLabel:'Low Energy',    oLabel:'High',           eMood:'Tired most of the time. Hard to focus, motivation dropping. The body is signalling that something needs to change.', oMood:'High overload. Cortisol elevated, immune function reduced. Mood and performance both affected.'},
+  {range:[79,100], eLabel:'Depleted',      oLabel:'Severe',         eMood:'Exhausted. Even simple tasks feel difficult. The body is running on reserves and urgently needs rest and recovery.', oMood:'Severe overload. Without intervention, burnout becomes likely. This is not sustainable.'}
+];
+
+var actSortData = [
+  {id:'a1', emoji:'📚', text:'Reading a textbook',    zone:'study'},
+  {id:'a2', emoji:'🏃', text:'Playing football',       zone:'play'},
+  {id:'a3', emoji:'😴', text:'Taking a nap',           zone:'rest'},
+  {id:'a4', emoji:'👥', text:'Chatting with friends',  zone:'social'},
+  {id:'a5', emoji:'📝', text:'Doing homework',         zone:'study'},
+  {id:'a6', emoji:'🎮', text:'Playing video games',    zone:'play'},
+  {id:'a7', emoji:'🧘', text:'Quiet breathing',        zone:'rest'},
+  {id:'a8', emoji:'📱', text:'Texting family',         zone:'social'},
+  {id:'a9', emoji:'🎨', text:'Drawing for fun',        zone:'play'},
+  {id:'a10',emoji:'📖', text:'Revising for a test',    zone:'study'}
+];
+
+var sort2Data = [
+  {id:'h1', emoji:'😴', text:'8 hours of sleep',             zone:'healthy'},
+  {id:'h2', emoji:'📚', text:'Studying 10 hours straight',   zone:'overload'},
+  {id:'h3', emoji:'🏃', text:'30 min daily exercise',        zone:'healthy'},
+  {id:'h4', emoji:'📵', text:'No breaks between subjects',   zone:'overload'},
+  {id:'h5', emoji:'🥗', text:'Eating regular meals',         zone:'healthy'},
+  {id:'h6', emoji:'📱', text:'4 hours of social media',      zone:'overload'},
+  {id:'h7', emoji:'🤝', text:'Spending time with friends',   zone:'healthy'},
+  {id:'h8', emoji:'😰', text:'Worrying about everything',    zone:'overload'}
+];
+
+var quizData = [
+  {
+    q:'Question 1: Why is sleep so critical for learning and emotional regulation - beyond just feeling rested?',
+    opts:[
+      {icon:'😴', text:'Sleep is mainly for resting tired muscles - the brain stays largely active and does not change significantly during sleep', correct:false},
+      {icon:'🧠', text:'During sleep the brain consolidates memories, clears metabolic waste, repairs neural connections, and resets the emotional regulation system - making sleep the most powerful cognitive and emotional performance tool available', correct:true},
+      {icon:'🎯', text:'Sleep affects energy levels but does not directly impact learning, memory, or emotional control', correct:false}
+    ],
+    fb:{
+      correct:'Exactly right. Sleep is not passive rest - it is the brain\'s primary maintenance and consolidation window. During slow-wave sleep, the hippocampus replays and consolidates memories formed during waking hours into long-term storage. During REM sleep, emotional memories are processed and the amygdala is recalibrated, resetting emotional reactivity for the next day. The glymphatic system clears metabolic waste products including beta-amyloid during sleep. Reducing sleep by even 90 minutes measurably impairs memory consolidation, emotional regulation, and immune function. No study technique, supplement, or strategy compensates for lost sleep.',
+      incorrect:'Not quite. Sleep is the single most powerful cognitive and emotional enhancement tool available - and it is free. The brain is highly active during sleep, performing essential work: memory consolidation (hippocampus replaying and storing learning), emotional processing (amygdala recalibration during REM), and metabolic waste clearance via the glymphatic system. Performance on every dimension - focus, memory, creativity, emotional regulation, immune function - declines measurably with sleep loss and improves with adequate sleep. Nothing else comes close to sleep as a performance and wellbeing tool.'
+    }
+  },
+  {
+    q:'Question 2: What specifically happens to the brain and body when someone is chronically overloaded with no balance or recovery time?',
+    opts:[
+      {icon:'💪', text:'The brain adapts and becomes stronger under sustained pressure - chronic overload builds mental toughness and resilience over time', correct:false},
+      {icon:'🔥', text:'Chronic overload keeps cortisol elevated, impairing the prefrontal cortex\'s function, weakening memory consolidation, reducing immune function, and eventually producing burnout', correct:true},
+      {icon:'😐', text:'Overload mainly affects mood and motivation but does not significantly change brain function or physical health', correct:false}
+    ],
+    fb:{
+      correct:'Correct. Chronic stress keeps the HPA axis activated, maintaining elevated cortisol levels. Sustained high cortisol has measurable negative effects: it impairs prefrontal cortex function (reducing working memory, decision-making and impulse control), disrupts the hippocampus (weakening new memory formation), suppresses immune system function, and disturbs sleep architecture - which then further impairs all of the above. This is a self-reinforcing cycle. Burnout represents the point at which the system\'s compensatory mechanisms are exhausted. The research is clear: chronic overload does not build resilience - it depletes the neural and physiological resources that resilience depends on.',
+      incorrect:'Not quite. The "stress builds strength" model is true for acute, recoverable stress with recovery periods between challenges - like physical exercise. It is not true for chronic unrelieved stress. Sustained overload keeps cortisol chronically elevated, which progressively impairs prefrontal cortex function, hippocampal memory consolidation, immune function, and sleep quality. Each of these then makes performance worse, which often leads to working harder and sleeping less - creating a damaging cycle. The research on burnout consistently shows it is caused by prolonged imbalance, not insufficient effort.'
+    }
+  },
+  {
+    q:'Question 3: Why does genuine life balance improve focus and academic performance - rather than reducing the time available for study?',
+    opts:[
+      {icon:'📚', text:'Balance improves performance only for average students - high performers benefit from maximising study time even at the expense of rest and social connection', correct:false},
+      {icon:'🌱', text:'Balanced lives produce better cognitive function, more stable emotions, and stronger motivation - meaning each hour of study in a balanced life is more productive than each hour in an overloaded one', correct:true},
+      {icon:'😶', text:'Balance and performance are unrelated - what matters is total time spent studying, not whether rest and recreation are included', correct:false}
+    ],
+    fb:{
+      correct:'Precisely. This is one of the most important and counterintuitive findings in educational psychology. Students who maintain balanced lives - with adequate sleep, regular exercise, social connection, and genuine rest - consistently outperform students who maximise study hours at the expense of those factors. The mechanism is clear: each hour of study in a well-rested, emotionally regulated, socially connected brain produces more learning than each hour in an exhausted, cortisol-elevated, isolated one. Sleep consolidates learning from the previous day. Exercise increases BDNF, directly supporting neural growth. Social connection regulates the nervous system. Genuine rest restores attentional resources. Balance does not reduce learning time - it multiplies the value of every hour studied.',
+      incorrect:'Not quite. Research consistently shows that balance improves performance rather than reducing it - for all students, including high performers. The mechanism is cognitive efficiency: a well-rested, emotionally regulated brain with adequate social connection and recovery time learns more per hour of study than an overloaded brain. Sleep consolidates the learning from each study session. Exercise supports neural growth. Social connection regulates the nervous system. Rest restores attentional capacity. Adding study hours at the expense of these factors produces diminishing - and eventually negative - returns. The total amount of productive learning decreases even as total study time increases.'
+    }
+  }
+];
+
+function backBtn(s, l) {
+  return '<div style="margin-bottom:4px"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟢', 3:'🟡'};
+  return '<div class="act-banner act' + act + '"><span style="font-size:19px">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getEnergyState(v) {
+  return energyStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+function updateProgress(n) {
+  var pct = Math.round(((n - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + n + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function renderStage(n) {
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ===== STAGE BUILDERS ===== */
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Balance') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #016</div>' +
+    '<h2>Why Balance Is Not Optional</h2>' +
+    '<p>Welcome to the Balanced Life Planner. Most people assume that doing more - studying longer, being busier, sleeping less - produces better results. Research in cognitive neuroscience and educational psychology consistently shows the opposite. The brain performs best when its four core needs are met in proportion: challenge, recovery, play, and connection. When any one of these collapses, the others suffer too.</p>' +
+    '<div class="story-box" data-icon="📱">' +
+      '<p><span>Amina</span> is eleven years old and has been staying up until midnight playing games on her tablet. She tells herself she will do her homework in the morning, but she is always too tired. By Thursday she has three overdue assignments, a persistent headache, and a short temper with everyone at home. She keeps thinking that if she just gets a bit more done she will feel less stressed - but the stress keeps growing.</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"I just need to get through this week and then I will rest."</p></div>' +
+    '<p>Amina\'s thinking is extremely common - and extremely counterproductive. "I will rest when I have finished" is a thought pattern that guarantees the rest never arrives. The brain does not work like a machine that can be pushed harder when deadlines approach and serviced later. It requires regular maintenance - sleep, breaks, movement, social connection - to function at the level that makes the work go well in the first place.</p>' +
+    '<div class="feedback-msg info-msg">📋 <strong>Core concept:</strong> Balance is not a reward you earn after you finish everything. It is the fuel that makes finishing things possible. Amina is not behind because she needs more time. She is behind because the four systems that power her brain - sleep, recovery, play, and connection - are all running on empty simultaneously.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Design the Balance</button>' +
+  '</div>';
+}
+
+function s2() {
+  imbalSel = new Set(); imbalOk = false;
+  var cards = [
+    {id:'sleep',  emoji:'😴', label:'Lack of sleep',   desc:'Staying up too late consistently', correct:true},
+    {id:'gaming', emoji:'🎮', label:'Too much gaming',  desc:'Consuming all available evening time', correct:true},
+    {id:'norest', emoji:'😰', label:'No recovery time', desc:'No breaks between demands', correct:true},
+    {id:'calm',   emoji:'😌', label:'Calm schedule',   desc:'Everything planned and spaced', correct:false}
+  ].map(function(c) {
+    return '<div class="imbal-card" id="ic-' + c.id + '" onclick="toggleImbal(\'' + c.id + '\',' + c.correct + ')">' +
+      '<div class="ic-check">&#10003;</div>' +
+      '<span class="ic-emoji">' + c.emoji + '</span>' +
+      '<div class="ic-label">' + c.label + '</div>' +
+      '<div class="ic-desc">' + c.desc + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Balance') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Spot the Imbalance</div>' +
+    '<h2>Identify What Is Causing Amina\'s Stress</h2>' +
+    '<p>Amina is stressed, behind on work, and tired all the time. But the cause is not that she has too much to do - it is that the systems that would help her cope with what she has to do are all depleted simultaneously. Identifying the specific imbalance signs is the first step in understanding how to address them.</p>' +
+    '<p>Select all the imbalance signs present in Amina\'s situation. One option does not belong.</p>' +
+    '<div class="imbal-grid">' + cards + '</div>' +
+    '<div id="imbalFeedback"></div>' +
+    '<button class="btn-primary" id="imbalNextBtn" onclick="renderStage(3)" disabled>Next: The Energy Meter -></button>' +
+  '</div>';
+}
+
+function s3() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Balance') +
+    backBtn(2,'Back to Imbalance') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Energy vs Overload Meter</div>' +
+    '<h2>How Overload Depletes Energy</h2>' +
+    '<p>Energy Level and Overload Level move in opposite directions. When overload is high - too many demands, not enough recovery - energy depletes steadily. When balance is maintained - sufficient sleep, regular breaks, time for play and connection - energy replenishes and stays available for the demands placed on it.</p>' +
+    '<p>Move the slider to explore different states and read what each level means for daily functioning. Consider where Amina\'s energy and overload levels sit right now - and where you think a balanced week should sit.</p>' +
+    '<div class="energy-meter-wrap">' +
+      '<div class="e-slider-labels"><span>🔋 Full Energy</span><span>Balanced</span><span>🔥 Overloaded</span></div>' +
+      '<input type="range" class="e-slider" id="energySl" min="0" max="100" value="78" oninput="updateEnergy(this.value)"/>' +
+      '<div class="e-bars">' +
+        '<div class="e-bar-side energy-side">' +
+          '<div class="ebs-header"><span class="ebs-emoji">🔋</span><span class="ebs-title">Energy Level</span></div>' +
+          '<div class="ebs-track"><div class="ebs-fill" id="energyFill" style="width:22%"></div></div>' +
+          '<div class="ebs-pct" id="energyPct">22%</div>' +
+          '<div class="ebs-mood" id="energyMood">Loading...</div>' +
+        '</div>' +
+        '<div class="e-bar-side overload-side">' +
+          '<div class="ebs-header"><span class="ebs-emoji">🔥</span><span class="ebs-title">Overload Level</span></div>' +
+          '<div class="ebs-track"><div class="ebs-fill" id="overloadFill" style="width:78%"></div></div>' +
+          '<div class="ebs-pct" id="overloadPct">78%</div>' +
+          '<div class="ebs-mood" id="overloadMood">Loading...</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg info-msg">💡 <strong>Amina\'s current state:</strong> Midnight gaming, skipped homework, persistent tiredness and stress place Amina firmly in the Low Energy / High Overload zone. The body is signalling urgently - headaches, short temper, reduced concentration - but she is interpreting these signals as pressure to work harder rather than as instructions to recover first.</div>' +
+    '<button class="btn-primary" onclick="renderStage(4)">Next: Sort the Activities -></button>' +
+  '</div>';
+}
+
+function s4() {
+  actSortPlac = {}; actSortSel = null;
+  var bank = actSortData.map(function(c) {
+    return '<div class="sort-chip" id="asc-' + c.id + '" onclick="handleActSort(\'' + c.id + '\')">' + c.emoji + ' ' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Balance') +
+    backBtn(3,'Back to Energy Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Sort Activities</div>' +
+    '<h2>Every Activity Belongs to a Category</h2>' +
+    '<p>A balanced week contains all four activity types in appropriate proportion. Understanding which category each activity belongs to helps in planning a week that genuinely covers all four needs - rather than accidentally filling all available time with Study and Play while Rest and Social connection disappear.</p>' +
+    '<p>Sort each activity into its correct category. Click an activity to select it, then click the category zone to place it.</p>' +
+    '<div class="sort-bank" id="actSortBank">' + bank + '</div>' +
+    '<div id="actSortHint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click an activity, then click a category to place it</div>' +
+    '<div class="cat-zones">' +
+      '<div class="cat-zone zone-study" onclick="placeActSort(\'study\')">' +
+        '<div class="cz-title">Study</div><div class="cz-items" id="cz-study"></div>' +
+      '</div>' +
+      '<div class="cat-zone zone-play" onclick="placeActSort(\'play\')">' +
+        '<div class="cz-title">Play</div><div class="cz-items" id="cz-play"></div>' +
+      '</div>' +
+      '<div class="cat-zone zone-rest" onclick="placeActSort(\'rest\')">' +
+        '<div class="cz-title">Rest</div><div class="cz-items" id="cz-rest"></div>' +
+      '</div>' +
+      '<div class="cat-zone zone-social" onclick="placeActSort(\'social\')">' +
+        '<div class="cz-title">Social</div><div class="cz-items" id="cz-social"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="actSortFeedback"></div>' +
+    '<button class="btn-primary" id="actSortNextBtn" onclick="renderStage(5)" disabled>Next: Time Allocation -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Balance') +
+    backBtn(4,'Back to Activity Sort') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Time Allocation</div>' +
+    '<h2>Balance a 24-Hour Day</h2>' +
+    '<p>A 24-hour day is fixed. Every hour given to one activity is an hour taken from another. The time allocation challenge is about understanding the real cost of imbalance: when gaming or scrolling expands to six hours, something else must shrink - and it is usually sleep or recovery time, not the activities that feel urgent.</p>' +
+    '<p>Use the sliders to allocate your ideal 24-hour day. You need at least the minimum for each category. Watch the total to keep it at or under 24 hours.</p>' +
+    '<div class="time-alloc-wrap" id="timeAllocWrap">' +
+      buildTimeRow('sleep','😴','Sleep',6,12,'violet') +
+      buildTimeRow('study','📚','Study',3,8,'blue') +
+      buildTimeRow('play','🎮','Play',1,5,'green') +
+      buildTimeRow('brk','🍵','Breaks',1,4,'amber') +
+    '</div>' +
+    '<div class="time-total-label"><span class="tl-used">Total used: <strong id="timeUsed">0h</strong></span><span class="tl-remain">Remaining: <strong id="timeRemain">24h</strong></span></div>' +
+    '<div class="time-total-bar"><div class="time-total-fill" id="timeTotalFill" style="width:0%"></div></div>' +
+    '<div id="timeFeedback" style="margin-top:14px"></div>' +
+    '<button class="btn-primary" id="timeNextBtn" onclick="renderStage(6)" disabled>Next: Balance Formula -></button>' +
+  '</div>';
+}
+
+function buildTimeRow(key, emoji, label, min, max, col) {
+  var v = timeVals[key] || min;
+  return '<div class="time-slot-row">' +
+    '<div class="ts-label ts-' + key + '"><span class="ts-emoji">' + emoji + '</span>' + label + '</div>' +
+    '<input type="range" class="ts-slider ts-' + key + '" min="' + min + '" max="' + max + '" value="' + v + '" oninput="updateTime(\'' + key + '\',this.value)"/>' +
+    '<div class="ts-val ts-' + key + '" id="tsv-' + key + '">' + v + 'h</div>' +
+  '</div>';
+}
+
+function s6() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understand Balance') +
+    backBtn(5,'Back to Time Allocation') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Balance Formula</div>' +
+    '<h2>The Four-Component Balance Formula</h2>' +
+    '<p>Healthy life balance is not about equal time distribution - it is about ensuring each of the four core systems receives enough input to function well. A week with 20 hours of study and no play is not balanced. A week with 10 hours of sleep and no social connection is not balanced. Each component has a minimum threshold below which the whole system degrades.</p>' +
+    '<div class="formula-box">' +
+      '<div class="formula-row"><span class="fr-icon">📚</span><div><div class="fr-title">Work / Study</div><div class="fr-desc">Cognitive challenge is essential for growth, skill development, and the satisfaction of progress. Without it, motivation drops and self-efficacy weakens. With too much of it and no recovery, the prefrontal cortex becomes overwhelmed and performance degrades. The brain needs challenge - in proportion.</div></div></div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row"><span class="fr-icon">🎨</span><div><div class="fr-title">Play / Recreation</div><div class="fr-desc">Play is not the opposite of productivity - research shows it is a prerequisite for it. Unstructured, enjoyable activity allows the default mode network to consolidate learning, generate creative connections, and restore motivational systems. Removing play to "get more done" is a false economy: it depletes the very systems that make doing things well possible.</div></div></div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row"><span class="fr-icon">😴</span><div><div class="fr-title">Rest / Recovery</div><div class="fr-desc">Rest is active neural maintenance. Sleep consolidates memories, clears metabolic waste, and resets emotional regulation. Breaks between tasks restore attentional capacity through a measurable physiological mechanism - the brain\'s adenosine levels drop during rest, allowing focused attention to recover. Recovery is not a luxury; it is required maintenance.</div></div></div>' +
+      '<div class="formula-plus">+</div>' +
+      '<div class="formula-row"><span class="fr-icon">🤝</span><div><div class="fr-title">Connection / Social</div><div class="fr-desc">Humans are neurologically social - the brain\'s threat-detection system is co-regulated by connection with safe, familiar people. Chronic social isolation keeps the stress response partially activated, draining the cognitive and emotional resources needed for everything else. Regular, genuine social time is a nervous system regulation strategy, not a distraction from more important things.</div></div></div>' +
+      '<div class="formula-row formula-result"><span class="fr-icon">🌟</span><div><div class="fr-title">= Healthy Balance</div><div class="fr-desc">All four components working together produce genuine, sustainable energy - not the temporary energy of caffeine or adrenaline, but the steady daily capacity to engage with challenges, regulate emotions, maintain relationships, and learn effectively. This is what a balanced week actually feels like: not perfect, not easy, but fundamentally stable.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg amber-msg">🏅 <strong>Badge Progress:</strong> Balance Designer Level 1 - almost earned! Continue to Act 2 to build your personal plan...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Build Your Plan -></button>' +
+  '</div>';
+}
+
+function s7() {
+  activePlannerMode = 'study';
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build Your Plan') +
+    backBtn(6,'Back to Formula') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 7 - Weekly Planner</div>' +
+    '<h2>Design Your Balanced Week</h2>' +
+    '<p>A balanced weekly plan is not a rigid timetable - it is a visible commitment to all four categories. Seeing the week laid out reveals whether any category has been left empty or over-filled. Click a mode in the legend, then click time blocks to fill in your week. Aim for a mix of all four activity types across the days.</p>' +
+    '<div class="planner-legend" id="plannerLegend">' +
+      plannerLegendItem('study','#1a60d8','Study') +
+      plannerLegendItem('play','#18b85a','Play') +
+      plannerLegendItem('rest','#7040c8','Rest') +
+      plannerLegendItem('social','#d88c18','Social') +
+      plannerLegendItem('empty','#a8b8d0','Clear') +
+    '</div>' +
+    '<div class="week-planner"><table class="week-table" id="weekTable">' + buildWeekTable() + '</table></div>' +
+    '<div id="plannerSummary" style="margin-top:10px;font-size:13px;font-weight:700;color:var(--text-soft);text-align:center"></div>' +
+    '<button class="btn-primary" id="plannerNextBtn" onclick="renderStage(8)" style="margin-top:18px" disabled>Next: Balance Visual -></button>' +
+  '</div>';
+}
+
+function plannerLegendItem(type, color, label) {
+  return '<div class="legend-item' + (type==='study'?' active-mode':'') + '" id="li-' + type + '" onclick="setPlanMode(\'' + type + '\')">' +
+    '<div class="legend-dot" style="background:' + color + '"></div>' + label +
+  '</div>';
+}
+
+function buildWeekTable() {
+  var html = '<tr><th>Time</th>' + DAYS.map(function(d){ return '<th>' + d + '</th>'; }).join('') + '</tr>';
+  SLOTS.forEach(function(slot) {
+    html += '<tr><td>' + slot + '</td>';
+    DAYS.forEach(function(day) {
+      var key = day + '_' + slot;
+      var mode = plannerBlocks[key] || 'empty';
+      html += '<td><button class="block-btn ' + BLOCK_COLORS[mode] + '" onclick="toggleBlock(\'' + key + '\')">' + BLOCK_LABELS[mode] + '</button></td>';
+    });
+    html += '</tr>';
+  });
+  return html;
+}
+
+function s8() {
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build Your Plan') +
+    backBtn(7,'Back to Weekly Planner') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 8 - Balance Visual</div>' +
+    '<h2>Build Your Personal Balance Pie</h2>' +
+    '<p>The balance pie shows at a glance whether all four life categories are receiving enough time. An ideal pie has meaningful slices for all four - rest largest (you spend roughly a third of your time asleep and resting), study substantial, play real and not token, and social genuinely present rather than squeezed out by the other three.</p>' +
+    '<p>Adjust the sliders to represent your ideal percentage allocation across a week. Aim to keep the total near 100%.</p>' +
+    '<div class="pie-wrap">' +
+      '<div class="pie-svg-wrap"><svg width="200" height="200" id="pieSvg" viewBox="-1 -1 2 2" style="transform:rotate(-90deg)"></svg><div class="pie-center-label"><div class="pcl-main" id="pieCenterMain">Balance</div><div class="pcl-sub" id="pieCenterSub">Adjust sliders</div></div></div>' +
+      '<div class="pie-controls">' +
+        buildPieRow('study','#1a60d8','Study') +
+        buildPieRow('play','#18b85a','Play') +
+        buildPieRow('rest','#7040c8','Rest') +
+        buildPieRow('social','#d88c18','Social') +
+      '</div>' +
+    '</div>' +
+    '<div class="pie-total" id="pieTotal">Total: 100%</div>' +
+    '<div class="feedback-msg info-msg" style="margin-top:16px">💡 <strong>Reading the pie:</strong> Research-backed minimums for a balanced week: Rest (sleep + breaks) 35-40%, Study 25-30%, Play 20-25%, Social 10-15%. If any category is at 5% or below, it is likely to be the bottleneck causing low energy, poor focus, or low mood - even if the others look healthy.</div>' +
+    '<button class="btn-primary" onclick="renderStage(9)" style="margin-top:16px">Next: Write Your Personal Plan -></button>' +
+  '</div>';
+}
+
+function buildPieRow(key, color, label) {
+  var v = pieVals[key] || 25;
+  return '<div class="pie-row"><div class="pr-dot" style="background:' + color + '"></div>' +
+    '<div class="pr-label">' + label + '</div>' +
+    '<input type="range" min="5" max="60" value="' + v + '" style="--thumb-color:' + color + '" oninput="updatePie(\'' + key + '\',this.value)" ' +
+    'style="--tc:' + color + '">' +
+    '<div class="pr-pct" id="pp-' + key + '" style="color:' + color + '">' + v + '%</div>' +
+  '</div>';
+}
+
+function s9() {
+  planValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build Your Plan') +
+    backBtn(8,'Back to Balance Visual') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 9 - Personal Plan</div>' +
+    '<h2>Write Your Personal Balanced Week Plan</h2>' +
+    '<p>Writing your plan in specific, concrete terms - not "I will exercise more" but "I will walk for 20 minutes after school on Monday, Wednesday and Friday" - is what research on implementation intentions consistently shows makes follow-through dramatically more likely. Vague intentions feel complete; they produce no commitment. Specific plans change behaviour.</p>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:18px">Your plan should include all four components:<br/><strong>Study:</strong> When, how long, what subject or task<br/><strong>Rest:</strong> Bedtime, wake time, what break routine<br/><strong>Fun/Play:</strong> Specific activity, specific time<br/><strong>Social:</strong> Who, when, how you will connect</div>' +
+    '<label style="font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block">My balanced week includes...</label>' +
+    '<textarea class="reflection-input" id="planInput" oninput="checkPlan(this.value)" placeholder="For example: My balanced week includes going to sleep at 10pm every night and waking at 7am. I will study for 45 minutes after school on Monday to Thursday, with a 10-minute break halfway through. On Tuesday and Saturday I will play football with friends for at least an hour. On Sunday evening I will call my grandparents and spend time with family..." rows="5"></textarea>' +
+    '<div class="char-counter" id="planCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg amber-msg" style="margin-bottom:16px">🧠 <strong>The specificity test:</strong> Read your plan back and ask: could you execute exactly this tomorrow without making any more decisions? If you need to decide when, where, or with whom - make those decisions now, in the plan, not in the moment when decision-making capacity is under pressure.</div>' +
+    '<button class="btn-primary" id="planNextBtn" onclick="renderStage(10)" disabled>Next: Reflect -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Build Your Plan') +
+    backBtn(9,'Back to Personal Plan') +
+    '<div class="stage-label green"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Does Balance Actually Improve Mood and Focus?</h2>' +
+    '<p>Understanding the mechanism - not just accepting the conclusion - is what allows you to trust the balance plan when it feels counterintuitive to stop studying and go for a walk. If you know why the walk actually improves the next hour of study, you will do it. If you just feel vaguely that it is probably better, the study anxiety will win.</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.75">' +
+      '1. Explain what happens in the brain during sleep that makes it the most important cognitive performance tool available - and what specifically is lost when sleep is consistently shortened.<br/>' +
+      '2. Why does taking a genuine break from studying - going outside, playing something, resting - actually improve performance in the next study session rather than reducing total learning time?<br/>' +
+      '3. Describe a week from your own life when you were overloaded and out of balance. What signals did your body and brain give you? What would a balanced week have looked like instead?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about memory consolidation, adenosine and attentional recovery, your own experience of overload, and what a genuinely balanced week would look and feel like for you..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg amber-msg" style="margin-bottom:16px">🏅 <strong>Badge Progress:</strong> Energy Manager Level 1 - almost earned! Final act coming up...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Apply and Adjust -></button>' +
+  '</div>';
+}
+
+function s11() {
+  imranDone1 = false; imranDone2 = false;
+  var ib1done = false; var ib2done = false;
+  var cause1opts = [
+    {id:'grades',  text:'He studies too little - his grades are suffering',        sub:'Incorrect - scenario states good grades', correct:false},
+    {id:'noplay',  text:'He has no time for rest, play or social connection - his life is study and pressure only', sub:'All cognitive and emotional renewal is blocked', correct:true},
+    {id:'lazy',    text:'He is not trying hard enough and needs more motivation',  sub:'Incorrect - he has good grades showing effort', correct:false}
+  ];
+  var fix1opts = [
+    {id:'more',    text:'Study even harder so the grades anxiety goes away',       sub:'More of what is already causing the problem', correct:false},
+    {id:'balance', text:'Add genuine rest, play and social time - even if it feels wrong to reduce study hours', sub:'Address the actual cause: missing renewal activities', correct:true},
+    {id:'ignore',  text:'Ignore the stress - it will pass once exams are over',    sub:'Avoidance - the pattern will repeat next term', correct:false}
+  ];
+  function mkBtns(opts, fn, idpfx) {
+    return opts.map(function(o) {
+      return '<button class="imran-btn" id="' + idpfx + o.id + '" onclick="' + fn + '(\'' + o.id + '\',' + o.correct + ')">' +
+        '<span class="ib-icon">💭</span><div><div class="ib-text">' + o.text + '</div><div class="ib-sub">' + o.sub + '</div></div></button>';
+    }).join('');
+  }
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Adjust') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Imran Has Good Grades But Feels Terrible</h2>' +
+    '<div class="story-box" data-icon="📊">' +
+      '<p><span>Imran</span> is thirteen years old and consistently gets top marks. He studies every evening from the moment he gets home until bedtime, does extra practice at weekends, and rarely does anything that is not school-related. His parents are proud of his grades. But Imran feels constantly stressed, has no energy, struggles to sleep despite being tired, and has quietly stopped seeing his friends. He cannot understand why he feels so bad when he is doing everything right.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 2 - What is the real cause of Imran\'s stress?</div>' +
+    '<div class="imran-opts">' + mkBtns(cause1opts,'pickImranCause','ic1-') + '</div>' +
+    '<div id="imranCauseFb"></div>' +
+    '<div class="section-divider">Step 2 of 2 - What should Imran actually do?</div>' +
+    '<div id="imranFixWrap" style="opacity:0.4;pointer-events:none"><div class="imran-opts">' + mkBtns(fix1opts,'pickImranFix','if1-') + '</div></div>' +
+    '<div id="imranFixFb"></div>' +
+    '<button class="btn-primary" id="imranNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Overload vs Healthy Sorting -></button>' +
+  '</div>';
+}
+
+function s12() {
+  sort2Plac = {}; sort2Sel = null;
+  var bank = sort2Data.map(function(c) {
+    return '<div class="sort-chip" id="s2c-' + c.id + '" onclick="handleSort2(' + "'" + c.id + "'" + ')">' + c.emoji + ' ' + c.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Adjust') +
+    backBtn(11,"Back to Imran's Scenario") +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 12 - Overload vs Healthy Habits</div>' +
+    '<h2>Sort Habits Into Overload or Healthy Balance</h2>' +
+    '<p>Some habits look virtuous but are actually overload patterns in disguise. "Working with no breaks" sounds productive but consistently degrades performance over hours. "Four hours of social media" can look like rest but is cognitively demanding and socially comparative. The test is not how the habit feels in the moment - it is what it does to energy, focus and mood over time.</p>' +
+    '<div class="sort-bank" id="sort2Bank">' + bank + '</div>' +
+    '<div id="sort2Hint" style="font-size:13px;font-weight:700;color:var(--text-soft);text-align:center;margin-bottom:10px">Click a habit, then click a zone to place it</div>' +
+    '<div class="sort2-zones">' +
+      '<div class="sort2-zone zone-overload" onclick="placeSort2(\'overload\')">' +
+        '<div class="sz-title">Overload Pattern</div><div class="sz-items" id="zone-overload"></div>' +
+      '</div>' +
+      '<div class="sort2-zone zone-healthy" onclick="placeSort2(\'healthy\')">' +
+        '<div class="sz-title">Healthy Balance</div><div class="sz-items" id="zone-healthy"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sort2Feedback"></div>' +
+    '<button class="btn-primary" id="sort2NextBtn" onclick="renderStage(13)" disabled>Next: Final Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.opts.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text + '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's"><div class="quiz-q-text">' + q.q + '</div><div class="quiz-options">' + opts + '</div><div id="qf-' + i + '" class="quiz-feedback"></div></div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply and Adjust') +
+    backBtn(12,'Back to Sorting') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 13 - Final Quiz</div>' +
+    '<h2>Three Questions to Confirm Your Understanding</h2>' +
+    '<p>You have designed a weekly plan, built a balance visual, sorted activities, and understood the neuroscience of balance and overload. These three questions test whether the core mechanisms have genuinely settled in your thinking.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Plan Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Plan Complete!') +
+    '<div class="stage-label amber"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>You Are Now a Balanced Life Designer!</h2>' +
+    '<p>You completed all 3 Acts of the Balanced Life Planner. You understand the four components of life balance, how overload depletes energy, and how to build a realistic personal plan. Here are your three earned badges:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🎨</span><div class="b-title">Balance Designer</div><div class="b-sub">Designed the plan</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🔋</span><div class="b-title">Energy Manager</div><div class="b-sub">Managed the energy</div></div>' +
+      '<div class="badge-item"><span class="b-icon">📅</span><div class="b-title">Life Planner</div><div class="b-sub">Built the system</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Built Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🎨</span><div><div class="sk-title">The Four-Component Balance Formula</div><div class="sk-desc">Work, Play, Rest, and Connection are not competing for your time - they are cooperating to produce the energy that makes work possible. Removing Play to get more Study done is not a trade-off that works: each hour of study in a rested, connected, recreated brain produces more learning than two hours in a depleted one. Balance multiplies the value of effort rather than dividing the time available for it.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🔋</span><div><div class="sk-title">Energy Is the Real Resource</div><div class="sk-desc">Time is not the scarcity that makes weeks hard - energy is. A tired, overloaded brain given more time just sits there. A rested, balanced brain gets things done quickly and retains them. Sleep consolidates learning. Breaks restore attention. Play regenerates motivation. Social connection regulates the stress response. Managing energy rather than managing time is the insight that changes how every week feels.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">📅</span><div><div class="sk-title">Specific Plans Beat Vague Intentions</div><div class="sk-desc">Knowing balance is important changes nothing on its own. A specific, pre-decided plan - written before the decision needs to be made, in calm conditions when the thinking brain is fully available - is what actually changes weekly behaviour. "I will sleep by 10pm and study from 4-5pm with a break" is a plan you can execute. "I will try to be more balanced" is an intention that evaporates under pressure every time. Specificity is the difference.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="🌟" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9"><strong>A message for you:</strong><br/>' +
+      'The next time you think "I will rest when I am finished" - remember: that moment never comes in an unbalanced life. Finished is not a place you arrive at by exhausting yourself into it. Finished happens when a rested, energised, socially-connected brain applies itself to a specific task with attentional capacity available and memory systems working. That brain is built in the hours you spend sleeping, playing, resting, and connecting - not despite them. Your balanced week is not a reward for getting things done. It is the reason things get done at all. 🌟</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ===== POST RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    imbalSel.forEach(function(id){ var el=document.getElementById('ic-'+id); if(el) el.classList.add('ic-correct'); });
+    if (imbalOk) { var b=document.getElementById('imbalNextBtn'); if(b) b.disabled=false; }
+  }
+  if (n === 3) updateEnergy(energyLevel);
+  if (n === 4) restoreActSort();
+  if (n === 5) { updateTime('sleep',timeVals.sleep); updateTime('study',timeVals.study); updateTime('play',timeVals.play); updateTime('brk',timeVals.brk); }
+  if (n === 7) { redrawWeekTable(); updatePlannerSummary(); }
+  if (n === 8) { drawPie(); updatePieTotal(); }
+  if (n === 9 && planText) { var ta=document.getElementById('planInput'); if(ta) ta.value=planText; checkPlan(planText); }
+  if (n === 10 && reflectText) { var ta2=document.getElementById('reflectInput'); if(ta2) ta2.value=reflectText; checkReflect(reflectText); }
+  if (n === 11) { setTimeout(function(){ if(imranDone1){ var fw=document.getElementById('imranFixWrap'); if(fw){fw.style.opacity='1';fw.style.pointerEvents='auto';} } checkImranDone(); }, 60); }
+  if (n === 12) restoreSort2();
+}
+
+/* S2 IMBALANCE */
+function toggleImbal(id, correct) {
+  var el = document.getElementById('ic-' + id);
+  if (!el || el.classList.contains('ic-correct')) return;
+  if (!correct) {
+    el.classList.add('ic-wrong');
+    var fb = document.getElementById('imbalFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">A calm, well-planned schedule is not an imbalance sign - it is the goal we are working toward. Amina\'s scenario shows the opposite. Select the three signs that are actually present in her situation.</div>';
+    setTimeout(function(){ if(el) el.classList.remove('ic-wrong'); }, 900);
+    return;
+  }
+  if (imbalSel.has(id)) {
+    imbalSel.delete(id);
+    el.classList.remove('ic-correct');
+  } else {
+    imbalSel.add(id);
+    el.classList.add('ic-correct');
+  }
+  var correctIds = ['sleep','gaming','norest'];
+  var allSelected = correctIds.every(function(c){ return imbalSel.has(c); });
+  var fb = document.getElementById('imbalFeedback');
+  var nb = document.getElementById('imbalNextBtn');
+  if (allSelected) {
+    imbalOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All three imbalance signs identified. Lack of sleep undermines every other cognitive function. Too much gaming crowds out the time needed for homework and recovery. No rest means no adenosine clearance between tasks - attention cannot recover. All three are simultaneously active in Amina\'s week, which explains why the problem feels so total: it is hitting all three systems at once.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (nb) nb.disabled = true;
+    if (fb && imbalSel.size > 0) fb.innerHTML = '<div class="feedback-msg info-msg">' + imbalSel.size + ' of 3 signs selected. Keep going.</div>';
+  }
+}
+
+/* S3 ENERGY METER */
+function updateEnergy(val) {
+  energyLevel = parseInt(val);
+  var eV = 100 - energyLevel; var oV = energyLevel;
+  var state = getEnergyState(energyLevel);
+  if (!state) return;
+  var eF=document.getElementById('energyFill'), oF=document.getElementById('overloadFill');
+  var eP=document.getElementById('energyPct'), oP=document.getElementById('overloadPct');
+  var eM=document.getElementById('energyMood'), oM=document.getElementById('overloadMood');
+  var sl=document.getElementById('energySl');
+  if(eF) eF.style.width = eV + '%';
+  if(oF) oF.style.width = oV + '%';
+  if(eP) eP.textContent = eV + '%';
+  if(oP) oP.textContent = oV + '%';
+  if(eM) eM.textContent = state.eMood;
+  if(oM) oM.textContent = state.oMood;
+  if(sl) {
+    var gE = 'rgba(24,184,90,' + (0.25 + eV/220) + ')';
+    var gO = 'rgba(232,72,72,' + (0.25 + oV/220) + ')';
+    sl.style.background = 'linear-gradient(90deg,' + gE + ',' + gO + ')';
+  }
+}
+
+/* S4 ACTIVITY SORT */
+function handleActSort(id) {
+  if (actSortPlac[id]) return;
+  actSortSel = id;
+  document.querySelectorAll('#actSortBank .sort-chip').forEach(function(el){ el.classList.remove('sc-selected'); el.style.outline='none'; });
+  var el = document.getElementById('asc-' + id);
+  if (el) { el.classList.add('sc-selected'); el.style.outline='3px solid var(--blue-dark)'; }
+  var hint = document.getElementById('actSortHint');
+  if (hint) hint.textContent = 'Click a category zone to place this activity';
+}
+function placeActSort(zone) {
+  if (!actSortSel) return;
+  var item = actSortData.find(function(c){ return c.id===actSortSel; });
+  if (!item) return;
+  actSortPlac[actSortSel] = zone;
+  var el = document.getElementById('asc-' + actSortSel);
+  if (el) { el.classList.add('placed'); el.classList.remove('sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('cz-' + zone);
+  var correct = item.zone === zone;
+  if (zoneEl) zoneEl.innerHTML += '<div class="cz-item">' + item.emoji + (correct?' ✅':' ❌') + ' ' + item.text + '<span class="cz-remove" onclick="removeActSort(\'' + actSortSel + '\',\'' + zone + '\')">x</span></div>';
+  actSortSel = null;
+  var hint = document.getElementById('actSortHint');
+  if (hint) hint.textContent = 'Click another activity to continue';
+  checkActSort();
+}
+function removeActSort(id, zone) {
+  delete actSortPlac[id];
+  var el = document.getElementById('asc-' + id);
+  if (el) { el.classList.remove('placed','sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('cz-' + zone);
+  if (zoneEl) { var t=actSortData.find(function(c){return c.id===id;}).text; zoneEl.querySelectorAll('.cz-item').forEach(function(i){ if(i.textContent.includes(t)) i.remove(); }); }
+  checkActSort();
+}
+function restoreActSort() {
+  Object.keys(actSortPlac).forEach(function(id) {
+    var zone=actSortPlac[id]; var item=actSortData.find(function(c){return c.id===id;});
+    var el=document.getElementById('asc-'+id); if(el) el.classList.add('placed');
+    var zoneEl=document.getElementById('cz-'+zone);
+    if(zoneEl&&item){ var c=item.zone===zone; zoneEl.innerHTML+='<div class="cz-item">'+item.emoji+(c?' ✅':' ❌')+' '+item.text+'<span class="cz-remove" onclick="removeActSort(\''+id+'\',\''+zone+'\')">x</span></div>'; }
+  });
+  checkActSort();
+}
+function checkActSort() {
+  var total = Object.keys(actSortPlac).length;
+  var correct = actSortData.filter(function(c){ return actSortPlac[c.id]===c.zone; }).length;
+  var fb=document.getElementById('actSortFeedback'); var nb=document.getElementById('actSortNextBtn');
+  if (total < actSortData.length) { if(fb&&total>0) fb.innerHTML='<div class="feedback-msg info-msg">'+total+' of 10 sorted. Continue.</div>'; if(nb) nb.disabled=true; return; }
+  if (correct === actSortData.length) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">All 10 correctly categorised. Note that some categories are not always obvious: drawing for fun is Play (even though it looks productive); quiet breathing is Rest (it is not Study or Social). The category is determined by the primary purpose - challenge/growth (Study), enjoyment/energy (Play), recovery/stillness (Rest), or human connection (Social).</div>';
+    if(nb) nb.disabled=false;
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Not all correct ('+correct+' of 10). Remember: category is determined by primary purpose, not appearance. Drawing for fun = Play. Quiet breathing = Rest.</div>';
+    if(nb) nb.disabled=true;
+  }
+}
+
+/* S5 TIME ALLOCATION */
+function updateTime(key, val) {
+  timeVals[key] = parseInt(val);
+  var display = document.getElementById('tsv-' + key);
+  if (display) display.textContent = val + 'h';
+  var total = timeVals.sleep + timeVals.study + timeVals.play + timeVals.brk;
+  var remain = 24 - total;
+  var used = document.getElementById('timeUsed'), rem = document.getElementById('timeRemain');
+  var fill = document.getElementById('timeTotalFill'), fb = document.getElementById('timeFeedback');
+  var nb = document.getElementById('timeNextBtn');
+  if (used) used.textContent = total + 'h';
+  if (rem) rem.textContent = remain + 'h';
+  var pct = Math.min(100, (total / 24) * 100);
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.style.background = total > 24 ? 'linear-gradient(90deg,#f8b0b0,#e02828)' :
+      total >= 20 ? 'linear-gradient(90deg,var(--green-light),var(--green-dark))' :
+      'linear-gradient(90deg,var(--blue-light),var(--blue-dark))';
+  }
+  timeOk = (total <= 24 && timeVals.sleep >= 6 && timeVals.study >= 3 && timeVals.play >= 1 && timeVals.brk >= 1);
+  if (fb) {
+    if (total > 24) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Over 24 hours by ' + (total-24) + 'h. Reduce one or more categories to fit within a real day.</div>';
+    else if (timeOk) fb.innerHTML = '<div class="feedback-msg correct-msg">Great allocation! Sleep ' + timeVals.sleep + 'h, Study ' + timeVals.study + 'h, Play ' + timeVals.play + 'h, Breaks ' + timeVals.brk + 'h = ' + total + ' hours accounted for. ' + remain + ' hours remaining for meals, travel, and other daily activities.</div>';
+    else fb.innerHTML = '<div class="feedback-msg info-msg">Adjust sliders to include meaningful time for all four categories.</div>';
+  }
+  if (nb) nb.disabled = !timeOk;
+}
+
+/* S7 PLANNER */
+function setPlanMode(type) {
+  activePlannerMode = type;
+  document.querySelectorAll('.legend-item').forEach(function(el){ el.classList.remove('active-mode'); });
+  var el = document.getElementById('li-' + type);
+  if (el) el.classList.add('active-mode');
+}
+function toggleBlock(key) {
+  plannerBlocks[key] = activePlannerMode;
+  redrawWeekTable();
+  updatePlannerSummary();
+}
+function redrawWeekTable() {
+  var t = document.getElementById('weekTable');
+  if (!t) return;
+  t.innerHTML = buildWeekTable();
+}
+function updatePlannerSummary() {
+  var counts = {study:0,play:0,rest:0,social:0};
+  Object.values(plannerBlocks).forEach(function(v){ if(counts[v]!==undefined) counts[v]++; });
+  var total = counts.study + counts.play + counts.rest + counts.social;
+  var nb = document.getElementById('plannerNextBtn');
+  var sm = document.getElementById('plannerSummary');
+  if (sm) sm.textContent = 'Planned: Study ' + counts.study + ' | Play ' + counts.play + ' | Rest ' + counts.rest + ' | Social ' + counts.social + ' blocks';
+  if (nb) nb.disabled = (total < 6);
+}
+
+/* S8 PIE CHART */
+function updatePie(key, val) {
+  pieVals[key] = parseInt(val);
+  var pp = document.getElementById('pp-' + key);
+  if (pp) pp.textContent = val + '%';
+  drawPie();
+  updatePieTotal();
+}
+function drawPie() {
+  var svg = document.getElementById('pieSvg');
+  if (!svg) return;
+  var colors = {study:'#1a60d8', play:'#18b85a', rest:'#7040c8', social:'#d88c18'};
+  var keys = ['study','play','rest','social'];
+  var total = keys.reduce(function(s,k){ return s + pieVals[k]; }, 0);
+  if (total === 0) return;
+  var html = ''; var startAngle = 0;
+  keys.forEach(function(k) {
+    var slice = (pieVals[k] / total) * 2 * Math.PI;
+    var endAngle = startAngle + slice;
+    var x1 = Math.cos(startAngle), y1 = Math.sin(startAngle);
+    var x2 = Math.cos(endAngle),   y2 = Math.sin(endAngle);
+    var large = slice > Math.PI ? 1 : 0;
+    html += '<path d="M0,0 L' + x1 + ',' + y1 + ' A1,1,0,' + large + ',1,' + x2 + ',' + y2 + ' Z" fill="' + colors[k] + '" opacity="0.88" stroke="#fff" stroke-width="0.03"/>';
+    startAngle = endAngle;
+  });
+  svg.innerHTML = html;
+  var cm = document.getElementById('pieCenterMain'), cs = document.getElementById('pieCenterSub');
+  if (cm) cm.textContent = total + '%';
+  if (cs) cs.textContent = total >= 95 && total <= 105 ? 'Balanced!' : total > 105 ? 'Over 100%' : 'Under 100%';
+}
+function updatePieTotal() {
+  var keys = ['study','play','rest','social'];
+  var total = keys.reduce(function(s,k){ return s + pieVals[k]; }, 0);
+  var el = document.getElementById('pieTotal');
+  if (el) {
+    el.textContent = 'Total: ' + total + '%';
+    el.className = 'pie-total ' + (total >= 95 && total <= 105 ? 'balanced' : 'over');
+  }
+}
+
+/* TEXTAREAS */
+function checkPlan(val) {
+  planText = val;
+  var len = val.trim().length; planValid = len >= 40;
+  var c=document.getElementById('planCounter'), b=document.getElementById('planNextBtn');
+  if(c){ c.textContent=len+' / 40 minimum characters'; c.className='char-counter'+(planValid?' met':''); }
+  if(b) b.disabled = !planValid;
+}
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length; reflectValid = len >= 40;
+  var c=document.getElementById('reflectCounter'), b=document.getElementById('reflectNextBtn');
+  if(c){ c.textContent=len+' / 40 minimum characters'; c.className='char-counter'+(reflectValid?' met':''); }
+  if(b) b.disabled = !reflectValid;
+}
+
+/* S11 IMRAN */
+var i1done = false, i2done = false;
+function pickImranCause(id, correct) {
+  if (i1done) return; i1done = true; imranDone1 = true;
+  document.querySelectorAll('[id^="ic1-"]').forEach(function(b){ b.style.cursor='default'; });
+  var el = document.getElementById('ic1-' + id);
+  if (el) el.classList.add(correct ? 'ib-correct' : 'ib-incorrect');
+  var fb = document.getElementById('imranCauseFb');
+  if (correct) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">Correct. Imran\'s grades are good - he is clearly working hard. The problem is that the four-component balance is broken: he has Study (in excess) but no Play, no genuine Rest, and no Social connection. Each of these missing components depletes a different system: Play restores motivational resources, Rest consolidates learning and clears cognitive fatigue, Social connection regulates the nervous system. Without all three, even excellent study performance comes at the cost of the systems that make life feel worth living.</div>';
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">The scenario explicitly states Imran has good grades and is working very hard. The problem is the opposite: he is doing too much of one thing (Study) and none of the others. The correct cause is shown. Step 2 is now unlocked.</div>';
+    var c2=document.getElementById('ic1-noplay'); if(c2) c2.classList.add('ib-correct');
+  }
+  var fw = document.getElementById('imranFixWrap');
+  if (fw) { fw.style.opacity='1'; fw.style.pointerEvents='auto'; }
+  checkImranDone();
+}
+function pickImranFix(id, correct) {
+  if (i2done) return; i2done = true; imranDone2 = true;
+  document.querySelectorAll('[id^="if1-"]').forEach(function(b){ b.style.cursor='default'; });
+  var el = document.getElementById('if1-' + id);
+  if (el) el.classList.add(correct ? 'ib-correct' : 'ib-incorrect');
+  var fb = document.getElementById('imranFixFb');
+  if (correct) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">Correct. This is counterintuitive but well-supported: the solution to Imran\'s stress is not more study or more willpower - it is restoring the missing three components of the balance formula. Adding Play, Rest, and Social time will feel like it reduces his available study hours, but the quality and retention of each study hour will improve significantly as the depleted systems recover. The total learning will increase even as total study time decreases.</div>';
+  } else if (id === 'more') {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Studying more is the cause of the problem, not the solution. Adding more of what is already in excess will not fix the deficit in the other three components. The correct approach is shown above.</div>';
+    var c2=document.getElementById('if1-balance'); if(c2) c2.classList.add('ib-correct');
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Ignoring the stress allows the pattern to continue - and research on burnout shows it compounds over time rather than resolving itself. The correct approach is shown above.</div>';
+    var c3=document.getElementById('if1-balance'); if(c3) c3.classList.add('ib-correct');
+  }
+  checkImranDone();
+}
+function checkImranDone() {
+  if (imranDone1 && imranDone2) {
+    var b = document.getElementById('imranNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+/* S12 SORT2 */
+function handleSort2(id) {
+  if (sort2Plac[id]) return;
+  sort2Sel = id;
+  document.querySelectorAll('#sort2Bank .sort-chip').forEach(function(el){ el.classList.remove('sc-selected'); el.style.outline='none'; });
+  var el = document.getElementById('s2c-' + id);
+  if (el) { el.classList.add('sc-selected'); el.style.outline='3px solid var(--blue-dark)'; }
+  var hint = document.getElementById('sort2Hint');
+  if (hint) hint.textContent = 'Click a zone to place this habit';
+}
+function placeSort2(zone) {
+  if (!sort2Sel) return;
+  var item = sort2Data.find(function(c){ return c.id===sort2Sel; });
+  if (!item) return;
+  sort2Plac[sort2Sel] = zone;
+  var el = document.getElementById('s2c-' + sort2Sel);
+  if (el) { el.classList.add('placed'); el.classList.remove('sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  var correct = item.zone === zone;
+  if (zoneEl) zoneEl.innerHTML += '<div class="sz-item">' + item.emoji + (correct?' ✅':' ❌') + ' ' + item.text + '<span class="sz-remove" onclick="removeSort2(\'' + sort2Sel + '\',\'' + zone + '\')">x</span></div>';
+  sort2Sel = null;
+  checkSort2();
+}
+function removeSort2(id, zone) {
+  delete sort2Plac[id];
+  var el = document.getElementById('s2c-' + id);
+  if (el) { el.classList.remove('placed','sc-selected'); el.style.outline='none'; }
+  var zoneEl = document.getElementById('zone-' + zone);
+  if (zoneEl) { var t=sort2Data.find(function(c){return c.id===id;}).text; zoneEl.querySelectorAll('.sz-item').forEach(function(i){ if(i.textContent.includes(t)) i.remove(); }); }
+  checkSort2();
+}
+function restoreSort2() {
+  Object.keys(sort2Plac).forEach(function(id) {
+    var zone=sort2Plac[id]; var item=sort2Data.find(function(c){return c.id===id;});
+    var el=document.getElementById('s2c-'+id); if(el) el.classList.add('placed');
+    var zoneEl=document.getElementById('zone-'+zone);
+    if(zoneEl&&item){ var c=item.zone===zone; zoneEl.innerHTML+='<div class="sz-item">'+item.emoji+(c?' ✅':' ❌')+' '+item.text+'<span class="sz-remove" onclick="removeSort2(\''+id+'\',\''+zone+'\')">x</span></div>'; }
+  });
+  checkSort2();
+}
+function checkSort2() {
+  var total = Object.keys(sort2Plac).length;
+  var correct = sort2Data.filter(function(c){ return sort2Plac[c.id]===c.zone; }).length;
+  var fb=document.getElementById('sort2Feedback'); var nb=document.getElementById('sort2NextBtn');
+  if (total < sort2Data.length) { if(fb&&total>0) fb.innerHTML='<div class="feedback-msg info-msg">'+total+' of 8 placed. Continue.</div>'; if(nb) nb.disabled=true; return; }
+  if (correct === sort2Data.length) {
+    if(fb) fb.innerHTML='<div class="feedback-msg correct-msg">All correctly sorted. Healthy habits (8h sleep, exercise, meals, time with friends) all address a specific component of the balance formula. Overload patterns (10h straight study, no breaks, 4h social media, constant worry) all violate the recovery component in different ways - including social media, which feels like rest but is cognitively demanding and often socially stressful.</div>';
+    if(nb) nb.disabled=false;
+  } else {
+    if(fb) fb.innerHTML='<div class="feedback-msg incorrect-msg">Not all correct ('+correct+' of 8). Remember: the test is long-term effect on energy and focus, not how the habit feels in the moment.</div>';
+    if(nb) nb.disabled=true;
+  }
+}
+
+/* QUIZ */
+function answerQuiz(qi, oi, correct) {
+  if (quizAnswers[qi] !== undefined) return;
+  quizAnswers[qi] = correct;
+  var q = quizData[qi];
+  q.opts.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qi + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === oi) el.classList.add(correct ? 'q-correct' : 'q-incorrect');
+    else if (q.opts[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qi);
+  if (fb) { fb.style.display='block'; fb.className='quiz-feedback '+(correct?'q-fb-correct':'q-fb-incorrect'); fb.textContent=correct?q.fb.correct:q.fb.incorrect; }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn'); if(nb) nb.disabled=false;
+  }
+}
+
+function restartLab() {
+  imbalSel=new Set(); imbalOk=false;
+  energyLevel=78;
+  actSortPlac={}; actSortSel=null;
+  timeVals={sleep:8,study:6,play:3,brk:2}; timeOk=false;
+  plannerBlocks={}; activePlannerMode='study';
+  pieVals={study:30,play:20,rest:35,social:15};
+  planText=''; planValid=false;
+  reflectText=''; reflectValid=false;
+  imranDone1=false; imranDone2=false;
+  i1done=false; i2done=false;
+  sort2Plac={}; sort2Sel=null;
+  quizAnswers={};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas=document.getElementById('confetti-canvas');
+  var ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  var colors=['#1a60d8','#18b85a','#d88c18','#7040c8','#e84848','#0a3898','#a0f0c0','#fde8a0'];
+  var pieces=[];
+  for(var i=0;i<160;i++){
+    pieces.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,w:Math.random()*12+5,h:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rotSpeed:(Math.random()-0.5)*6,speed:Math.random()*3+1.5,drift:(Math.random()-0.5)*1.5,opacity:Math.random()*0.5+0.5});
+  }
+  var frame=0,maxFrames=280;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(function(p){
+      ctx.save(); ctx.globalAlpha=p.opacity*Math.max(0,1-frame/maxFrames);
+      ctx.translate(p.x+p.w/2,p.y+p.h/2); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.y+=p.speed; p.x+=p.drift; p.rot+=p.rotSpeed;
+    });
+    frame++;
+    if(frame<maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+var _section_divider = '<div class="section-divider">';
+function sectionDivider(t){ return '<div class="section-divider">' + t + '</div>'; }
+
+renderStage(1);
+window.addEventListener('resize',function(){var c=document.getElementById('confetti-canvas');c.width=window.innerWidth;c.height=window.innerHeight;});
+</script>
+</body>
+</html>

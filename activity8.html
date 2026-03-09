@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Calm Brain Switch</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2ff;
+  --card:#ffffff;
+  --navy:#182050;
+  --blue:#2858c8;--blue-dark:#0e3898;--blue-light:#a8c0f8;
+  --teal:#1898b0;--teal-dark:#0a6880;--teal-light:#98d8e8;
+  --violet:#6840c0;--violet-dark:#401890;--violet-light:#c0a8f0;
+  --coral:#e05040;--coral-dark:#a82010;--coral-light:#f8b8b0;
+  --orange:#e87820;--orange-dark:#a84800;
+  --mint:#18c890;--mint-dark:#0a8060;--mint-light:#98e8d0;
+  --gold:#d89000;--gold-dark:#906000;
+  --text:#101830;--text-soft:#384070;
+  --shadow-sm:0 4px 16px rgba(14,56,152,0.12);
+  --shadow-md:0 8px 32px rgba(14,56,152,0.16);
+  --shadow-lg:0 16px 48px rgba(14,56,152,0.20);
+  --radius:20px;--radius-sm:12px;--t:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 7% 12%,rgba(40,88,200,0.20) 0%,transparent 46%),
+    radial-gradient(circle at 93% 80%,rgba(24,152,176,0.17) 0%,transparent 46%),
+    radial-gradient(circle at 50% 50%,rgba(104,64,192,0.11) 0%,transparent 52%)}
+.app{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+.header{text-align:center;margin-bottom:36px;animation:fadeDown 0.6s ease both}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;font-size:13px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.header h1{font-size:clamp(22px,5vw,32px);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:8px}
+.header h1 span{color:var(--blue-dark)}
+.header p{font-size:14.5px;color:var(--text-soft);font-weight:600;line-height:1.5}
+
+.act-banner{display:flex;align-items:center;gap:12px;padding:11px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;font-weight:800;letter-spacing:0.5px;animation:fadeUp 0.4s ease both}
+.act-banner.act1{background:rgba(14,56,152,0.09);color:var(--blue-dark);border:1.5px solid rgba(14,56,152,0.24)}
+.act-banner.act2{background:rgba(64,24,144,0.09);color:var(--violet-dark);border:1.5px solid rgba(64,24,144,0.24)}
+.act-banner.act3{background:rgba(10,104,128,0.09);color:var(--teal-dark);border:1.5px solid rgba(10,104,128,0.24)}
+.act-banner .act-icon{font-size:19px}
+
+.progress-wrap{margin-bottom:28px;animation:fadeUp 0.6s 0.2s ease both}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text-soft)}
+.progress-track{height:10px;background:rgba(40,88,200,0.16);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.05)}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-dark),var(--teal-dark));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 2px 8px rgba(14,56,152,0.36)}
+.stage-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stage-dot{width:9px;height:9px;border-radius:50%;background:rgba(40,88,200,0.22);transition:var(--t)}
+.stage-dot.active{background:var(--blue-dark);transform:scale(1.3)}
+.stage-dot.done{background:var(--mint-dark)}
+
+.stage-card{background:var(--card);border-radius:var(--radius);padding:36px 32px;box-shadow:var(--shadow-md);animation:fadeUp 0.5s ease both;border:1.5px solid rgba(40,88,200,0.13);position:relative;overflow:hidden}
+.stage-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(40,88,200,0.10),transparent 70%);pointer-events:none}
+.stage-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue-dark);background:rgba(40,88,200,0.10);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+.stage-label.violet{color:var(--violet-dark);background:rgba(64,24,144,0.09)}
+.stage-label.teal{color:var(--teal-dark);background:rgba(10,104,128,0.09)}
+.stage-label .dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+.stage-card h2{font-size:clamp(18px,3.5vw,22px);font-weight:900;color:var(--text);margin-bottom:12px;line-height:1.3}
+.stage-card p{font-size:15px;color:var(--text-soft);line-height:1.75;font-weight:600;margin-bottom:16px}
+
+.story-box{background:linear-gradient(135deg,rgba(40,88,200,0.09),rgba(24,152,176,0.08));border:1.5px solid rgba(40,88,200,0.26);border-radius:var(--radius-sm);padding:22px 24px;margin:20px 0 28px;position:relative}
+.story-box::before{content:attr(data-icon);font-size:28px;position:absolute;top:-14px;left:20px;background:var(--card);padding:0 6px;border-radius:8px}
+.story-box p{font-size:15.5px;line-height:1.85;color:var(--text);font-weight:700;font-style:italic;margin:0}
+.story-box p span{color:var(--blue-dark);font-style:normal}
+.story-box p span.teal{color:var(--teal-dark)}
+.thought-box{background:linear-gradient(135deg,rgba(224,80,64,0.10),rgba(104,64,192,0.09));border:2px solid rgba(224,80,64,0.26);border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;position:relative}
+.thought-box::before{content:'🧠';font-size:22px;position:absolute;top:-12px;left:14px;background:var(--card);padding:0 4px;border-radius:6px}
+.thought-box p{font-size:15px;font-weight:900;color:var(--coral-dark);font-style:italic;margin:0;line-height:1.6}
+
+/* BRAIN MODE CARDS */
+.brain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 26px}
+.brain-card{background:var(--bg);border:2px solid rgba(40,88,200,0.20);border-radius:var(--radius-sm);padding:16px 12px;cursor:pointer;transition:var(--t);text-align:center;position:relative}
+.brain-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.brain-card.bc-stress{border-color:var(--coral-dark);background:linear-gradient(135deg,rgba(224,80,64,0.12),rgba(232,120,32,0.09));box-shadow:0 0 0 3px rgba(168,32,16,0.14),var(--shadow-sm);transform:translateY(-2px)}
+.brain-card.bc-calm{border-color:var(--mint-dark);background:linear-gradient(135deg,rgba(24,200,144,0.12),rgba(24,152,176,0.09));box-shadow:0 0 0 3px rgba(10,128,96,0.14),var(--shadow-sm);transform:translateY(-2px)}
+.brain-card.bc-wrong{border-color:var(--orange-dark);background:rgba(232,120,32,0.07);animation:wrongShake 0.4s ease}
+.brain-card .bc-icon{font-size:26px;display:block;margin-bottom:8px;transition:transform 0.3s ease}
+.brain-card:hover .bc-icon,.brain-card.bc-stress .bc-icon,.brain-card.bc-calm .bc-icon{transform:scale(1.14)}
+.brain-card .bc-text{font-size:12.5px;font-weight:800;color:var(--text);line-height:1.3}
+.bc-check{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:var(--t)}
+.brain-card.bc-stress .bc-check{opacity:1;transform:scale(1);background:var(--coral-dark)}
+.brain-card.bc-calm .bc-check{opacity:1;transform:scale(1);background:var(--mint-dark)}
+
+/* DUAL BRAIN METER */
+.dual-meter-wrap{margin:22px 0 28px;background:linear-gradient(135deg,rgba(40,88,200,0.07),rgba(24,152,176,0.06));border:1.5px solid rgba(40,88,200,0.20);border-radius:var(--radius-sm);padding:24px}
+.dual-slider-labels{display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--text-soft);margin-bottom:10px}
+.dual-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:999px;outline:none;cursor:pointer}
+.dual-slider::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);box-shadow:0 3px 14px rgba(14,56,152,0.36);cursor:pointer;transition:transform 0.2s ease}
+.dual-slider::-webkit-slider-thumb:hover,.dual-slider:active::-webkit-slider-thumb{transform:scale(1.2)}
+.dual-slider::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--blue-dark);cursor:pointer}
+.brain-bars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.brain-bar-side{padding:16px;border-radius:var(--radius-sm);transition:background 0.5s ease,border-color 0.5s ease;border:2px solid rgba(40,88,200,0.18)}
+.brain-bar-side.stress-side{border-color:rgba(168,32,16,0.28);background:rgba(224,80,64,0.07)}
+.brain-bar-side.calm-side{border-color:rgba(10,128,96,0.28);background:rgba(24,200,144,0.07)}
+.bbs-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bbs-emoji{font-size:24px}
+.bbs-title{font-size:13px;font-weight:900;color:var(--text)}
+.bbs-track{height:12px;border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.06);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06)}
+.bbs-fill{height:100%;border-radius:999px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.stress-side .bbs-fill{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 6px rgba(168,32,16,0.28)}
+.calm-side .bbs-fill{background:linear-gradient(90deg,var(--mint-light),var(--mint-dark));box-shadow:0 2px 6px rgba(10,128,96,0.28)}
+.bbs-pct{text-align:right;font-size:14px;font-weight:900;margin-top:6px;transition:color 0.4s ease}
+.stress-side .bbs-pct{color:var(--coral-dark)}
+.calm-side .bbs-pct{color:var(--mint-dark)}
+.bbs-mood{font-size:13px;font-weight:700;color:var(--text-soft);margin-top:6px;line-height:1.45;min-height:36px;transition:var(--t)}
+
+/* REACTION MATCHING */
+.reaction-wrap{margin:18px 0 26px;display:flex;flex-direction:column;gap:10px}
+.reaction-row{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(40,88,200,0.16);border-radius:var(--radius-sm);padding:14px 16px;transition:var(--t)}
+.reaction-row.rr-stress{border-color:var(--coral-dark);background:rgba(224,80,64,0.08);animation:fadeUp 0.4s ease both}
+.reaction-row.rr-calm{border-color:var(--mint-dark);background:rgba(24,200,144,0.08);animation:fadeUp 0.4s ease both}
+.rr-icon{font-size:22px;flex-shrink:0}
+.rr-text{font-size:14px;font-weight:800;color:var(--text);line-height:1.4}
+.rr-badge{font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;color:#fff;white-space:nowrap;flex-shrink:0;margin-left:auto}
+.rr-badge.stress-badge{background:var(--coral-dark)}
+.rr-badge.calm-badge{background:var(--mint-dark)}
+
+/* BREATHING CIRCLE */
+.breath-wrap{display:flex;flex-direction:column;align-items:center;margin:28px 0 32px;gap:20px}
+.breath-circle-outer{width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:transform 0.4s ease}
+.breath-ring{position:absolute;inset:0;border-radius:50%;border:4px solid transparent;transition:border-color 0.5s ease}
+.breath-ring-1{inset:-8px;border-color:rgba(40,88,200,0.20)}
+.breath-ring-2{inset:-16px;border-color:rgba(40,88,200,0.12)}
+.breath-circle{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;box-shadow:0 8px 32px rgba(14,56,152,0.30);transition:transform 0.4s ease,opacity 0.4s ease,box-shadow 0.4s ease;cursor:pointer}
+.breath-circle.inhaling{transform:scale(1.18);box-shadow:0 12px 42px rgba(14,56,152,0.42);background:linear-gradient(135deg,var(--blue),var(--teal))}
+.breath-circle.holding{transform:scale(1.18);box-shadow:0 12px 42px rgba(104,64,192,0.42);background:linear-gradient(135deg,var(--violet-dark),var(--blue-dark))}
+.breath-circle.exhaling{transform:scale(0.88);box-shadow:0 5px 20px rgba(10,128,96,0.28);background:linear-gradient(135deg,var(--teal-dark),var(--mint-dark))}
+.breath-emoji{font-size:38px;display:block;margin-bottom:4px;transition:all 0.4s ease}
+.breath-label{font-size:16px;font-weight:900;letter-spacing:0.3px}
+.breath-counter{font-size:28px;font-weight:900;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.20);display:flex;align-items:center;justify-content:center;margin-top:3px;transition:var(--t)}
+.breath-phase-label{font-size:16px;font-weight:800;color:var(--text);text-align:center;min-height:24px;transition:color 0.4s ease}
+.breath-progress-bar{width:200px;height:6px;background:rgba(40,88,200,0.12);border-radius:999px;overflow:hidden}
+.breath-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-dark),var(--mint-dark));border-radius:999px;transition:width 1s linear,background 0.5s ease}
+.breath-stress-display{width:100%;max-width:320px}
+.breath-stress-label{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text);margin-bottom:6px}
+.breath-stress-track{height:12px;background:rgba(224,80,64,0.12);border-radius:999px;overflow:hidden}
+.breath-stress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 6px rgba(168,32,16,0.24);transition:width 1.5s cubic-bezier(0.4,0,0.2,1)}
+.breath-start-btn{background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;border:none;border-radius:14px;padding:14px 32px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 5px 18px rgba(14,56,152,0.28)}
+.breath-start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(14,56,152,0.36)}
+.breath-start-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* COMPARE REACTIONS */
+.compare-options{display:flex;flex-direction:column;gap:13px;margin:18px 0 24px}
+.compare-btn{display:flex;align-items:flex-start;gap:16px;background:var(--bg);border:2px solid rgba(40,88,200,0.18);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:var(--t);text-align:left;font-family:'Nunito',sans-serif;width:100%}
+.compare-btn:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:var(--blue)}
+.compare-btn .cb-icon{font-size:28px;flex-shrink:0;margin-top:2px;transition:transform 0.3s ease}
+.compare-btn:hover .cb-icon{transform:scale(1.10)}
+.compare-btn .cb-text{font-size:15px;font-weight:900;color:var(--text);line-height:1.4;margin-bottom:3px}
+.compare-btn .cb-sub{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.compare-btn.sel-harmful{border-color:var(--coral-dark);background:rgba(224,80,64,0.08);animation:wrongShake 0.4s ease}
+.compare-btn.sel-best{border-color:var(--mint-dark);background:rgba(24,200,144,0.09);animation:correctPop 0.4s ease}
+
+/* METERS */
+.meters-wrap{margin:20px 0 24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.5s ease both}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-label-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--text)}
+.meter-track{height:14px;background:rgba(40,88,200,0.10);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05)}
+.meter-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);width:0%}
+.meter-fill.stress-meter{background:linear-gradient(90deg,var(--coral-light),var(--coral-dark));box-shadow:0 2px 8px rgba(168,32,16,0.28)}
+.meter-fill.calm-meter{background:linear-gradient(90deg,var(--mint-light),var(--mint-dark));box-shadow:0 2px 8px rgba(10,128,96,0.28)}
+.outcome-box{padding:18px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;line-height:1.75;color:var(--text);animation:fadeUp 0.5s 0.3s ease both;margin-bottom:6px}
+.outcome-box.harmful{background:rgba(224,80,64,0.09);border:1.5px solid rgba(168,32,16,0.22)}
+.outcome-box.best{background:rgba(24,200,144,0.09);border:1.5px solid rgba(10,128,96,0.22)}
+.outcome-box .outcome-title{font-size:15px;font-weight:900;margin-bottom:6px}
+.outcome-box .outcome-tip{font-size:13px;font-weight:600;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1.5px solid rgba(0,0,0,0.07)}
+
+/* MARIAM SCENARIO */
+.mariam-options{display:flex;flex-direction:column;gap:11px;margin:14px 0 22px}
+.mariam-btn{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:2px solid rgba(40,88,200,0.18);border-radius:var(--radius-sm);padding:15px 18px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;text-align:left;width:100%}
+.mariam-btn:hover{border-color:var(--blue);transform:translateX(3px)}
+.mariam-btn .mb-icon{font-size:24px;flex-shrink:0}
+.mariam-btn .mb-text{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
+.mariam-btn .mb-sub{font-size:12px;font-weight:600;color:var(--text-soft);margin-top:2px}
+.mariam-btn.mb-correct{border-color:var(--mint-dark);background:rgba(24,200,144,0.10);animation:correctPop 0.4s ease}
+.mariam-btn.mb-incorrect{border-color:var(--coral-dark);background:rgba(224,80,64,0.08);animation:wrongShake 0.4s ease}
+
+/* CALM KIT */
+.kit-chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.kit-chip{background:var(--bg);border:2px solid rgba(40,88,200,0.20);border-radius:999px;padding:9px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.kit-chip:hover{border-color:var(--blue-dark);color:var(--text);background:rgba(40,88,200,0.08)}
+.kit-chip.chip-good{background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(14,56,152,0.28)}
+.kit-chip.chip-bad{border-color:var(--coral-dark);background:rgba(224,80,64,0.07);color:var(--coral-dark)}
+.kit-display{margin:16px 0 24px;background:linear-gradient(135deg,rgba(40,88,200,0.08),rgba(24,152,176,0.07));border:1.5px solid rgba(40,88,200,0.22);border-radius:var(--radius-sm);padding:20px 22px;animation:fadeUp 0.4s ease both;min-height:80px}
+.kit-display-title{font-size:13px;font-weight:900;color:var(--blue-dark);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px}
+.kit-items{display:flex;flex-wrap:wrap;gap:8px}
+.kit-item{background:#fff;border:2px solid rgba(40,88,200,0.20);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px;animation:popIn 0.3s ease both}
+
+/* FORMULA */
+.formula-box{background:linear-gradient(135deg,rgba(40,88,200,0.08),rgba(24,152,176,0.07),rgba(24,200,144,0.06));border:2px solid rgba(40,88,200,0.22);border-radius:var(--radius-sm);padding:22px 24px;margin:18px 0 24px}
+.formula-row{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1.5px solid rgba(40,88,200,0.12)}
+.formula-row:last-child{border-bottom:none;padding-bottom:0}
+.formula-row.formula-result{background:linear-gradient(135deg,rgba(24,200,144,0.10),rgba(40,88,200,0.09));border-radius:var(--radius-sm);padding:12px 16px;margin-top:10px;border:none}
+.formula-row .fr-icon{font-size:26px;flex-shrink:0}
+.formula-row .fr-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:2px}
+.formula-row .fr-desc{font-size:12.5px;font-weight:600;color:var(--text-soft);line-height:1.45}
+.formula-arrow{text-align:center;font-size:20px;font-weight:900;color:var(--blue-dark);padding:2px 0}
+.formula-equals{text-align:center;font-size:16px;font-weight:900;color:var(--mint-dark);margin:8px 0 4px;letter-spacing:1px}
+
+/* QUIZ */
+.quiz-question{margin-bottom:26px;animation:fadeUp 0.4s ease both}
+.quiz-q-text{font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.55}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;background:var(--bg);border:2px solid rgba(40,88,200,0.18);border-radius:var(--radius-sm);padding:13px 16px;cursor:pointer;transition:var(--t);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);text-align:left;width:100%}
+.quiz-option:hover{border-color:var(--blue);background:rgba(40,88,200,0.07);transform:translateX(3px)}
+.quiz-option .q-icon{font-size:20px;flex-shrink:0}
+.quiz-option.q-correct{border-color:var(--mint-dark);background:rgba(24,200,144,0.12);animation:correctPop 0.35s ease;cursor:default}
+.quiz-option.q-incorrect{border-color:var(--coral-dark);background:rgba(224,80,64,0.08);animation:wrongShake 0.4s ease;cursor:default}
+.quiz-option.q-reveal{border-color:var(--mint-dark);background:rgba(24,200,144,0.07);cursor:default;opacity:0.8}
+.quiz-feedback{font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;margin-top:10px;line-height:1.65;animation:fadeUp 0.3s ease both;display:none}
+.quiz-feedback.q-fb-correct{background:rgba(24,200,144,0.16);color:#0a5838}
+.quiz-feedback.q-fb-incorrect{background:rgba(224,80,64,0.12);color:#801010}
+
+/* FEEDBACK */
+.feedback-msg{border-radius:var(--radius-sm);padding:14px 18px;font-size:14px;font-weight:800;margin-bottom:20px;animation:fadeUp 0.4s ease both;line-height:1.65}
+.feedback-msg.correct-msg{background:rgba(24,200,144,0.13);color:#0a5838;border:1.5px solid rgba(10,128,96,0.25)}
+.feedback-msg.incorrect-msg{background:rgba(224,80,64,0.10);color:#801010;border:1.5px solid rgba(168,32,16,0.22)}
+.feedback-msg.info-msg{background:rgba(64,24,144,0.08);color:var(--violet-dark);border:1.5px solid rgba(64,24,144,0.20)}
+.feedback-msg.blue-msg{background:rgba(14,56,152,0.08);color:var(--blue-dark);border:1.5px solid rgba(14,56,152,0.22)}
+.feedback-msg.teal-msg{background:rgba(10,104,128,0.09);color:var(--teal-dark);border:1.5px solid rgba(10,104,128,0.22)}
+
+/* INPUTS */
+.reflection-input{width:100%;background:var(--bg);border:2px solid rgba(40,88,200,0.26);border-radius:var(--radius-sm);padding:14px 18px;font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);resize:none;outline:none;transition:var(--t);margin-bottom:14px;min-height:110px}
+.reflection-input::placeholder{color:rgba(56,64,112,0.40)}
+.reflection-input:focus{border-color:var(--blue-dark);box-shadow:0 0 0 3px rgba(14,56,152,0.12);background:#fff}
+.char-counter{font-size:12px;font-weight:700;color:var(--text-soft);text-align:right;margin-top:-10px;margin-bottom:16px}
+.char-counter.met{color:var(--mint-dark)}
+.input-label{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:8px;display:block}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));color:#fff;border:none;border-radius:14px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:var(--t);box-shadow:0 6px 20px rgba(14,56,152,0.30);width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(14,56,152,0.40)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:0.42;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;border:2px solid rgba(40,88,200,0.28);border-radius:12px;padding:10px 18px;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t);margin-bottom:22px}
+.btn-back:hover{background:rgba(40,88,200,0.08);border-color:var(--blue-dark);color:var(--text);transform:translateX(-2px)}
+.btn-back svg{width:15px;height:15px;transition:transform 0.2s ease;flex-shrink:0}
+.btn-back:hover svg{transform:translateX(-3px)}
+.stage-nav{display:flex;align-items:center;margin-bottom:4px}
+.btn-restart{display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--bg);border:2px solid rgba(40,88,200,0.24);border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-soft);cursor:pointer;transition:var(--t)}
+.btn-restart:hover{background:#fff;border-color:var(--blue-dark);color:var(--text);box-shadow:var(--shadow-sm)}
+
+.section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft)}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:rgba(40,88,200,0.18);border-radius:999px}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(40,88,200,0.14),rgba(24,152,176,0.11));border:1.5px solid rgba(40,88,200,0.28);border-radius:var(--radius-sm);padding:18px 10px;animation:popIn 0.5s ease both}
+.badge-item:nth-child(1){animation-delay:0.1s}
+.badge-item:nth-child(2){animation-delay:0.25s}
+.badge-item:nth-child(3){animation-delay:0.4s}
+.badge-item .b-icon{font-size:36px}
+.badge-item .b-title{font-size:12px;font-weight:900;color:var(--text);text-align:center;line-height:1.3}
+.badge-item .b-sub{font-size:11px;font-weight:700;color:var(--text-soft);text-align:center}
+
+.skills-summary{display:flex;flex-direction:column;gap:12px;margin:18px 0 24px}
+.skill-row{display:flex;align-items:flex-start;gap:14px;background:var(--bg);border:1.5px solid rgba(40,88,200,0.16);border-radius:var(--radius-sm);padding:16px 18px;animation:fadeUp 0.5s ease both}
+.skill-row:nth-child(1){animation-delay:0.1s}
+.skill-row:nth-child(2){animation-delay:0.2s}
+.skill-row:nth-child(3){animation-delay:0.3s}
+.skill-row .sk-icon{font-size:28px;flex-shrink:0}
+.skill-row .sk-title{font-size:14px;font-weight:900;color:var(--text);margin-bottom:4px}
+.skill-row .sk-desc{font-size:13px;font-weight:600;color:var(--text-soft);line-height:1.6}
+
+.celebration-overlay{position:fixed;inset:0;background:rgba(240,242,255,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.5s ease;backdrop-filter:blur(6px);padding:20px}
+.celebration-overlay.active{opacity:1;pointer-events:all}
+.celebration-card{background:#fff;border-radius:28px;padding:40px 32px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;border:2px solid rgba(40,88,200,0.18);position:relative;overflow:hidden;max-height:90vh;overflow-y:auto}
+.celebration-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(40,88,200,0.06),rgba(24,152,176,0.05),rgba(24,200,144,0.04));pointer-events:none}
+.celebration-card h2{font-size:22px;font-weight:900;color:var(--text);margin-bottom:6px}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes badgeSpin{from{opacity:0;transform:scale(0) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+@media(max-width:480px){
+  .app{padding:20px 14px 60px}
+  .stage-card{padding:26px 20px}
+  .brain-grid{grid-template-columns:repeat(2,1fr)}
+  .brain-bars{grid-template-columns:1fr}
+  .btn-primary{padding:14px 22px;font-size:14px}
+  .badge-grid{gap:10px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="app">
+  <header class="header">
+    <div class="header-badge">🧠 Brain Lab</div>
+    <h1>The <span>Calm Brain</span> Switch</h1>
+    <p>Understand your brain - Activate calm mode - Train your nervous system</p>
+  </header>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-labels">
+      <span id="stageLabel">Stage 1 of 14</span>
+      <span id="stagePercent">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-dots" id="stageDots"></div>
+  </div>
+  <div id="stageContainer"></div>
+</div>
+
+<div class="celebration-overlay" id="celebrationOverlay">
+  <div class="celebration-card">
+    <div style="font-size:52px;margin-bottom:12px;animation:badgeSpin 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;display:block">🧠</div>
+    <h2>Calm Mode Unlocked!</h2>
+    <p style="margin:10px 0 18px;font-size:14px;color:var(--text-soft);font-weight:600;line-height:1.6">You completed all 3 Acts and earned all 3 badges. You now understand your brain's two modes - and you hold the switch.</p>
+    <div class="badge-grid" style="text-align:left">
+      <div class="badge-item"><span class="b-icon">🔬</span><div class="b-title">Brain Mode Detective</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">💡</span><div class="b-title">Calm Switch Activator</div><div class="b-sub">Level 1 Unlocked</div></div>
+      <div class="badge-item"><span class="b-icon">🌊</span><div class="b-title">Regulation Trainer</div><div class="b-sub">Level 1 Unlocked</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex;margin-top:16px">Restart the Lab</button>
+  </div>
+</div>
+
+<script>
+/* ===== STATE ===== */
+const TOTAL_STAGES = 14;
+let currentStage = 1;
+
+let stressBrainSel   = new Set();
+let stressBrainOk    = false;
+let calmBrainSel     = new Set();
+let calmBrainOk      = false;
+let brainLevel       = 70;
+let breathDone       = false;
+let breathTimer      = null;
+let breathPhase      = 'ready';
+let breathCycle      = 0;
+let breathStress     = 88;
+let breathCountdown  = 0;
+let breathTotal      = 12;
+let compareChoice    = null;
+let compareLocked    = false;
+let calmText         = '';
+let calmValid        = false;
+let reflectText      = '';
+let reflectValid     = false;
+let mariamSignsDone  = false;
+let mariamToolDone   = false;
+let mariamOutcomeDone= false;
+let mariamCount      = 0;
+let kitSelected      = new Set();
+let kitGoodCount     = 0;
+let quizAnswers      = {};
+
+/* ===== DATA ===== */
+const stressBrainItems = [
+  {id:'heartrace', icon:'💓', text:'Heart races fast',    mode:'stress'},
+  {id:'shallow',   icon:'💨', text:'Shallow fast breathing', mode:'stress'},
+  {id:'yelling',   icon:'😤', text:'Yelling or snapping', mode:'stress'},
+  {id:'forget',    icon:'😵', text:'Forgetting things',   mode:'stress'},
+  {id:'solve',     icon:'🧩', text:'Calm problem solving',mode:'calm'},
+  {id:'listen',    icon:'👂', text:'Listening carefully', mode:'calm'}
+];
+
+const calmBrainItems = [
+  {id:'slow',      icon:'🌬️', text:'Slow steady breathing', mode:'calm'},
+  {id:'clear',     icon:'💡', text:'Thinking clearly',    mode:'calm'},
+  {id:'decide',    icon:'✅', text:'Making good decisions', mode:'calm'},
+  {id:'pause',     icon:'⏸️', text:'Pausing before reacting', mode:'calm'},
+  {id:'yell2',     icon:'😠', text:'Immediate yelling',   mode:'stress'}
+];
+
+const brainStates = [
+  {range:[0,15],   sLabel:'Barely Active', cLabel:'Fully Engaged', sMood:'Alarm system quiet. Body at ease. Full thinking capacity available.', cMood:'Optimal focus, creativity, and problem-solving. This is the learning zone.'},
+  {range:[16,35],  sLabel:'Low', cLabel:'Strong', sMood:'Mild alertness. Manageable. Thinking mostly clear with some arousal.', cMood:'Strong access to reasoning and decision-making. Emotions feel balanced.'},
+  {range:[36,57],  sLabel:'Building', cLabel:'Reduced', sMood:'Noticeable activation. Harder to think calmly. Regulation tools would help.', cMood:'Thinking capacity beginning to reduce. Quick decisions may be impulsive.'},
+  {range:[58,78],  sLabel:'High', cLabel:'Low', sMood:'Strong alarm response. Survival instincts active. Rational thought significantly impaired.', cMood:'Low access to thoughtful decision-making. Reactions faster but less accurate.'},
+  {range:[79,100], sLabel:'Maximum', cLabel:'Minimal', sMood:'Full alarm response. Fight-or-flight fully activated. Clear thinking nearly impossible.', cMood:'Minimal rational function. Body has taken over from thinking brain entirely.'}
+];
+
+const reactionData = [
+  {icon:'⚡', text:'Reacts before thinking things through', mode:'stress', badge:'Stress Brain'},
+  {icon:'😤', text:'Raises voice or snaps at someone nearby', mode:'stress', badge:'Stress Brain'},
+  {icon:'🏃', text:'Wants to run away or escape the situation', mode:'stress', badge:'Stress Brain'},
+  {icon:'😵', text:'Cannot remember information that was known moments before', mode:'stress', badge:'Stress Brain'},
+  {icon:'💡', text:'Considers options before choosing a response', mode:'calm', badge:'Calm Brain'},
+  {icon:'🤝', text:'Listens to understand rather than to respond', mode:'calm', badge:'Calm Brain'}
+];
+
+const compareOptions = [
+  {
+    id:'panic', icon:'🔴', text:'Stay in panic mode - let the thoughts spiral', sub:'Avoid activating any regulation tool',
+    quality:'harmful', stressLevel:92, calmLevel:8,
+    outcome:{title:'The Spiral Effect', body:'When Arham stays in panic mode, his stress brain keeps the alarm running at full volume. Each anxious thought activates another. His heart continues racing, his thinking stays foggy, and his body remains in fight-or-flight mode throughout the test. He cannot access the information he studied because stress brain is blocking the pathway to it.', tip:'Research: High cortisol levels directly impair the hippocampus - the brain\'s memory centre. This is why students who panic in exams often cannot recall information they clearly learned. Stress brain literally blocks access to stored knowledge.'}
+  },
+  {
+    id:'breathe', icon:'🟢', text:'Use slow, deliberate breathing to activate calm mode', sub:'Exhale longer than inhale to signal safety to the brain',
+    quality:'best', stressLevel:28, calmLevel:78,
+    outcome:{title:'The Calm Switch Activates', body:'When Arham uses slow, deliberate breathing - particularly with a longer exhale than inhale - he directly activates the parasympathetic nervous system (the body\'s calm mode). His heart rate slows, cortisol levels begin to drop, and the prefrontal cortex (thinking brain) gradually regains function. Within two to three minutes of slow breathing, he can access his memory and thinking capacity again.', tip:'Science: The vagus nerve connects the lungs directly to the brain\'s calm centre. Slow exhale breathing stimulates the vagus nerve, signalling to the brain that the environment is safe - directly activating the parasympathetic response regardless of what the mind is thinking.'}
+  }
+];
+
+const calmKitOptions = [
+  {id:'breathe',  text:'Deep breathing', good:true, icon:'🌬️'},
+  {id:'count',    text:'Counting slowly', good:true, icon:'🔢'},
+  {id:'stretch',  text:'Body stretching', good:true, icon:'🧘'},
+  {id:'yell2',    text:'Yelling louder', good:false, icon:'😤'},
+  {id:'walk',     text:'Slow walking', good:true, icon:'🚶'},
+  {id:'selftalk', text:'Positive self-talk', good:true, icon:'💬'}
+];
+
+const quizData = [
+  {
+    q:'Question 1: What is the primary purpose of Stress Brain (alarm mode)?',
+    options:[
+      {icon:'🛡️', text:'To prioritize immediate survival by activating the body\'s rapid response system - useful in genuine danger', correct:true},
+      {icon:'📚', text:'To help us think more clearly and solve complex problems under pressure', correct:false},
+      {icon:'😴', text:'To reduce energy consumption and encourage rest and recovery', correct:false}
+    ],
+    feedback:{
+      correct:'Correct. Stress brain - or the alarm mode driven by the amygdala - is designed to prioritize physical survival. It increases heart rate, sharpens immediate physical responses, and diverts energy away from complex thinking toward fast, reactive behaviour. This is perfect for physical danger, but unhelpful in situations requiring careful thought or emotional regulation.',
+      incorrect:'Not quite. Stress brain\'s purpose is survival, not thinking. When the alarm mode activates, it prioritizes rapid physical response over careful reasoning. This is why we feel like we "cannot think straight" when stressed - stress brain has redirected resources away from the thinking brain (prefrontal cortex) toward survival responses.'
+    }
+  },
+  {
+    q:'Question 2: What most directly activates calm brain mode in the nervous system?',
+    options:[
+      {icon:'💭', text:'Telling yourself to calm down using thought and willpower alone', correct:false},
+      {icon:'🌬️', text:'Slow breathing - especially a longer exhale - which stimulates the vagus nerve and parasympathetic response', correct:true},
+      {icon:'📱', text:'Distracting yourself with something entertaining or engaging', correct:false}
+    ],
+    feedback:{
+      correct:'Exactly right. The body - particularly breathing - is the fastest pathway to activating calm brain. Slow breathing with an extended exhale stimulates the vagus nerve, which directly activates the parasympathetic nervous system (calm mode). This bypasses the thinking brain entirely, which is important because when stress brain is active, the thinking brain has reduced function anyway.',
+      incorrect:'Not quite. The most direct route to calm brain bypasses the thinking brain entirely - because when stress brain is active, the thinking brain has reduced function. Slow breathing, particularly with a longer exhale than inhale, stimulates the vagus nerve directly and activates the parasympathetic (calm) response. The body is the switch, not the mind.'
+    }
+  },
+  {
+    q:'Question 3: Why does stress brain make it harder to remember or think clearly?',
+    options:[
+      {icon:'😴', text:'Because stress makes us tired, and tiredness always impairs thinking', correct:false},
+      {icon:'🔀', text:'Because stress hormones like cortisol reduce activity in the prefrontal cortex and hippocampus - the brain\'s thinking and memory centres', correct:true},
+      {icon:'🎯', text:'Because stress makes us focus so intensely on one thing that we forget everything else', correct:false}
+    ],
+    feedback:{
+      correct:'Spot on. When the stress response activates, cortisol and adrenaline redirect blood flow and neural resources away from the prefrontal cortex (decision-making, reasoning) and hippocampus (memory retrieval) toward the more primitive survival areas of the brain. This is why information "disappears" during high-stress moments - it is not gone, just temporarily inaccessible while stress brain has control.',
+      incorrect:'Not quite. The specific mechanism is neurochemical: stress hormones like cortisol and adrenaline directly reduce activity in the prefrontal cortex and hippocampus - the areas responsible for thinking clearly and retrieving memories. This is why a student can study thoroughly but "blank" in an exam under high stress. The information is there, but stress brain has temporarily blocked access to it.'
+    }
+  }
+];
+
+/* ===== UTILS ===== */
+function backBtn(s, l) {
+  return '<div class="stage-nav"><button class="btn-back" onclick="renderStage(' + s + ')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' + l + '</button></div>';
+}
+function actBanner(act, text) {
+  var icons = {1:'🔵', 2:'🟣', 3:'🌊'};
+  return '<div class="act-banner act' + act + '"><span class="act-icon">' + icons[act] + '</span> ' + text + '</div>';
+}
+function getBrainState(v) {
+  return brainStates.find(function(s){ return v >= s.range[0] && v <= s.range[1]; });
+}
+
+/* ===== PROGRESS ===== */
+function updateProgress(stage) {
+  var pct = Math.round(((stage - 1) / TOTAL_STAGES) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stageLabel').textContent = 'Stage ' + stage + ' of ' + TOTAL_STAGES;
+  document.getElementById('stagePercent').textContent = pct + '%';
+  var dots = document.getElementById('stageDots');
+  dots.innerHTML = '';
+  for (var i = 1; i <= TOTAL_STAGES; i++) {
+    var d = document.createElement('div');
+    d.className = 'stage-dot' + (i < stage ? ' done' : i === stage ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ===== ROUTER ===== */
+function renderStage(n) {
+  if (breathTimer) { clearInterval(breathTimer); breathTimer = null; }
+  currentStage = n;
+  updateProgress(n);
+  window.scrollTo({top:0, behavior:'smooth'});
+  var fns = [null,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14];
+  document.getElementById('stageContainer').innerHTML = fns[n]();
+  postRender(n);
+}
+
+/* ===== STAGES ===== */
+function s1() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress Brain') +
+    '<div class="stage-label"><span class="dot"></span> Lab Entry - Case File #008</div>' +
+    '<h2>Your Brain Has Two Modes</h2>' +
+    '<p>Welcome to the Calm Brain Switch Lab. Your brain is arguably the most sophisticated object in the known universe. It regulates your heartbeat, processes millions of sensory inputs per second, stores decades of memories, and creates conscious experience - all simultaneously. But when it comes to stress, it has a critical design feature: a two-mode system. And most people have never been taught how to switch between them.</p>' +
+    '<div class="story-box" data-icon="📝">' +
+      '<p><span>Arham</span> is eleven years old. It is the morning of his science test - a test he has genuinely prepared for. He revised his notes three times, understood the material, and went to sleep at a reasonable hour. But as soon as the test paper lands on his desk, something changes. His brain goes loud. Thoughts begin racing at speed. His hands feel damp against the paper. His heart beats visibly in his chest. And then the thought that makes everything worse arrives:</p>' +
+    '</div>' +
+    '<div class="thought-box"><p>"I cannot think clearly. Everything I knew is gone. My mind has gone blank."</p></div>' +
+    '<p>The information Arham studied has not disappeared. But his brain has switched modes - and in the mode it has switched to, that information is temporarily inaccessible. Understanding why this happens, and how to switch back, is what this entire lab is about.</p>' +
+    '<div class="feedback-msg info-msg">🧠 <strong>Core concept:</strong> Your brain operates in two primary modes. Stress Mode (driven by the amygdala) prioritizes survival and speed. Calm Mode (driven by the prefrontal cortex) enables thinking, reasoning, memory access, and good decisions. The key insight is that you cannot force your brain into calm mode by thinking harder. But you CAN activate it using your body - specifically, your breathing. This is the Brain Switch.</div>' +
+    '<button class="btn-primary" onclick="renderStage(2)">Begin Brain Investigation</button>' +
+  '</div>';
+}
+
+function s2() {
+  stressBrainSel = new Set(); stressBrainOk = false;
+  var cards = stressBrainItems.map(function(item) {
+    return '<div class="brain-card" id="sb-' + item.id + '" onclick="toggleStressBrain(\'' + item.id + '\',\'' + item.mode + '\')">' +
+      '<div class="bc-check">✓</div>' +
+      '<span class="bc-icon">' + item.icon + '</span>' +
+      '<div class="bc-text">' + item.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress Brain') +
+    backBtn(1,'Back to Story') +
+    '<div class="stage-label"><span class="dot"></span> Stage 2 - Brain Mode Identification</div>' +
+    '<h2>Which Belong to Stress Brain?</h2>' +
+    '<p>Stress Brain is the brain\'s alarm system - specifically the amygdala and the fight-or-flight response. It activates rapidly in response to perceived threat, whether real or imagined. It produces very specific and recognisable signs - physical, cognitive, and behavioural. But not everything on this list belongs to Stress Brain mode.</p>' +
+    '<p>Select all the cards that describe Stress Brain behaviours and signals. Read carefully - two of these belong to Calm Brain instead.</p>' +
+    '<div class="brain-grid">' + cards + '</div>' +
+    '<div id="sbFeedback"></div>' +
+    '<button class="btn-primary" id="sbNextBtn" onclick="renderStage(3)" disabled>Next: Inside Stress Mode -></button>' +
+  '</div>';
+}
+
+function s3() {
+  var rows = reactionData.map(function(r, i) {
+    return '<div class="reaction-row r' + (i < 4 ? 'r-stress' : 'r-calm') + '" style="animation-delay:' + (i*0.07) + 's">' +
+      '<span class="rr-icon">' + r.icon + '</span>' +
+      '<div class="rr-text">' + r.text + '</div>' +
+      '<span class="rr-badge ' + (r.mode === 'stress' ? 'stress-badge' : 'calm-badge') + '">' + r.badge + '</span>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress Brain') +
+    backBtn(2,'Back to Mode Identification') +
+    '<div class="stage-label"><span class="dot"></span> Stage 3 - Inside Stress Mode</div>' +
+    '<h2>What Stress Brain Actually Does</h2>' +
+    '<p>When the amygdala triggers the alarm, it initiates a specific cascade of neurological and physiological changes. These changes are perfectly designed for immediate physical survival - running from danger, fighting off a threat, or freezing to avoid detection. The problem is that this same system activates in response to social pressure, exams, arguments, and uncertainty - situations where survival-mode reactions are actively counterproductive.</p>' +
+    '<p>Study how each reaction maps to either Stress Brain or Calm Brain mode. Notice the fundamental difference in what each mode enables.</p>' +
+    '<div class="reaction-wrap">' + rows + '</div>' +
+    '<div class="feedback-msg blue-msg">🧠 <strong>The critical insight:</strong> Stress Brain\'s behaviours are not character flaws - they are neurological events. When Arham blanks in the test, he is not being careless. His brain has literally reduced access to the prefrontal cortex (thinking, memory) in order to divert resources to survival-mode responses. Understanding this removes blame and creates the space for a skill-based response.</div>' +
+    '<button class="btn-primary" onclick="renderStage(4)">Next: Calm Brain Characteristics -></button>' +
+  '</div>';
+}
+
+function s4() {
+  calmBrainSel = new Set(); calmBrainOk = false;
+  var cards = calmBrainItems.map(function(item) {
+    return '<div class="brain-card" id="cb-' + item.id + '" onclick="toggleCalmBrain(\'' + item.id + '\',\'' + item.mode + '\')">' +
+      '<div class="bc-check">✓</div>' +
+      '<span class="bc-icon">' + item.icon + '</span>' +
+      '<div class="bc-text">' + item.text + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress Brain') +
+    backBtn(3,'Back to Stress Mode') +
+    '<div class="stage-label"><span class="dot"></span> Stage 4 - Calm Brain Characteristics</div>' +
+    '<h2>What Calm Brain Looks Like</h2>' +
+    '<p>Calm Brain is governed by the prefrontal cortex - the part of the brain responsible for executive function: reasoning, planning, impulse control, empathy, and decision-making. This is the brain\'s most sophisticated region, and it is the one that is most directly impaired by the stress response. When calm brain is active, we have access to our best thinking.</p>' +
+    '<p>Below are five characteristics. Select all that belong to Calm Brain mode. One of them is a Stress Brain behaviour - read carefully.</p>' +
+    '<div class="brain-grid">' + cards + '</div>' +
+    '<div id="cbFeedback"></div>' +
+    '<button class="btn-primary" id="cbNextBtn" onclick="renderStage(5)" disabled>Next: Brain Mode Meter -></button>' +
+  '</div>';
+}
+
+function s5() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress Brain') +
+    backBtn(4,'Back to Calm Brain') +
+    '<div class="stage-label"><span class="dot"></span> Stage 5 - Brain Mode Meter</div>' +
+    '<h2>Where Is Arham\'s Brain Right Now?</h2>' +
+    '<p>The balance between Stress Brain and Calm Brain is not all-or-nothing - it exists on a continuous spectrum. As stress increases, Calm Brain capacity decreases proportionally. The relationship is inverse and dynamic: every increase in Stress Brain activity comes at the direct cost of Calm Brain function. Move the slider to estimate Arham\'s brain state as he sits down to take his test.</p>' +
+    '<div class="dual-meter-wrap">' +
+      '<div class="dual-slider-labels"><span>😌 Full Calm</span><span>⚖️ Balanced</span><span>🫨 Full Stress</span></div>' +
+      '<input type="range" class="dual-slider" id="dualSlider" min="0" max="100" value="70" oninput="updateDual(this.value)"/>' +
+      '<div class="brain-bars">' +
+        '<div class="brain-bar-side stress-side">' +
+          '<div class="bbs-header"><span class="bbs-emoji">⚡</span><span class="bbs-title">Stress Brain</span></div>' +
+          '<div class="bbs-track"><div class="bbs-fill" id="stressFill" style="width:70%"></div></div>' +
+          '<div class="bbs-pct" id="stressPct">70%</div>' +
+          '<div class="bbs-mood" id="stressMood">Strong alarm response. Survival instincts active.</div>' +
+        '</div>' +
+        '<div class="brain-bar-side calm-side">' +
+          '<div class="bbs-header"><span class="bbs-emoji">💡</span><span class="bbs-title">Calm Brain</span></div>' +
+          '<div class="bbs-track"><div class="bbs-fill" id="calmFill" style="width:30%"></div></div>' +
+          '<div class="bbs-pct" id="calmPct">30%</div>' +
+          '<div class="bbs-mood" id="calmMood">Low access to thoughtful decision-making.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="feedback-msg blue-msg">📊 <strong>Arham\'s context:</strong> Multiple simultaneous stressors - performance pressure, self-doubt, physical stress signals - typically push the brain meter into the High Stress range. At this level, Calm Brain function is significantly impaired, which is precisely why the information Arham studied feels inaccessible. The meter accurately reflects a neurological state, not a character trait.</div>' +
+    '<button class="btn-primary" onclick="renderStage(6)">Next: The Brain Switch Concept -></button>' +
+  '</div>';
+}
+
+function s6() {
+  return '<div class="stage-card">' +
+    actBanner(1,'Act 1 - Understanding Stress Brain') +
+    backBtn(5,'Back to Brain Meter') +
+    '<div class="stage-label"><span class="dot"></span> Stage 6 - The Brain Switch</div>' +
+    '<h2>You Cannot Think Your Way to Calm</h2>' +
+    '<p>Here is one of the most important insights in emotional regulation: you cannot use your thinking brain to switch off your stress brain - because when stress brain is active, your thinking brain is the thing that is impaired. Telling yourself "calm down" or "stop panicking" rarely works, because the very cognitive system you are trying to use to send that message is the one that has been downregulated by stress.</p>' +
+    '<p>But there is a backdoor into calm mode. And it goes through the body.</p>' +
+    '<div class="formula-box">' +
+      '<div class="formula-row"><span class="fr-icon">⚡</span><div><div class="fr-title">Stress Brain Activates</div><div class="fr-desc">Amygdala fires. Cortisol and adrenaline release. Prefrontal cortex (thinking brain) gets less blood flow and activity. Body goes into alarm mode.</div></div></div>' +
+      '<div class="formula-arrow">↓</div>' +
+      '<div class="formula-row"><span class="fr-icon">🫁</span><div><div class="fr-title">The Breathing Connection</div><div class="fr-desc">The vagus nerve runs from the brain stem all the way down to the diaphragm. When you breathe slowly - especially with a longer exhale - you stimulate this nerve directly. The vagus nerve is the primary activator of the parasympathetic nervous system: the body\'s built-in calm response.</div></div></div>' +
+      '<div class="formula-arrow">↓</div>' +
+      '<div class="formula-row"><span class="fr-icon">🌊</span><div><div class="fr-title">Parasympathetic System Activates</div><div class="fr-desc">Heart rate slows. Cortisol begins to decrease. Blood flow returns to the prefrontal cortex. The brain\'s thinking capacity gradually comes back online. Calm mode begins to dominate.</div></div></div>' +
+      '<div class="formula-equals">= THE BRAIN SWITCH</div>' +
+      '<div class="formula-row formula-result"><span class="fr-icon">💡</span><div><div class="fr-title">Calm Brain Comes Back Online</div><div class="fr-desc">Within 2-4 minutes of deliberate slow breathing, measurable changes in cortisol levels and heart rate variability are detectable. The brain\'s thinking capacity gradually returns. You have flipped the switch - through the body, not the mind.</div></div></div>' +
+    '</div>' +
+    '<div class="feedback-msg teal-msg">🌊 <strong>Badge Progress:</strong> Brain Mode Detective Level 1 - almost earned! Continue to Act 2 to activate the switch...</div>' +
+    '<button class="btn-primary" onclick="renderStage(7)">Continue to Act 2: Activating Calm Mode -></button>' +
+  '</div>';
+}
+
+function s7() {
+  breathDone = false; breathPhase = 'ready'; breathCycle = 0; breathStress = 88; breathCountdown = 0;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Activating Calm Mode') +
+    backBtn(6,'Back to Brain Switch Concept') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 7 - Breathing Simulation</div>' +
+    '<h2>Activate the Switch Right Now</h2>' +
+    '<p>This is not a demonstration - this is practice. The 4-2-6 breathing pattern (inhale 4, hold 2, exhale 6) is specifically designed to activate the parasympathetic response. The extended exhale is the critical component: it is the exhale, more than the inhale, that stimulates the vagus nerve and triggers calm mode. Complete 3 full cycles and watch the stress meter respond in real time.</p>' +
+    '<p>Click the circle to begin your first cycle.</p>' +
+    '<div class="breath-wrap">' +
+      '<div class="breath-circle-outer" id="breathOuter">' +
+        '<div class="breath-ring breath-ring-1" id="bRing1"></div>' +
+        '<div class="breath-ring breath-ring-2" id="bRing2"></div>' +
+        '<div class="breath-circle" id="breathCircle" onclick="startBreathing()">' +
+          '<span class="breath-emoji" id="breathEmoji">🫁</span>' +
+          '<div class="breath-label" id="breathLabelInner">Tap to Begin</div>' +
+          '<div class="breath-counter" id="breathNum" style="display:none"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="breath-phase-label" id="breathPhaseLabel">Tap the circle to start</div>' +
+      '<div class="breath-progress-bar"><div class="breath-progress-fill" id="breathProgFill" style="width:0%"></div></div>' +
+    '</div>' +
+    '<div class="breath-stress-display">' +
+      '<div class="breath-stress-label"><span>⚡ Stress Brain Level</span><span id="breathStressNum">88%</span></div>' +
+      '<div class="breath-stress-track"><div class="breath-stress-fill" id="breathStressFill" style="width:88%"></div></div>' +
+    '</div>' +
+    '<br/>' +
+    '<div id="breathFeedback"></div>' +
+    '<button class="btn-primary" id="breathNextBtn" onclick="renderStage(8)" disabled style="margin-top:12px">Compare Two Reactions -></button>' +
+  '</div>';
+}
+
+function s8() {
+  compareChoice = null; compareLocked = false;
+  var cards = compareOptions.map(function(opt) {
+    return '<button class="compare-btn" id="co-' + opt.id + '" onclick="chooseCompare(\'' + opt.id + '\')">' +
+      '<span class="cb-icon">' + opt.icon + '</span>' +
+      '<div><div class="cb-text">' + opt.text + '</div><div class="cb-sub">' + opt.sub + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Activating Calm Mode') +
+    backBtn(7,'Back to Breathing') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 8 - Compare Two Reactions</div>' +
+    '<h2>Two Paths for Arham</h2>' +
+    '<p>Arham is three questions into his test. His brain is in high stress mode. His thoughts are spiralling. He has two options available to him right now. Each will have a measurably different impact on his Stress Brain and Calm Brain levels - and therefore on his ability to complete the test effectively. Choose the path you think will serve him best and watch how the brain meters respond.</p>' +
+    '<div class="compare-options">' + cards + '</div>' +
+    '<div id="compareOutcome"></div>' +
+    '<div id="compareNextWrap" style="display:none"><button class="btn-primary" onclick="renderStage(9)">Build Your Calm Routine -></button></div>' +
+  '</div>';
+}
+
+function s9() {
+  calmValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Activating Calm Mode') +
+    backBtn(8,'Back to Comparison') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 9 - Build a Calm Routine</div>' +
+    '<h2>Design Your Personal Brain Switch Routine</h2>' +
+    '<p>The most effective calm routine is personalised - built from tools that resonate with your specific body, preferences, and situations. A routine written in your own words, based on your own signals, is far more likely to be activated in a real high-stress moment than generic advice. Build yours below.</p>' +
+    '<div class="feedback-msg info-msg" style="text-align:left;margin-bottom:18px">' +
+      'Your routine should include three components:<br/>' +
+      '<strong>Body signal:</strong> What physical sensation tells me my brain has switched into stress mode?<br/>' +
+      '<strong>Regulation tool:</strong> What specific action will I use - breathing, movement, grounding, self-talk?<br/>' +
+      '<strong>Thought shift:</strong> What can I remind myself about what is happening and what I can do?' +
+    '</div>' +
+    '<label class="input-label">When I notice my brain in stress mode, I can...</label>' +
+    '<textarea class="reflection-input" id="calmInput" oninput="checkCalm(this.value)" placeholder="For example: When I notice my heart beating fast and my thoughts getting tangled, I know my brain has switched to stress mode. I will stop, put my pen down, and breathe out slowly for a count of six - three times. Then I can remind myself that I know this material, and my calm brain will come back online..." rows="5"></textarea>' +
+    '<div class="char-counter" id="calmCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg info-msg" style="margin-bottom:16px">🧠 <strong>Why writing matters:</strong> In a genuine high-stress moment, the thinking brain\'s capacity is reduced. A pre-written routine becomes a retrievable script that the brain can access even when under stress. Writing it in advance is itself a form of preparation that makes the routine more likely to be used when it is needed most.</div>' +
+    '<button class="btn-primary" id="calmNextBtn" onclick="renderStage(10)" disabled>Next: Reflect on the Brain Switch -></button>' +
+  '</div>';
+}
+
+function s10() {
+  reflectValid = false;
+  return '<div class="stage-card">' +
+    actBanner(2,'Act 2 - Activating Calm Mode') +
+    backBtn(9,'Back to Calm Routine') +
+    '<div class="stage-label violet"><span class="dot"></span> Stage 10 - Reflect</div>' +
+    '<h2>Why Slow Breathing Switches the Brain</h2>' +
+    '<p>You have now practised the breathing technique and seen the science behind it. Before we move to the final act, it is worth cementing the understanding at a deeper level - because when you truly understand why something works, you are far more likely to use it in a real moment.</p>' +
+    '<p>Answer all three questions thoughtfully:</p>' +
+    '<p style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.7">' +
+      '1. Explain in your own words why slow breathing - particularly a long exhale - activates calm brain mode. What is the physical pathway?<br/>' +
+      '2. Why does telling yourself to "just calm down" often fail - what is happening in the brain at that moment?<br/>' +
+      '3. Think of a recent situation where you were in stress mode. What body signal could you have noticed? What tool could you have used?' +
+    '</p>' +
+    '<textarea class="reflection-input" id="reflectInput" oninput="checkReflect(this.value)" placeholder="Write your reflections here... Think about the vagus nerve, the parasympathetic response, why the body is the backdoor to the brain, and a specific situation where you have experienced the thinking-brain-offline effect..." rows="5"></textarea>' +
+    '<div class="char-counter" id="reflectCounter">0 / 40 minimum characters</div>' +
+    '<div class="feedback-msg teal-msg" style="margin-bottom:16px">💡 <strong>Badge Progress:</strong> Calm Switch Activator Level 1 - almost earned! One final act to go...</div>' +
+    '<button class="btn-primary" id="reflectNextBtn" onclick="renderStage(11)" disabled>Continue to Act 3: Apply the Brain Switch -></button>' +
+  '</div>';
+}
+
+function s11() {
+  mariamSignsDone = false; mariamToolDone = false; mariamOutcomeDone = false; mariamCount = 0;
+  var signs = [
+    {id:'voice', icon:'🔊', text:'Raises her voice at her sibling', correct:true},
+    {id:'storm', icon:'🚪', text:'Storms out of the room and slams the door', correct:true},
+    {id:'heart', icon:'💓', text:'Heart racing, breathing becoming shallow', correct:true},
+    {id:'calm',  icon:'😌', text:'Calmly explaining her point of view', correct:false}
+  ];
+  var tools = [
+    {id:'leave', icon:'🚶', text:'Leave the room and take 3 slow breaths before responding', correct:true},
+    {id:'louder',icon:'📢', text:'Raise her voice even more to make her point', correct:false},
+    {id:'ignore',icon:'🙈', text:'Pretend the argument is not happening', correct:false}
+  ];
+  var outcomes = [
+    {id:'worse',  icon:'📈', text:'The argument escalates further - neither person feels heard', correct:false},
+    {id:'resolve',icon:'✅', text:'Mariam returns calmer, able to listen and express herself more clearly', correct:true},
+    {id:'same',   icon:'➡️', text:'Nothing changes - the situation stays exactly as it was', correct:false}
+  ];
+  var signBtns = signs.map(function(s) {
+    return '<button class="mariam-btn" id="ms-' + s.id + '" onclick="selectMariamSign(\'' + s.id + '\',' + s.correct + ')">' +
+      '<span class="mb-icon">' + s.icon + '</span>' +
+      '<div><div class="mb-text">' + s.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var toolBtns = tools.map(function(t) {
+    return '<button class="mariam-btn" id="mt-' + t.id + '" onclick="selectMariamTool(\'' + t.id + '\',' + t.correct + ')">' +
+      '<span class="mb-icon">' + t.icon + '</span>' +
+      '<div><div class="mb-text">' + t.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  var outBtns = outcomes.map(function(o) {
+    return '<button class="mariam-btn" id="mo-' + o.id + '" onclick="selectMariamOutcome(\'' + o.id + '\',' + o.correct + ')">' +
+      '<span class="mb-icon">' + o.icon + '</span>' +
+      '<div><div class="mb-text">' + o.text + '</div></div>' +
+    '</button>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply the Brain Switch') +
+    backBtn(10,'Back to Act 2') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 11 - New Scenario</div>' +
+    '<h2>Mariam\'s Argument</h2>' +
+    '<div class="story-box" data-icon="🏠">' +
+      '<p><span class="teal">Mariam</span> is twelve years old. She has just arrived home from a long day at school, tired and slightly overwhelmed. Her younger sibling has used her art supplies without asking and left them in a mess. Within seconds of seeing this, Mariam feels heat rising in her chest. Her jaw tightens. Her voice goes sharp. The argument begins.</p>' +
+    '</div>' +
+    '<div class="section-divider">Step 1 of 3 - Identify Mariam\'s stress brain signs</div>' +
+    '<div class="mariam-options">' + signBtns + '</div>' +
+    '<div id="mariamSignFeedback"></div>' +
+    '<div class="section-divider">Step 2 of 3 - Choose the best calm activation tool</div>' +
+    '<div id="mariamToolWrap" style="opacity:0.4;pointer-events:none"><div class="mariam-options">' + toolBtns + '</div></div>' +
+    '<div id="mariamToolFeedback"></div>' +
+    '<div class="section-divider">Step 3 of 3 - Predict the outcome</div>' +
+    '<div id="mariamOutcomeWrap" style="opacity:0.4;pointer-events:none"><div class="mariam-options">' + outBtns + '</div></div>' +
+    '<div id="mariamOutcomeFeedback"></div>' +
+    '<button class="btn-primary" id="mariamNextBtn" onclick="renderStage(12)" disabled style="margin-top:12px">Next: Build Your Calm Reset Kit -></button>' +
+  '</div>';
+}
+
+function s12() {
+  kitSelected = new Set(); kitGoodCount = 0;
+  var chips = calmKitOptions.map(function(opt) {
+    return '<div class="kit-chip" id="kc-' + opt.id + '" onclick="toggleKit(\'' + opt.id + '\',' + opt.good + ')">' + opt.icon + ' ' + opt.text + '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply the Brain Switch') +
+    backBtn(11,'Back to Mariam\'s Scenario') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 12 - Calm Reset Kit</div>' +
+    '<h2>Build Your Personal Calm Reset Kit</h2>' +
+    '<p>A Calm Reset Kit is a personalised set of tools that you can reach for the moment you recognise that your brain has switched into stress mode. Having a pre-planned kit dramatically increases the likelihood of actually using a regulation tool in the moment - because stress brain reduces decision-making capacity, and you do not want to be deciding what to do when your thinking brain is offline.</p>' +
+    '<p>Choose exactly <strong>3 genuine calm activation tools</strong> from the list below. Read carefully - one option will actually escalate stress rather than reduce it.</p>' +
+    '<div class="kit-chips">' + chips + '</div>' +
+    '<div class="kit-display" id="kitDisplay">' +
+      '<div class="kit-display-title">Your Calm Reset Kit</div>' +
+      '<div class="kit-items" id="kitItems"><span style="font-size:13px;color:var(--text-soft);font-weight:700">Select 3 tools above to build your kit...</span></div>' +
+    '</div>' +
+    '<div id="kitFeedback"></div>' +
+    '<button class="btn-primary" id="kitNextBtn" onclick="renderStage(13)" disabled>Next: Skill Check Quiz -></button>' +
+  '</div>';
+}
+
+function s13() {
+  quizAnswers = {};
+  var qs = quizData.map(function(q, i) {
+    var opts = q.options.map(function(opt, j) {
+      return '<button class="quiz-option" id="qo-' + i + '-' + j + '" onclick="answerQuiz(' + i + ',' + j + ',' + opt.correct + ')">' +
+        '<span class="q-icon">' + opt.icon + '</span>' + opt.text +
+      '</button>';
+    }).join('');
+    return '<div class="quiz-question" style="animation-delay:' + (i*0.1) + 's">' +
+      '<div class="quiz-q-text">' + q.q + '</div>' +
+      '<div class="quiz-options">' + opts + '</div>' +
+      '<div id="qf-' + i + '" class="quiz-feedback"></div>' +
+    '</div>';
+  }).join('');
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Apply the Brain Switch') +
+    backBtn(12,'Back to Calm Kit') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 13 - Skill Check</div>' +
+    '<h2>Quick Knowledge Check</h2>' +
+    '<p>You have navigated all three acts of the Calm Brain Switch Lab with real depth and attention. Let\'s see how clearly the core concepts have settled in. Answer all three questions carefully - draw on everything you have explored today about your brain and its two modes.</p>' +
+    qs +
+    '<button class="btn-primary" id="quizNextBtn" onclick="renderStage(14)" disabled style="margin-top:8px">Claim Your Badges and Complete the Lab!</button>' +
+  '</div>';
+}
+
+function s14() {
+  setTimeout(function() {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('stageLabel').textContent = 'Lab Complete!';
+    document.getElementById('stagePercent').textContent = '100%';
+    document.querySelectorAll('.stage-dot').forEach(function(d){ d.classList.remove('active'); d.classList.add('done'); });
+    launchConfetti();
+  }, 300);
+  return '<div class="stage-card">' +
+    actBanner(3,'Act 3 - Lab Complete!') +
+    '<div class="stage-label teal"><span class="dot"></span> Stage 14 - Badges Earned</div>' +
+    '<h2>Outstanding Work, Brain Scientist!</h2>' +
+    '<p>You completed the full Calm Brain Switch Lab - all 3 Acts, 14 stages, and a genuine journey into one of the most empowering truths about the human brain. Here are the three badges you have earned:</p>' +
+    '<div class="badge-grid">' +
+      '<div class="badge-item"><span class="b-icon">🔬</span><div class="b-title">Brain Mode Detective</div><div class="b-sub">Read the two modes</div></div>' +
+      '<div class="badge-item"><span class="b-icon">💡</span><div class="b-title">Calm Switch Activator</div><div class="b-sub">Activated the response</div></div>' +
+      '<div class="badge-item"><span class="b-icon">🌊</span><div class="b-title">Regulation Trainer</div><div class="b-sub">Built the calm kit</div></div>' +
+    '</div>' +
+    '<div class="section-divider">What You Learned Today</div>' +
+    '<div class="skills-summary">' +
+      '<div class="skill-row"><span class="sk-icon">🧠</span><div><div class="sk-title">Two Brain Modes</div><div class="sk-desc">Stress Brain (amygdala-driven alarm mode) prioritises immediate survival and reduces access to the prefrontal cortex - the thinking, reasoning, and memory brain. When Stress Brain is dominant, the information you know becomes temporarily inaccessible - not lost, just blocked. This is a neurological event, not a character flaw. Recognising which mode you are in is the first step to changing it.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🫁</span><div><div class="sk-title">The Body Is the Switch</div><div class="sk-desc">You cannot think your way out of stress brain - because thinking brain is the very system that has been impaired. But you can activate calm mode through the body. Slow breathing - specifically with a longer exhale - stimulates the vagus nerve, which directly activates the parasympathetic nervous system (calm mode). Within 2-4 minutes of deliberate slow breathing, measurable neurological changes occur.</div></div></div>' +
+      '<div class="skill-row"><span class="sk-icon">🌊</span><div><div class="sk-title">The Calm Reset Kit</div><div class="sk-desc">A personalised set of pre-chosen regulation tools - breathing, grounding, movement, self-talk - that you can reach for the moment you recognise stress brain activation. Pre-choosing your tools before you need them is essential, because stress brain reduces decision-making capacity. The kit makes calm activation automatic rather than effortful.</div></div></div>' +
+    '</div>' +
+    '<div class="story-box" data-icon="💡" style="margin-bottom:24px">' +
+      '<p style="font-style:normal;font-size:14.5px;line-height:1.9">' +
+        '<strong>A message for you:</strong><br/>' +
+        'The next time your brain goes loud - heart racing, thoughts tangling, the world feeling suddenly too much - you now know exactly what is happening. Your amygdala has fired. Your stress brain is online. Your thinking brain is temporarily reduced. And you hold the switch. One slow breath. Then another. And another. The vagus nerve fires. The parasympathetic system activates. Calm brain begins to come back online. You are not at the mercy of your brain\'s alarm system. You are its operator. 🧠' +
+      '</p>' +
+    '</div>' +
+    '<button class="btn-primary" onclick="document.getElementById(\'celebrationOverlay\').classList.add(\'active\')" style="background:linear-gradient(135deg,var(--blue-dark),var(--teal-dark));margin-bottom:12px">See Your Certificate</button>' +
+    '<button class="btn-restart" onclick="restartLab()" style="width:100%;justify-content:center;display:flex">Restart the Lab</button>' +
+  '</div>';
+}
+
+/* ===== POST-RENDER ===== */
+function postRender(n) {
+  if (n === 2) {
+    stressBrainSel.forEach(function(id) {
+      var el = document.getElementById('sb-' + id);
+      if (el) {
+        var item = stressBrainItems.find(function(i){ return i.id === id; });
+        if (item) el.classList.add(item.mode === 'stress' ? 'bc-stress' : 'bc-wrong');
+      }
+    });
+    checkStressBrain();
+  }
+  if (n === 4) {
+    calmBrainSel.forEach(function(id) {
+      var el = document.getElementById('cb-' + id);
+      if (el) {
+        var item = calmBrainItems.find(function(i){ return i.id === id; });
+        if (item) el.classList.add(item.mode === 'calm' ? 'bc-calm' : 'bc-wrong');
+      }
+    });
+    checkCalmBrain();
+  }
+  if (n === 5) updateDual(brainLevel);
+  if (n === 9 && calmText) {
+    var ta = document.getElementById('calmInput');
+    if (ta) ta.value = calmText;
+    checkCalm(calmText);
+  }
+  if (n === 10 && reflectText) {
+    var ta2 = document.getElementById('reflectInput');
+    if (ta2) ta2.value = reflectText;
+    checkReflect(reflectText);
+  }
+  if (n === 11) {
+    setTimeout(function() {
+      if (mariamSignsDone) {
+        var tw = document.getElementById('mariamToolWrap');
+        if (tw) { tw.style.opacity = '1'; tw.style.pointerEvents = 'auto'; }
+      }
+      if (mariamToolDone) {
+        var ow = document.getElementById('mariamOutcomeWrap');
+        if (ow) { ow.style.opacity = '1'; ow.style.pointerEvents = 'auto'; }
+      }
+      checkMariamComplete();
+    }, 60);
+  }
+  if (n === 12) {
+    kitSelected.forEach(function(id) {
+      var el = document.getElementById('kc-' + id);
+      if (el) {
+        var opt = calmKitOptions.find(function(o){ return o.id === id; });
+        if (opt) el.classList.add(opt.good ? 'chip-good' : 'chip-bad');
+      }
+    });
+    updateKitDisplay();
+    checkKitDone();
+  }
+}
+
+/* ===== ACT 1 ===== */
+function toggleStressBrain(id, mode) {
+  var el = document.getElementById('sb-' + id);
+  if (stressBrainSel.has(id)) {
+    stressBrainSel.delete(id);
+    el.classList.remove('bc-stress'); el.classList.remove('bc-wrong'); el.classList.remove('bc-calm');
+  } else {
+    stressBrainSel.add(id);
+    if (mode === 'stress') el.classList.add('bc-stress');
+    else { el.classList.add('bc-wrong'); }
+  }
+  checkStressBrain();
+}
+
+function checkStressBrain() {
+  var correct = Array.from(stressBrainSel).filter(function(id) {
+    return stressBrainItems.find(function(i){ return i.id === id; }).mode === 'stress';
+  }).length;
+  var wrong = Array.from(stressBrainSel).filter(function(id) {
+    return stressBrainItems.find(function(i){ return i.id === id; }).mode !== 'stress';
+  }).length;
+  var fb = document.getElementById('sbFeedback');
+  var nb = document.getElementById('sbNextBtn');
+  if (correct === 4 && wrong === 0) {
+    stressBrainOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All four Stress Brain behaviours identified correctly. Fast heartbeat, shallow breathing, yelling, and forgetting things are all direct products of the amygdala\'s alarm response. Calm problem solving and careful listening both require prefrontal cortex activity - they belong to Calm Brain mode, not Stress Brain.</div>';
+    if (nb) nb.disabled = false;
+  } else if (wrong > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">One or more selections belong to Calm Brain mode, not Stress Brain. Calm problem solving and careful listening both require the prefrontal cortex - the very region that Stress Brain deactivates. Remove those selections.</div>';
+    if (nb) nb.disabled = true; stressBrainOk = false;
+  } else {
+    if (fb && stressBrainSel.size > 0) fb.innerHTML = '<div class="feedback-msg blue-msg">' + correct + ' of 4 Stress Brain signals identified. Keep going.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function toggleCalmBrain(id, mode) {
+  var el = document.getElementById('cb-' + id);
+  if (calmBrainSel.has(id)) {
+    calmBrainSel.delete(id);
+    el.classList.remove('bc-calm'); el.classList.remove('bc-wrong');
+  } else {
+    calmBrainSel.add(id);
+    if (mode === 'calm') el.classList.add('bc-calm');
+    else el.classList.add('bc-wrong');
+  }
+  checkCalmBrain();
+}
+
+function checkCalmBrain() {
+  var correct = Array.from(calmBrainSel).filter(function(id) {
+    return calmBrainItems.find(function(i){ return i.id === id; }).mode === 'calm';
+  }).length;
+  var wrong = Array.from(calmBrainSel).filter(function(id) {
+    return calmBrainItems.find(function(i){ return i.id === id; }).mode !== 'calm';
+  }).length;
+  var fb = document.getElementById('cbFeedback');
+  var nb = document.getElementById('cbNextBtn');
+  if (correct === 4 && wrong === 0) {
+    calmBrainOk = true;
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">All four Calm Brain characteristics identified. Slow breathing, clear thinking, good decisions, and pausing before reacting all require the prefrontal cortex - the brain\'s executive control centre. "Immediate yelling" is a Stress Brain behaviour - it is a reactive discharge, not a regulated response.</div>';
+    if (nb) nb.disabled = false;
+  } else if (wrong > 0) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">One selection belongs to Stress Brain, not Calm Brain. "Immediate yelling" is a reactive Stress Brain behaviour - it is the opposite of the paused, thoughtful responses that characterise Calm Brain mode.</div>';
+    if (nb) nb.disabled = true; calmBrainOk = false;
+  } else {
+    if (fb && calmBrainSel.size > 0) fb.innerHTML = '<div class="feedback-msg blue-msg">' + correct + ' of 4 Calm Brain traits found. Keep going.</div>';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function updateDual(val) {
+  brainLevel = parseInt(val);
+  var stressVal = brainLevel;
+  var calmVal = 100 - brainLevel;
+  var state = getBrainState(brainLevel);
+  if (!state) return;
+  var sf = document.getElementById('stressFill');
+  var cf = document.getElementById('calmFill');
+  var sp = document.getElementById('stressPct');
+  var cp = document.getElementById('calmPct');
+  var sm = document.getElementById('stressMood');
+  var cm = document.getElementById('calmMood');
+  var sliderEl = document.getElementById('dualSlider');
+  if (sf) sf.style.width = stressVal + '%';
+  if (cf) cf.style.width = calmVal + '%';
+  if (sp) sp.textContent = stressVal + '%';
+  if (cp) cp.textContent = calmVal + '%';
+  if (sm) sm.textContent = state.sMood;
+  if (cm) cm.textContent = state.cMood;
+  if (sliderEl) {
+    var g1 = 'rgba(224,80,64,' + (0.3 + stressVal/200) + ')';
+    var g2 = 'rgba(24,200,144,' + (0.3 + calmVal/200) + ')';
+    sliderEl.style.background = 'linear-gradient(90deg,' + g2 + ' 0%,' + g1 + ' 100%)';
+  }
+}
+
+/* ===== ACT 2 - BREATHING ===== */
+var breathPhaseIndex = 0;
+var breathPhases = [
+  {name:'inhale', duration:4, label:'Breathe IN...', emoji:'🫁', class:'inhaling'},
+  {name:'hold',   duration:2, label:'Hold...', emoji:'⏸️', class:'holding'},
+  {name:'exhale', duration:6, label:'Breathe OUT slowly...', emoji:'🌬️', class:'exhaling'}
+];
+var breathSecondCount = 0;
+var breathTotalSeconds = 0;
+var maxBreathSeconds = 3 * 12;
+
+function startBreathing() {
+  if (breathTimer) return;
+  var circle = document.getElementById('breathCircle');
+  if (circle) circle.onclick = null;
+  breathPhaseIndex = 0;
+  breathSecondCount = 0;
+  breathTotalSeconds = 0;
+  runBreathPhase();
+}
+
+function runBreathPhase() {
+  var phase = breathPhases[breathPhaseIndex];
+  var circle = document.getElementById('breathCircle');
+  var lbl = document.getElementById('breathLabelInner');
+  var em = document.getElementById('breathEmoji');
+  var pl = document.getElementById('breathPhaseLabel');
+  var num = document.getElementById('breathNum');
+
+  if (circle) {
+    circle.className = 'breath-circle ' + phase.class;
+  }
+  if (lbl) lbl.textContent = phase.label;
+  if (em) em.textContent = phase.emoji;
+  if (pl) { pl.textContent = phase.label; pl.style.color = phase.name === 'exhale' ? 'var(--mint-dark)' : phase.name === 'hold' ? 'var(--violet-dark)' : 'var(--blue-dark)'; }
+  if (num) { num.style.display = 'flex'; num.textContent = phase.duration; }
+
+  var countdown = phase.duration;
+  var ring1 = document.getElementById('bRing1');
+  var ring2 = document.getElementById('bRing2');
+  if (ring1) ring1.style.borderColor = phase.name === 'exhale' ? 'rgba(24,200,144,0.40)' : phase.name === 'hold' ? 'rgba(104,64,192,0.40)' : 'rgba(40,88,200,0.40)';
+  if (ring2) ring2.style.borderColor = phase.name === 'exhale' ? 'rgba(24,200,144,0.20)' : phase.name === 'hold' ? 'rgba(104,64,192,0.20)' : 'rgba(40,88,200,0.20)';
+
+  if (breathTimer) clearInterval(breathTimer);
+  breathTimer = setInterval(function() {
+    countdown--;
+    breathTotalSeconds++;
+    if (num) num.textContent = countdown > 0 ? countdown : '';
+    var progress = Math.min((breathTotalSeconds / maxBreathSeconds) * 100, 100);
+    var progFill = document.getElementById('breathProgFill');
+    if (progFill) progFill.style.width = progress + '%';
+    var stressReduction = Math.round(88 - (breathTotalSeconds / maxBreathSeconds) * 60);
+    stressReduction = Math.max(stressReduction, 28);
+    var sf = document.getElementById('breathStressFill');
+    var sn = document.getElementById('breathStressNum');
+    if (sf) sf.style.width = stressReduction + '%';
+    if (sn) sn.textContent = stressReduction + '%';
+    if (countdown <= 0) {
+      clearInterval(breathTimer); breathTimer = null;
+      breathPhaseIndex = (breathPhaseIndex + 1) % breathPhases.length;
+      if (breathPhaseIndex === 0) {
+        breathCycle++;
+        if (breathCycle >= 3) {
+          finishBreathing();
+          return;
+        }
+      }
+      setTimeout(runBreathPhase, 200);
+    }
+  }, 1000);
+}
+
+function finishBreathing() {
+  breathDone = true;
+  var circle = document.getElementById('breathCircle');
+  if (circle) {
+    circle.className = 'breath-circle';
+    circle.style.background = 'linear-gradient(135deg,var(--mint-dark),var(--teal-dark))';
+  }
+  var lbl = document.getElementById('breathLabelInner');
+  if (lbl) lbl.textContent = 'Well done!';
+  var em = document.getElementById('breathEmoji');
+  if (em) em.textContent = '✅';
+  var pl = document.getElementById('breathPhaseLabel');
+  if (pl) { pl.textContent = '3 cycles complete. Calm brain is activating.'; pl.style.color = 'var(--mint-dark)'; }
+  var num = document.getElementById('breathNum');
+  if (num) num.style.display = 'none';
+  var pf = document.getElementById('breathProgFill');
+  if (pf) { pf.style.width = '100%'; pf.style.background = 'linear-gradient(90deg,var(--mint-dark),var(--teal-dark))'; }
+  var sf = document.getElementById('breathStressFill');
+  var sn = document.getElementById('breathStressNum');
+  if (sf) sf.style.width = '28%';
+  if (sn) sn.textContent = '28%';
+  var fb = document.getElementById('breathFeedback');
+  if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">3 breathing cycles complete. Your stress brain level has measurably decreased. In a real situation, this same sequence - done with genuine slowness on the exhale - would produce the same result. The vagus nerve does not know the difference between a practice and a real moment. It responds to the breathing pattern, not the context.</div>';
+  var nb = document.getElementById('breathNextBtn');
+  if (nb) nb.disabled = false;
+}
+
+function chooseCompare(id) {
+  if (compareLocked) return;
+  compareLocked = true; compareChoice = id;
+  var chosen = compareOptions.find(function(o){ return o.id === id; });
+  compareOptions.forEach(function(o) {
+    var el = document.getElementById('co-' + o.id);
+    if (el) { if (o.id === id) el.classList.add('sel-' + o.quality); el.style.cursor = 'default'; }
+  });
+  var out = document.getElementById('compareOutcome');
+  if (out) out.innerHTML =
+    '<div class="meters-wrap">' +
+      '<div class="meter-row"><div class="meter-label-row"><span>⚡ Stress Brain Level</span><span id="cmpSL">0%</span></div><div class="meter-track"><div class="meter-fill stress-meter" id="cmpSF"></div></div></div>' +
+      '<div class="meter-row"><div class="meter-label-row"><span>💡 Calm Brain Level</span><span id="cmpCL">0%</span></div><div class="meter-track"><div class="meter-fill calm-meter" id="cmpCF"></div></div></div>' +
+    '</div>' +
+    '<div class="outcome-box ' + chosen.quality + '"><div class="outcome-title">' + chosen.outcome.title + '</div>' + chosen.outcome.body + '<div class="outcome-tip">' + chosen.outcome.tip + '</div></div>';
+  setTimeout(function() {
+    var sf = document.getElementById('cmpSF'), cf = document.getElementById('cmpCF');
+    var sl = document.getElementById('cmpSL'), cl = document.getElementById('cmpCL');
+    if (sf) sf.style.width = chosen.stressLevel + '%';
+    if (cf) cf.style.width = chosen.calmLevel + '%';
+    if (sl) sl.textContent = chosen.stressLevel + '%';
+    if (cl) cl.textContent = chosen.calmLevel + '%';
+  }, 150);
+  var nw = document.getElementById('compareNextWrap');
+  if (nw) nw.style.display = 'block';
+}
+
+function checkCalm(val) {
+  calmText = val;
+  var len = val.trim().length;
+  calmValid = len >= 40;
+  var c = document.getElementById('calmCounter');
+  var b = document.getElementById('calmNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (calmValid ? ' met' : ''); }
+  if (b) b.disabled = !calmValid;
+}
+
+function checkReflect(val) {
+  reflectText = val;
+  var len = val.trim().length;
+  reflectValid = len >= 40;
+  var c = document.getElementById('reflectCounter');
+  var b = document.getElementById('reflectNextBtn');
+  if (c) { c.textContent = len + ' / 40 minimum characters'; c.className = 'char-counter' + (reflectValid ? ' met' : ''); }
+  if (b) b.disabled = !reflectValid;
+}
+
+/* ===== ACT 3 ===== */
+var mariamSignCount = 0;
+var mariamSignCorrect = 0;
+
+function selectMariamSign(id, correct) {
+  var el = document.getElementById('ms-' + id);
+  if (el && (el.classList.contains('mb-correct') || el.classList.contains('mb-incorrect'))) return;
+  if (el) el.classList.add(correct ? 'mb-correct' : 'mb-incorrect');
+  mariamSignCount++;
+  if (correct) mariamSignCorrect++;
+  if (mariamSignCount >= 4) {
+    mariamSignsDone = true;
+    var fb = document.getElementById('mariamSignFeedback');
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Stress brain signs identified. Raised voice, storming out, and racing heart with shallow breathing are all classic amygdala-driven stress responses. Calmly explaining her point of view is a Calm Brain behaviour - it requires the prefrontal cortex, and therefore cannot happen while Stress Brain is at full activation.</div>';
+    var tw = document.getElementById('mariamToolWrap');
+    if (tw) { tw.style.opacity = '1'; tw.style.pointerEvents = 'auto'; }
+    checkMariamComplete();
+  }
+}
+
+function selectMariamTool(id, correct) {
+  if (mariamToolDone) return;
+  mariamToolDone = true;
+  document.querySelectorAll('#mariamToolWrap .mariam-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('mt-' + id);
+  if (el) el.classList.add(correct ? 'mb-correct' : 'mb-incorrect');
+  var fb = document.getElementById('mariamToolFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">Excellent choice. Leaving the room and taking 3 slow breaths does two things: it physically removes Mariam from the activating stimulus (the sibling and the argument), and it initiates the vagus nerve response. Both are necessary. Physical distance reduces new amygdala triggers while breathing activates the parasympathetic system. Together they give Calm Brain a genuine chance to come back online.</div>';
+  } else if (id === 'louder') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Raising her voice further escalates Stress Brain activation in both Mariam and her sibling. This creates a feedback loop - higher stress in one person activates higher stress in the other. The calm tool is highlighted.</div>';
+    var correct2 = document.getElementById('mt-leave');
+    if (correct2) correct2.classList.add('mb-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Pretending the conflict is not happening is avoidance rather than regulation. It delays the amygdala response rather than reducing it, and leaves the underlying issue unresolved. The calm tool is highlighted.</div>';
+    var correct3 = document.getElementById('mt-leave');
+    if (correct3) correct3.classList.add('mb-correct');
+  }
+  var ow = document.getElementById('mariamOutcomeWrap');
+  if (ow) { ow.style.opacity = '1'; ow.style.pointerEvents = 'auto'; }
+  checkMariamComplete();
+}
+
+function selectMariamOutcome(id, correct) {
+  if (mariamOutcomeDone) return;
+  mariamOutcomeDone = true;
+  document.querySelectorAll('#mariamOutcomeWrap .mariam-btn').forEach(function(b){ b.style.cursor = 'default'; });
+  var el = document.getElementById('mo-' + id);
+  if (el) el.classList.add(correct ? 'mb-correct' : 'mb-incorrect');
+  var fb = document.getElementById('mariamOutcomeFeedback');
+  if (correct) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">The most accurate predicted outcome. When Mariam returns with Calm Brain more active, she has genuine access to empathy, reasoning, and clear communication. She can listen to understand rather than just to defend. She can express how she feels without it being a reactive discharge. The argument is far more likely to reach resolution - or at minimum, a respectful pause.</div>';
+  } else if (id === 'worse') {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Escalation is the outcome if Mariam stays in Stress Brain mode and re-enters the argument without regulating. But the scenario specifies she leaves and breathes first - which changes the neurological state she returns with. The correct outcome is highlighted.</div>';
+    var c2 = document.getElementById('mo-resolve');
+    if (c2) c2.classList.add('mb-correct');
+  } else {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Calm brain activation produces genuine change, not merely a return to the same state. The research is clear: regulated emotional states produce significantly different social behaviour - better listening, clearer expression, and higher resolution rates. The correct outcome is highlighted.</div>';
+    var c3 = document.getElementById('mo-resolve');
+    if (c3) c3.classList.add('mb-correct');
+  }
+  checkMariamComplete();
+}
+
+function checkMariamComplete() {
+  if (mariamSignsDone && mariamToolDone && mariamOutcomeDone) {
+    var b = document.getElementById('mariamNextBtn');
+    if (b) b.disabled = false;
+  }
+}
+
+function toggleKit(id, good) {
+  var el = document.getElementById('kc-' + id);
+  if (kitSelected.has(id)) {
+    kitSelected.delete(id);
+    el.classList.remove('chip-good'); el.classList.remove('chip-bad');
+    if (good) kitGoodCount--;
+  } else {
+    if (!good && el) el.classList.add('chip-bad');
+    else if (el) el.classList.add('chip-good');
+    kitSelected.add(id);
+    if (good) kitGoodCount++;
+  }
+  updateKitDisplay();
+  checkKitDone();
+}
+
+function updateKitDisplay() {
+  var items = document.getElementById('kitItems');
+  if (!items) return;
+  if (kitSelected.size === 0) {
+    items.innerHTML = '<span style="font-size:13px;color:var(--text-soft);font-weight:700">Select 3 tools above to build your kit...</span>';
+    return;
+  }
+  items.innerHTML = '';
+  kitSelected.forEach(function(id) {
+    var opt = calmKitOptions.find(function(o){ return o.id === id; });
+    if (!opt) return;
+    var div = document.createElement('div');
+    div.className = 'kit-item';
+    div.style.borderColor = opt.good ? 'rgba(10,128,96,0.28)' : 'rgba(168,32,16,0.28)';
+    div.innerHTML = '<span>' + opt.icon + '</span><span>' + opt.text + '</span>';
+    items.appendChild(div);
+  });
+}
+
+function checkKitDone() {
+  var hasBad = Array.from(kitSelected).some(function(id) {
+    return id === 'yell2';
+  });
+  var fb = document.getElementById('kitFeedback');
+  var nb = document.getElementById('kitNextBtn');
+  if (hasBad) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg incorrect-msg">Your kit includes a behaviour that escalates Stress Brain rather than activating Calm Brain. "Yelling louder" increases arousal and feeds the amygdala response - the opposite of a calm activation tool. Remove it from your kit.</div>';
+    if (nb) nb.disabled = true;
+  } else if (kitGoodCount === 3) {
+    if (fb) fb.innerHTML = '<div class="feedback-msg correct-msg">A powerful Calm Reset Kit. Deep breathing, counting, stretching, slow walking, and positive self-talk all activate different components of the calm response - breathing through the vagus nerve, counting and self-talk through deliberate cognitive engagement, and movement through the release of physical stress energy. Having three pre-chosen tools means you have options even when one does not feel available.</div>';
+    if (nb) nb.disabled = false;
+  } else {
+    if (fb) fb.innerHTML = kitSelected.size > 0 ? '<div class="feedback-msg blue-msg">Select ' + (3 - kitGoodCount) + ' more healthy calm tools.</div>' : '';
+    if (nb) nb.disabled = true;
+  }
+}
+
+function answerQuiz(qIndex, optIndex, isCorrect) {
+  if (quizAnswers[qIndex] !== undefined) return;
+  quizAnswers[qIndex] = isCorrect;
+  var q = quizData[qIndex];
+  q.options.forEach(function(opt, j) {
+    var el = document.getElementById('qo-' + qIndex + '-' + j);
+    if (!el) return;
+    el.style.cursor = 'default';
+    if (j === optIndex) el.classList.add(isCorrect ? 'q-correct' : 'q-incorrect');
+    else if (q.options[j].correct) el.classList.add('q-reveal');
+  });
+  var fb = document.getElementById('qf-' + qIndex);
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'q-fb-correct' : 'q-fb-incorrect');
+    fb.textContent = isCorrect ? q.feedback.correct : q.feedback.incorrect;
+  }
+  if (Object.keys(quizAnswers).length === quizData.length) {
+    var nb = document.getElementById('quizNextBtn');
+    if (nb) nb.disabled = false;
+  }
+}
+
+function restartLab() {
+  if (breathTimer) { clearInterval(breathTimer); breathTimer = null; }
+  stressBrainSel = new Set(); stressBrainOk = false;
+  calmBrainSel = new Set(); calmBrainOk = false;
+  brainLevel = 70; breathDone = false; breathPhase = 'ready';
+  breathCycle = 0; breathStress = 88; breathCountdown = 0; breathPhaseIndex = 0;
+  compareChoice = null; compareLocked = false;
+  calmText = ''; calmValid = false; reflectText = ''; reflectValid = false;
+  mariamSignsDone = false; mariamToolDone = false; mariamOutcomeDone = false;
+  mariamSignCount = 0; mariamSignCorrect = 0; mariamCount = 0;
+  kitSelected = new Set(); kitGoodCount = 0;
+  quizAnswers = {};
+  document.getElementById('celebrationOverlay').classList.remove('active');
+  renderStage(1);
+}
+
+function launchConfetti() {
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var colors = ['#2858c8','#1898b0','#6840c0','#18c890','#e05040','#d89000','#a8c0f8','#98e8d0'];
+  var pieces = [];
+  for (var i = 0; i < 160; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 12 + 5, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 6,
+      speed: Math.random() * 3 + 1.5, drift: (Math.random() - 0.5) * 1.5,
+      opacity: Math.random() * 0.5 + 0.5
+    });
+  }
+  var frame = 0; var maxFrames = 280;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.opacity * Math.max(0, 1 - frame / maxFrames);
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+renderStage(1);
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
