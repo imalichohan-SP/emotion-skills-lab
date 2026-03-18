@@ -533,19 +533,26 @@ function lockCardsForGuest(locked) {
     var btn = document.getElementById('btn-' + i);
     if (!btn) continue;
     if (locked) {
-      btn.setAttribute('data-href', btn.getAttribute('href') || btn.dataset.href || 'activity' + i + '.html');
-      btn.removeAttribute('href');
-      btn.onclick = function(e) {
-        e.preventDefault();
-        handleSignIn();
-      };
-      if (!btn.querySelector('.lock-icon')) {
-        btn.innerHTML = '&#x1F512; Sign in to Start';
+      // Store original href before removing
+      if (!btn.getAttribute('data-href')) {
+        btn.setAttribute('data-href', btn.getAttribute('href') || ('activity' + i + '.html'));
       }
+      btn.removeAttribute('href');
+      btn.setAttribute('data-locked', 'true');
+      btn.onclick = function(e) { e.preventDefault(); handleSignIn(); };
+      btn.innerHTML = '&#x1F512; Sign in to Start';
     } else {
-      var href = btn.getAttribute('data-href');
-      if (href) { btn.setAttribute('href', href); btn.onclick = null; }
-      if (btn.innerHTML.includes('Sign in to Start')) btn.innerHTML = 'Start Activity';
+      // Restore original href and clear lock
+      var href = btn.getAttribute('data-href') || ('activity' + i + '.html');
+      btn.setAttribute('href', href);
+      btn.removeAttribute('data-locked');
+      btn.onclick = null;
+      // Restore correct button label based on progress
+      var done  = localStorage.getItem('esl_act' + i + '_done') === 'true';
+      var stage = parseInt(localStorage.getItem('esl_act' + i + '_stage') || '0');
+      if (done)         btn.innerHTML = 'Play Again';
+      else if (stage>1) btn.innerHTML = 'Continue';
+      else              btn.innerHTML = 'Start Activity';
     }
   }
 }
@@ -554,13 +561,24 @@ function lockCardsForGuest(locked) {
 for (var i = 1; i <= 16; i++) { updateCard(i); }
 updateProgressBar();
 
-lockCardsForGuest(true); // Lock by default until auth resolves
-
-// Refresh when tab becomes visible
+// Refresh when tab becomes visible (user returning from activity)
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
     for (var j = 1; j <= 16; j++) { updateCard(j); }
     updateProgressBar();
+    // Re-apply lock state based on current auth
+    import('./firebase-auth.js').then(function(m) {
+      var user = m.getCurrentUser();
+      lockCardsForGuest(!user);
+      // If signed in, also refresh progress from cloud
+      if (user) {
+        m.loadAllProgress().then(function(cloud) {
+          if (cloud) { mergeCloudProgress(cloud); }
+          for (var k = 1; k <= 16; k++) { updateCard(k); }
+          updateProgressBar();
+        });
+      }
+    });
   }
 });
 </script>
