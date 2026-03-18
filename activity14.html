@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- AUTH GUARD: redirects to homepage if not signed in -->
+<script type="module">
+import { onAuthChange } from './firebase-auth.js';
+
+var _guardChecked = false;
+onAuthChange(function(user) {
+  if (_guardChecked) return;
+  _guardChecked = true;
+  if (!user) {
+    // Not signed in — redirect to homepage
+    window.location.replace('index.html');
+  }
+});
+
+// Safety fallback: if Firebase takes too long, redirect after 5 seconds
+setTimeout(function() {
+  if (!_guardChecked) {
+    window.location.replace('index.html');
+  }
+}, 5000);
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>The Emotion Regulation Toolkit Builder</title>
@@ -309,6 +331,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 </style>
 </head>
 <body>
+
+<!-- AUTH BAR -->
+<div id="eslAuthBar" style="position:sticky;top:0;z-index:999;background:#fff;border-bottom:2px solid rgba(124,58,237,0.14);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.07);font-family:'Nunito',sans-serif">
+  <a href="index.html" style="font-size:14px;font-weight:900;color:#1a3a7c;text-decoration:none;display:flex;align-items:center;gap:7px">&#x2190; Emotion Skills Lab</a>
+  <div id="eslAuthControls">
+    <button onclick="eslHandleSignIn()" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">&#x1F4F2; Sign in</button>
+  </div>
+</div>
 <canvas id="confetti-canvas"></canvas>
 <div class="app">
   <header class="header">
@@ -367,6 +397,98 @@ var hibaDone3 = false;
 var hibaCount1 = 0;
 var matchAnswers = {};
 var quizAnswers = {};
+
+/* =============================================
+   ESL AUTO-SAVE (DO NOT EDIT)
+============================================= */
+var ESL_ACTIVITY_ID = 14;
+var ESL_KEY_STAGE = 'esl_act' + ESL_ACTIVITY_ID + '_stage';
+var ESL_KEY_STATE = 'esl_act' + ESL_ACTIVITY_ID + '_state';
+var ESL_KEY_DONE  = 'esl_act' + ESL_ACTIVITY_ID + '_done';
+
+function eslSaveState() {
+  try {
+    localStorage.setItem(ESL_KEY_STAGE, String(currentStage));
+    var s = {
+      intensityPicked:  intensityPicked,
+      toolMatchSel:     Array.from(toolMatchSel),
+      toolMatchOk:      toolMatchOk,
+      sortPlac:         sortPlac,
+      sortSel:          sortSel,
+      dualLevel:        dualLevel,
+      toolPick5Id:      toolPick5Id,
+      toolPick5Lock:    toolPick5Lock,
+      kitSel:           Array.from(kitSel),
+      kitOk:            kitOk,
+      scenPick8Id:      scenPick8Id,
+      scenPick8Lock:    scenPick8Lock,
+      planText:         planText,
+      planValid:        planValid,
+      reflectText:      reflectText,
+      reflectValid:     reflectValid,
+      hibaDone1:        hibaDone1,
+      hibaDone2:        hibaDone2,
+      hibaDone3:        hibaDone3,
+      hibaCount1:       hibaCount1,
+      h1Count:          h1Count,
+      h2Done:           h2Done,
+      h3Done:           h3Done,
+      matchAnswers:     matchAnswers,
+      quizAnswers:      quizAnswers
+    };
+    localStorage.setItem(ESL_KEY_STATE, JSON.stringify(s));
+  } catch(e) {}
+}
+
+function eslLoadState() {
+  try {
+    var raw = localStorage.getItem(ESL_KEY_STATE);
+    if (!raw) return false;
+    var s = JSON.parse(raw);
+    if (s.intensityPicked !== undefined) intensityPicked = s.intensityPicked;
+    if (s.toolMatchSel)                  toolMatchSel    = new Set(s.toolMatchSel);
+    if (s.toolMatchOk    !== undefined)  toolMatchOk     = s.toolMatchOk;
+    if (s.sortPlac)                      sortPlac        = s.sortPlac;
+    if (s.sortSel        !== undefined)  sortSel         = s.sortSel;
+    if (s.dualLevel      !== undefined)  dualLevel       = s.dualLevel;
+    if (s.toolPick5Id    !== undefined)  toolPick5Id     = s.toolPick5Id;
+    if (s.toolPick5Lock  !== undefined)  toolPick5Lock   = s.toolPick5Lock;
+    if (s.kitSel)                        kitSel          = new Set(s.kitSel);
+    if (s.kitOk          !== undefined)  kitOk           = s.kitOk;
+    if (s.scenPick8Id    !== undefined)  scenPick8Id     = s.scenPick8Id;
+    if (s.scenPick8Lock  !== undefined)  scenPick8Lock   = s.scenPick8Lock;
+    if (s.planText       !== undefined)  planText        = s.planText;
+    if (s.planValid      !== undefined)  planValid       = s.planValid;
+    if (s.reflectText    !== undefined)  reflectText     = s.reflectText;
+    if (s.reflectValid   !== undefined)  reflectValid    = s.reflectValid;
+    if (s.hibaDone1      !== undefined)  hibaDone1       = s.hibaDone1;
+    if (s.hibaDone2      !== undefined)  hibaDone2       = s.hibaDone2;
+    if (s.hibaDone3      !== undefined)  hibaDone3       = s.hibaDone3;
+    if (s.hibaCount1     !== undefined)  hibaCount1      = s.hibaCount1;
+    if (s.h1Count        !== undefined)  h1Count         = s.h1Count;
+    if (s.h2Done         !== undefined)  h2Done          = s.h2Done;
+    if (s.h3Done         !== undefined)  h3Done          = s.h3Done;
+    if (s.matchAnswers)                  matchAnswers    = s.matchAnswers;
+    if (s.quizAnswers)                   quizAnswers     = s.quizAnswers;
+    return true;
+  } catch(e) { return false; }
+}
+
+function eslMarkDone() {
+  try {
+    localStorage.setItem(ESL_KEY_DONE,  'true');
+    localStorage.setItem(ESL_KEY_STAGE, String(TOTAL_STAGES));
+  } catch(e) {}
+}
+
+function eslClearSave() {
+  try {
+    localStorage.removeItem(ESL_KEY_STAGE);
+    localStorage.removeItem(ESL_KEY_STATE);
+    localStorage.removeItem(ESL_KEY_DONE);
+  } catch(e) {}
+}
+
 
 var dualStates = [
   {range:[0,18],   eLabel:'Minimal',  rLabel:'Very Strong', eMood:'Emotion barely active. Thinking brain fully in charge. Regulation almost effortless.', rMood:'Peak regulation capacity. Any tool is easy to access and apply. Emotional resilience at maximum.'},
@@ -1303,6 +1425,7 @@ function answerQuiz(qi, oi, correct) {
 }
 
 function restartLab() {
+  eslClearSave();
   intensityPicked = null;
   toolMatchSel = new Set(); toolMatchOk = false;
   sortPlac = {}; sortSel = null;
@@ -1355,10 +1478,55 @@ function launchConfetti() {
   draw();
 }
 
-renderStage(1);
-window.addEventListener('resize',function(){
-  var c=document.getElementById('confetti-canvas');
-  c.width=window.innerWidth; c.height=window.innerHeight;
+var _origRender = renderStage;
+renderStage = function(n) {
+  _origRender(n);
+  eslSaveState();
+  if (n === TOTAL_STAGES) eslMarkDone();
+};
+
+var _eslTimer = null;
+document.addEventListener('input', function(e) {
+  if (e.target && e.target.classList.contains('reflection-input')) {
+    clearTimeout(_eslTimer);
+    _eslTimer = setTimeout(eslSaveState, 800);
+  }
+});
+
+(function() {
+  var saved = parseInt(localStorage.getItem(ESL_KEY_STAGE) || '0');
+  if (saved > 1) { eslLoadState(); renderStage(saved); }
+  else { renderStage(1); }
+})();
+
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  if (c) { c.width = window.innerWidth; c.height = window.innerHeight; }
+});
+</script>
+<script type="module">
+import { signInWithGoogle, signOutUser, onAuthChange, saveActivityProgress }
+  from './firebase-auth.js';
+
+window.eslHandleSignIn  = signInWithGoogle;
+window.eslHandleSignOut = signOutUser;
+
+// Wire up Firebase sync function
+window.__eslFirebaseSync = function(actId, stage, done) {
+  saveActivityProgress(actId, stage, done);
+};
+
+onAuthChange(function(user) {
+  var ctrl = document.getElementById('eslAuthControls');
+  if (!ctrl) return;
+  if (user) {
+    var first = user.displayName ? user.displayName.split(' ')[0] : 'there';
+    ctrl.innerHTML =
+      '<span style="font-size:13px;font-weight:800;color:#1a1a2e;margin-right:10px">Hi, <strong>' + first + '</strong>!</span>' +
+      '<button onclick="eslHandleSignOut()" style="background:#f0f0f0;border:none;border-radius:8px;padding:6px 12px;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;cursor:pointer;color:#444">Sign Out</button>';
+  } else {
+    ctrl.innerHTML = '<button onclick="eslHandleSignIn()" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;cursor:pointer">&#x1F4F2; Sign in</button>';
+  }
 });
 </script>
 </body>

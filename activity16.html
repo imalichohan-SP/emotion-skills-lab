@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- AUTH GUARD: redirects to homepage if not signed in -->
+<script type="module">
+import { onAuthChange } from './firebase-auth.js';
+
+var _guardChecked = false;
+onAuthChange(function(user) {
+  if (_guardChecked) return;
+  _guardChecked = true;
+  if (!user) {
+    // Not signed in — redirect to homepage
+    window.location.replace('index.html');
+  }
+});
+
+// Safety fallback: if Firebase takes too long, redirect after 5 seconds
+setTimeout(function() {
+  if (!_guardChecked) {
+    window.location.replace('index.html');
+  }
+}, 5000);
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>The Balanced Life Planner</title>
@@ -319,6 +341,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 </style>
 </head>
 <body>
+
+<!-- AUTH BAR -->
+<div id="eslAuthBar" style="position:sticky;top:0;z-index:999;background:#fff;border-bottom:2px solid rgba(124,58,237,0.14);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.07);font-family:'Nunito',sans-serif">
+  <a href="index.html" style="font-size:14px;font-weight:900;color:#1a3a7c;text-decoration:none;display:flex;align-items:center;gap:7px">&#x2190; Emotion Skills Lab</a>
+  <div id="eslAuthControls">
+    <button onclick="eslHandleSignIn()" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">&#x1F4F2; Sign in</button>
+  </div>
+</div>
 <canvas id="confetti-canvas"></canvas>
 <div class="app">
   <header class="header">
@@ -374,6 +404,90 @@ var imranDone2 = false;
 var sort2Plac = {};
 var sort2Sel = null;
 var quizAnswers = {};
+
+/* =============================================
+   ESL AUTO-SAVE (DO NOT EDIT)
+============================================= */
+var ESL_ACTIVITY_ID = 16;
+var ESL_KEY_STAGE = 'esl_act' + ESL_ACTIVITY_ID + '_stage';
+var ESL_KEY_STATE = 'esl_act' + ESL_ACTIVITY_ID + '_state';
+var ESL_KEY_DONE  = 'esl_act' + ESL_ACTIVITY_ID + '_done';
+
+function eslSaveState() {
+  try {
+    localStorage.setItem(ESL_KEY_STAGE, String(currentStage));
+    var s = {
+      imbalSel:           Array.from(imbalSel),
+      imbalOk:            imbalOk,
+      energyLevel:        energyLevel,
+      actSortPlac:        actSortPlac,
+      actSortSel:         actSortSel,
+      timeVals:           timeVals,
+      timeOk:             timeOk,
+      plannerBlocks:      plannerBlocks,
+      activePlannerMode:  activePlannerMode,
+      pieVals:            pieVals,
+      planText:           planText,
+      planValid:          planValid,
+      reflectText:        reflectText,
+      reflectValid:       reflectValid,
+      imranDone1:         imranDone1,
+      imranDone2:         imranDone2,
+      i1done:             i1done,
+      i2done:             i2done,
+      sort2Plac:          sort2Plac,
+      sort2Sel:           sort2Sel,
+      quizAnswers:        quizAnswers
+    };
+    localStorage.setItem(ESL_KEY_STATE, JSON.stringify(s));
+  } catch(e) {}
+}
+
+function eslLoadState() {
+  try {
+    var raw = localStorage.getItem(ESL_KEY_STATE);
+    if (!raw) return false;
+    var s = JSON.parse(raw);
+    if (s.imbalSel)                    imbalSel          = new Set(s.imbalSel);
+    if (s.imbalOk          !== undefined) imbalOk        = s.imbalOk;
+    if (s.energyLevel      !== undefined) energyLevel    = s.energyLevel;
+    if (s.actSortPlac)                 actSortPlac       = s.actSortPlac;
+    if (s.actSortSel       !== undefined) actSortSel     = s.actSortSel;
+    if (s.timeVals)                    timeVals          = s.timeVals;
+    if (s.timeOk           !== undefined) timeOk         = s.timeOk;
+    if (s.plannerBlocks)               plannerBlocks     = s.plannerBlocks;
+    if (s.activePlannerMode !== undefined) activePlannerMode = s.activePlannerMode;
+    if (s.pieVals)                     pieVals           = s.pieVals;
+    if (s.planText         !== undefined) planText       = s.planText;
+    if (s.planValid        !== undefined) planValid      = s.planValid;
+    if (s.reflectText      !== undefined) reflectText    = s.reflectText;
+    if (s.reflectValid     !== undefined) reflectValid   = s.reflectValid;
+    if (s.imranDone1       !== undefined) imranDone1     = s.imranDone1;
+    if (s.imranDone2       !== undefined) imranDone2     = s.imranDone2;
+    if (s.i1done           !== undefined) i1done         = s.i1done;
+    if (s.i2done           !== undefined) i2done         = s.i2done;
+    if (s.sort2Plac)                   sort2Plac         = s.sort2Plac;
+    if (s.sort2Sel         !== undefined) sort2Sel       = s.sort2Sel;
+    if (s.quizAnswers)                 quizAnswers       = s.quizAnswers;
+    return true;
+  } catch(e) { return false; }
+}
+
+function eslMarkDone() {
+  try {
+    localStorage.setItem(ESL_KEY_DONE,  'true');
+    localStorage.setItem(ESL_KEY_STAGE, String(TOTAL_STAGES));
+  } catch(e) {}
+}
+
+function eslClearSave() {
+  try {
+    localStorage.removeItem(ESL_KEY_STAGE);
+    localStorage.removeItem(ESL_KEY_STATE);
+    localStorage.removeItem(ESL_KEY_DONE);
+  } catch(e) {}
+}
+
 
 var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 var SLOTS = ['Morning','Afternoon','Evening'];
@@ -1229,6 +1343,7 @@ function answerQuiz(qi, oi, correct) {
 }
 
 function restartLab() {
+  eslClearSave();
   imbalSel=new Set(); imbalOk=false;
   energyLevel=78;
   actSortPlac={}; actSortSel=null;
@@ -1273,8 +1388,56 @@ function launchConfetti() {
 var _section_divider = '<div class="section-divider">';
 function sectionDivider(t){ return '<div class="section-divider">' + t + '</div>'; }
 
-renderStage(1);
-window.addEventListener('resize',function(){var c=document.getElementById('confetti-canvas');c.width=window.innerWidth;c.height=window.innerHeight;});
+var _origRender = renderStage;
+renderStage = function(n) {
+  _origRender(n);
+  eslSaveState();
+  if (n === TOTAL_STAGES) eslMarkDone();
+};
+
+var _eslTimer = null;
+document.addEventListener('input', function(e) {
+  if (e.target && e.target.classList.contains('reflection-input')) {
+    clearTimeout(_eslTimer);
+    _eslTimer = setTimeout(eslSaveState, 800);
+  }
+});
+
+(function() {
+  var saved = parseInt(localStorage.getItem(ESL_KEY_STAGE) || '0');
+  if (saved > 1) { eslLoadState(); renderStage(saved); }
+  else { renderStage(1); }
+})();
+
+window.addEventListener('resize', function() {
+  var c = document.getElementById('confetti-canvas');
+  if (c) { c.width = window.innerWidth; c.height = window.innerHeight; }
+});
+</script>
+<script type="module">
+import { signInWithGoogle, signOutUser, onAuthChange, saveActivityProgress }
+  from './firebase-auth.js';
+
+window.eslHandleSignIn  = signInWithGoogle;
+window.eslHandleSignOut = signOutUser;
+
+// Wire up Firebase sync function
+window.__eslFirebaseSync = function(actId, stage, done) {
+  saveActivityProgress(actId, stage, done);
+};
+
+onAuthChange(function(user) {
+  var ctrl = document.getElementById('eslAuthControls');
+  if (!ctrl) return;
+  if (user) {
+    var first = user.displayName ? user.displayName.split(' ')[0] : 'there';
+    ctrl.innerHTML =
+      '<span style="font-size:13px;font-weight:800;color:#1a1a2e;margin-right:10px">Hi, <strong>' + first + '</strong>!</span>' +
+      '<button onclick="eslHandleSignOut()" style="background:#f0f0f0;border:none;border-radius:8px;padding:6px 12px;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;cursor:pointer;color:#444">Sign Out</button>';
+  } else {
+    ctrl.innerHTML = '<button onclick="eslHandleSignIn()" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;cursor:pointer">&#x1F4F2; Sign in</button>';
+  }
+});
 </script>
 </body>
 </html>
